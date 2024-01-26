@@ -10,9 +10,11 @@ public class Studente
     private String dataIscrizioneSito;
     private String id;
     private String livello;
+    private int numeroCorsi;
 
     private Map<String, Appunto> mappaAppunti;
-    private Map<String, Corso> mappaCorsi;
+    private Map<String, Iscrizione> mappaIscrizioni;
+    private Map<String, DatiPagamento> mappaDatiPagamento;
 
     public Studente(String nome, String cognome, String dataNascita, String luogoNascita, String residenza, String dataIscrizioneSito, String livello)
     {
@@ -23,14 +25,22 @@ public class Studente
         this.residenza = residenza;
         this.dataIscrizioneSito = dataIscrizioneSito;
         this.livello = livello;
+        this.numeroCorsi = 0;
         this.id = StudyHub.generaId();
         creaMappaAppunti();
-        creaMappaCorsi();
+        creaMappaIscrizioni();
+        creaMappaDatiPagamento();
     }
 
-    public DatiPagamento creaDatiPagamento(float importo, String metodo, String numeroCarta, String nome, String cognome)
+    public DatiPagamento creaDatiPagamento(String metodo, String numeroCarta, String nome, String cognome)
     {
-        return new DatiPagamento(importo, metodo, numeroCarta, nome, cognome);
+        return new DatiPagamento(metodo, numeroCarta, nome, cognome);
+    }
+
+    public void aggiungiIscrizione(Corso corso, Iscrizione iscrizione)
+    {
+        mappaIscrizioni.put(corso.getId(), iscrizione);
+        numeroCorsi++;
     }
 
     private Map<String, Appunto> creaMappaAppunti()
@@ -39,14 +49,31 @@ public class Studente
          return mappaAppunti;
     }
 
-    private Map<String, Corso> creaMappaCorsi()
+    private Map<String, Iscrizione> creaMappaIscrizioni()
     {
-         Map<String, Corso> mappaCorsi = new HashMap<String, Corso>();
-         return mappaCorsi;
+         Map<String, Iscrizione> mappaIscrizioni = new HashMap<String, Iscrizione>();
+         return mappaIscrizioni;
     }
 
-    public String getIdStudente()
+    public Map<String, DatiPagamento> creaMappaDatiPagamento()
+    {
+        Map<String, DatiPagamento> mappaDatiPagamento = new HashMap<String, DatiPagamento>();
+        return mappaDatiPagamento;
+    }
+
+    public String getId()
     {
         return this.id;
     }
+
+    public DatiPagamento usaDatiPagamento()
+    {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Inserisci il numero della carta: ");
+        String numeroCarta = scanner.nextLine();
+        scanner.close();
+
+        return mappaDatiPagamento.get(numeroCarta);
+    }
+
 }

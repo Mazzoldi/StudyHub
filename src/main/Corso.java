@@ -5,39 +5,39 @@ public class Corso
     private String nome;
     private String id;
     private String livello;
-    private String costo;
+    private float costo;
     private String creatore;
     private String lingua;
-    private int numero;
+    private int numeroStudenti;
     private int durata;
 
-    private Map<String, Studente> mappaStudenti;
+    private Map<String, Iscrizione> mappaIscrizioni;
     private Map<String, Contenuto> mappaContenuti;
 
-    public Corso(String nome, String livello, String costo, String creatore, String lingua, int durata)
+    public Corso(String nome, String livello, float costo, String creatore, String lingua, int durata)
     {
         this.nome = nome;
         this.livello = livello;
         this.costo = costo;
         this.creatore = creatore;
         this.lingua = lingua;
-        this.numero = 0;
+        this.numeroStudenti = 0;
         this.durata = durata;
         this.id = StudyHub.generaId();
-        creaMappaStudenti();
+        creaMappaIscrizioni();
         creaMappaContenuti();
     }
 
-    public void aggiungiStudente(Studente studente)
+    public void aggiungiIscrizione(Studente studente, Iscrizione iscrizione)
     {
-        mappaStudenti.put(studente.getIdStudente(), studente);
-        numero++;
+        mappaIscrizioni.put(studente.getId(), iscrizione);
+        numeroStudenti++;
     }
 
-    private Map<String, Studente> creaMappaStudenti()
+    private Map<String, Iscrizione> creaMappaIscrizioni()
     {
-         Map<String, Studente> mappaStudenti = new HashMap<String, Studente>();
-         return mappaStudenti;
+         Map<String, Iscrizione> mappaIscrizioni = new HashMap<String, Iscrizione>();
+         return mappaIscrizioni;
     }
 
     private Map<String, Contenuto> creaMappaContenuti()
@@ -46,4 +46,13 @@ public class Corso
          return mappaContenuti;
     }
 
+    public float getCosto()
+    {
+        return costo;
+    }
+
+    public String getId()
+    {
+        return id;
+    }
 }

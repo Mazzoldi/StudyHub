@@ -4,12 +4,14 @@ public class Iscrizione
 {
     private String dataIscrizione;
     private String dataScadenza;
-    private String id;
+    private String idStudente;
+    private String idCorso;
 
-    public Iscrizione(String dataIscrizione, String dataScadenza)
+    public Iscrizione(String dataIscrizione, String dataScadenza, String idStudente, String idCorso)
     {
         this.dataIscrizione = dataIscrizione;
         this.dataScadenza = dataScadenza;
-        this.id = StudyHub.generaId();
+        this.idStudente = idStudente;
+        this.idCorso = idCorso;
     }
 }
