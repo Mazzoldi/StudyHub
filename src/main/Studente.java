@@ -15,6 +15,7 @@ public class Studente
     private Map<String, Appunto> mappaAppunti;
     private Map<String, Iscrizione> mappaIscrizioni;
     private Map<String, DatiPagamento> mappaDatiPagamento;
+    private Map<String, Corso> mappaCorsiCreati;
 
     public Studente(String nome, String cognome, String dataNascita, String luogoNascita, String residenza, String dataIscrizioneSito, String livello)
     {
@@ -30,6 +31,7 @@ public class Studente
         creaMappaAppunti();
         creaMappaIscrizioni();
         creaMappaDatiPagamento();
+        creaMappaCorsiCreati();
     }
 
     public DatiPagamento creaDatiPagamento(String metodo, String numeroCarta, String nome, String cognome)
@@ -61,6 +63,12 @@ public class Studente
         return mappaDatiPagamento;
     }
 
+    public Map<String, Corso> creaMappaCorsiCreati()
+    {
+        Map<String, Corso> mappaCorsiCreati = new HashMap<String, Corso>();
+        return mappaCorsiCreati;
+    }
+
     public String getId()
     {
         return this.id;
@@ -76,4 +84,68 @@ public class Studente
         return mappaDatiPagamento.get(numeroCarta);
     }
 
+    public Map<String, Corso> getMappaCorsiCreati()
+    {
+        return mappaCorsiCreati;
+    }
+
+    public void aggiungiAppunto(Appunto appunto)
+    {
+        mappaAppunti.put(appunto.getId(), appunto);
+    }
+
+    public String getNome()
+    {
+        return nome;
+    }
+
+    public String getCognome()
+    {
+        return cognome;
+    }
+
+    public String getDataNascita()
+    {
+        return dataNascita;
+    }
+
+    public String getLuogoNascita()
+    {
+        return luogoNascita;
+    }
+
+    public String getResidenza()
+    {
+        return residenza;
+    }
+
+    public String getDataIscrizioneSito()
+    {
+        return dataIscrizioneSito;
+    }
+
+    public String getLivello()
+    {
+        return livello;
+    }
+
+    public int getNumeroCorsi()
+    {
+        return numeroCorsi;
+    }
+
+    public Map<String, Appunto> getMappaAppunti()
+    {
+        return mappaAppunti;
+    }
+
+    public Map<String, Iscrizione> getMappaIscrizioni()
+    {
+        return mappaIscrizioni;
+    }
+
+    public Map<String, DatiPagamento> getMappaDatiPagamento()
+    {
+        return mappaDatiPagamento;
+    }
 }

@@ -55,4 +55,49 @@ public class Corso
     {
         return id;
     }
+
+    public String getNome()
+    {
+        return nome;
+    }
+
+    public String getLivello()
+    {
+        return livello;
+    }
+
+    public String getLingua()
+    {
+        return lingua;
+    }
+
+    public void aggiungiContenuto(Contenuto contenuto)
+    {
+        mappaContenuti.put(contenuto.getId(), contenuto);
+    }
+
+    public String getCreatore()
+    {
+        return creatore;
+    }
+
+    public int getDurata()
+    {
+        return durata;
+    }
+
+    public Map<String, Iscrizione> getMappaIscrizioni()
+    {
+        return mappaIscrizioni;
+    }
+
+    public Map<String, Contenuto> getMappaContenuti()
+    {
+        return mappaContenuti;
+    }
+
+    public int getNumeroStudenti()
+    {
+        return numeroStudenti;
+    }
 }
