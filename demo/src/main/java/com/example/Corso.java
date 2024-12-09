@@ -38,13 +38,13 @@ public class Corso
 
     private Map<String, Iscrizione> creaMappaIscrizioni()
     {
-         Map<String, Iscrizione> mappaIscrizioni = new HashMap<String, Iscrizione>();
+         this.mappaIscrizioni = new HashMap<String, Iscrizione>();
          return mappaIscrizioni;
     }
 
     private Map<String, Contenuto> creaMappaContenuti()
     {
-         Map<String, Contenuto> mappaContenuti = new HashMap<String, Contenuto>();
+         this.mappaContenuti = new HashMap<String, Contenuto>();
          return mappaContenuti;
     }
 

@@ -21,7 +21,7 @@ public class Iscrizione
 
     private Map<String, Pagamento> creaMappaPagamenti()
     {
-        Map<String, Pagamento> mappaPagamenti = new HashMap<String, Pagamento>();
+        this.mappaPagamenti = new HashMap<String, Pagamento>();
         return mappaPagamenti;
     }
 

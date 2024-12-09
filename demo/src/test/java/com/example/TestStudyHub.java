@@ -69,14 +69,13 @@ public class TestStudyHub
 
     //Test cercaCorso
     @Test
-    public Map<String, Corso> testCercaCorso()
+    public void testCercaCorso()
     {
         Map<String, Corso> mockMappaCorsiCercati = new HashMap<String, Corso>();
         mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, "Nicolò Mazzola", "italiano", 100);
         studyHub.getMappaCorsiTotali().put(mockCorso.getNome(), mockCorso);
         mockMappaCorsiCercati = studyHub.cercaCorso("Ingegneria del Software", "Difficile", null, "Italiano");
         assertNotNull(mockMappaCorsiCercati);
-        return mockMappaCorsiCercati;
     }
 
     //Test selezionaCorso
@@ -87,9 +86,9 @@ public class TestStudyHub
         mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, "Nicolò Mazzola", "italiano", 100);
         Corso mockCorso1 = new Corso("Ingegneria", "Difficile", 49, "Nicolò Mazzola", "italiano", 100);
         Corso mockCorso2 = new Corso("Matematica", "Difficile", 49, "Nicolò Mazzola", "italiano", 100);
-        mockMappaCorsiCercati.put(mockCorso.getNome(), mockCorso);
-        mockMappaCorsiCercati.put(mockCorso1.getNome(), mockCorso1);
-        mockMappaCorsiCercati.put(mockCorso2.getNome(), mockCorso2);
+        mockMappaCorsiCercati.put(mockCorso.getId(), mockCorso);
+        mockMappaCorsiCercati.put(mockCorso1.getId(), mockCorso1);
+        mockMappaCorsiCercati.put(mockCorso2.getId(), mockCorso2);
         String simulatedInput = mockCorso.getId();
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
@@ -118,14 +117,18 @@ public class TestStudyHub
         mockStudente = new Studente("Nicolò", "Mazzola", "01/01/2000", "Roma", "Roma", "01/01/2021", "Laurea Triennale");
         mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, "Nicolò Mazzola", "italiano", 100);
         mockStudente.creaDatiPagamento("carta", "123456789", mockStudente.getNome(), mockStudente.getCognome());
+        studyHub.setCorsoSelezionato(mockCorso);
         assertNotNull(mockStudente.getMappaDatiPagamento().get("123456789"));
         String simulatedInput = "123456789\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
-        studyHub.pagamentoIscrizione(mockStudente, mockCorso.getCosto());
+        mockIscrizione = studyHub.pagamentoIscrizione(mockStudente, mockCorso.getCosto());
         assertNotNull(mockStudente.getMappaIscrizioni().get(mockCorso.getId()));
         assertNotNull(mockCorso.getMappaIscrizioni().get(mockStudente.getId()));
-        assertNotNull(mockIscrizione.getMappaPagamenti().get(mockStudente.getId()));
+        assertEquals(mockStudente.getMappaIscrizioni().get(mockCorso.getId()), mockCorso.getMappaIscrizioni().get(mockStudente.getId()));
+        assertEquals(1, mockCorso.getNumeroStudenti());
+        assertEquals(1, mockStudente.getNumeroCorsi());
+        assertNotNull(mockIscrizione.getMappaPagamenti().values().iterator().next());
         assertEquals(1, mockIscrizione.getMappaPagamenti().size());
     }
 

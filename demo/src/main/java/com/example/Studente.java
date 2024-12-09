@@ -38,7 +38,14 @@ public class Studente
 
     public DatiPagamento creaDatiPagamento(String metodo, String numeroCarta, String nome, String cognome)
     {
-        return new DatiPagamento(metodo, numeroCarta, nome, cognome);
+        if (mappaDatiPagamento.containsKey(numeroCarta))
+        {
+            return mappaDatiPagamento.get(numeroCarta);
+        }
+
+        DatiPagamento nuoviDatiPagamento = new DatiPagamento(metodo, numeroCarta, nome, cognome);
+        mappaDatiPagamento.put(numeroCarta, nuoviDatiPagamento);
+        return nuoviDatiPagamento;
     }
 
     public void aggiungiIscrizione(Corso corso, Iscrizione iscrizione)
@@ -49,25 +56,25 @@ public class Studente
 
     private Map<String, Appunto> creaMappaAppunti()
     {
-         Map<String, Appunto> mappaAppunti = new HashMap<String, Appunto>();
+         this.mappaAppunti = new HashMap<String, Appunto>();
          return mappaAppunti;
     }
 
     private Map<String, Iscrizione> creaMappaIscrizioni()
     {
-         Map<String, Iscrizione> mappaIscrizioni = new HashMap<String, Iscrizione>();
+         this.mappaIscrizioni = new HashMap<String, Iscrizione>();
          return mappaIscrizioni;
     }
 
     public Map<String, DatiPagamento> creaMappaDatiPagamento()
     {
-        Map<String, DatiPagamento> mappaDatiPagamento = new HashMap<String, DatiPagamento>();
+        this.mappaDatiPagamento = new HashMap<String, DatiPagamento>();
         return mappaDatiPagamento;
     }
 
     public Map<String, Corso> creaMappaCorsiCreati()
     {
-        Map<String, Corso> mappaCorsiCreati = new HashMap<String, Corso>();
+        this.mappaCorsiCreati = new HashMap<String, Corso>();
         return mappaCorsiCreati;
     }
 

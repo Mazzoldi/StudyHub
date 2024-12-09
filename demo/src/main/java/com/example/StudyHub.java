@@ -85,6 +85,11 @@ public class StudyHub
         return corsoSelezionato;
     }
     
+    public void setCorsoSelezionato(Corso corsoSelezionato)
+    {
+        this.corsoSelezionato = corsoSelezionato;
+    }
+
     //Esecuzione del main
     public static void main(String[] args) 
     {
@@ -177,8 +182,8 @@ public class StudyHub
         }
         else
         {
-            boolean conferma = pagamentoIscrizione(studente, costo);
-            if(!conferma)
+            Iscrizione iscrizione = pagamentoIscrizione(studente, costo);
+            if(iscrizione==null)
             {
                 System.out.println("Pagamento non andato a buon fine");
             }
@@ -186,7 +191,7 @@ public class StudyHub
     }
 
     //Funzione per il pagamento dell'iscrizione
-    public boolean pagamentoIscrizione(Studente studente, float costo)
+    public Iscrizione pagamentoIscrizione(Studente studente, float costo)
     {
         Calendar cal = Calendar.getInstance();
         Date currentDate = cal.getTime();
@@ -195,31 +200,33 @@ public class StudyHub
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String formattedCurrentDate = dateFormat.format(currentDate);
         String formattedFutureDate = dateFormat.format(futureDate);
-        boolean conferma = false;
+        boolean confermaPagamento = false;
 
         DatiPagamento datiPagamento = usaDatiPagamento(studente);
 
         if(datiPagamento == null)
         {
             System.out.println("Non hai inserito i dati di pagamento");
-            return conferma;
+            return null;
         }
 
         // Presumiamo che sia sempre vero anche se serve un sistema di pagamento esterno
-        conferma = true;
+        confermaPagamento = true;
 
-        if(conferma)
-        {        
+        if(confermaPagamento)
+        {
             Iscrizione iscrizione = new Iscrizione(formattedCurrentDate, formattedFutureDate, studente.getId(), corsoSelezionato.getId());
             aggiungiIscrizione(studente, corsoSelezionato, iscrizione);
 
             Pagamento pagamento = new Pagamento(formattedCurrentDate, costo, datiPagamento);
 
             iscrizione.aggiungiPagamento(pagamento);
+            return iscrizione;
         }
-
-        conferma = true;
-        return conferma;
+        else
+        {
+            return null;
+        }
     }
 
     //Funzione per il prelievo dei dati pagamento
