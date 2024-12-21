@@ -157,4 +157,30 @@ public class TestStudyHub
         // Verifica che l'output sia corretto
         assertEquals(5, result);
     }
+
+    //Test per caricare l'appunto
+    @Test
+    public void testCaricaAppunto() {
+        // Dati di input per il caricamento dell'appunto
+        mockStudente = new Studente("Mario", "Rossi", "1995-05-10", "Roma", "Via Roma 1", "2024-12-01", "L1");
+        String titolo = "Appunto di Matematica";
+        String formato = "PDF";
+        String file = "appunti_matematica.pdf";
+        String data = "2024-12-21";
+
+        // Esegui il metodo di caricamento degli appunti
+        studyHub.caricaAppunto(titolo, formato, file, data);
+
+        // Verifica che l'appunto sia stato aggiunto correttamente
+        assertNotNull(mockStudente.getMappaAppunti());
+        assertFalse(mockStudente.getMappaAppunti().isEmpty());
+
+        Appunto appuntoCaricato = mockStudente.getMappaAppunti().get(0); // Supponendo che gli appunti siano in una lista
+
+        assertNotNull(appuntoCaricato);
+        assertEquals(titolo, appuntoCaricato.getTitolo());
+        assertEquals(formato, appuntoCaricato.getFormato());
+        assertEquals(file, appuntoCaricato.getFile());
+        assertEquals(data, appuntoCaricato.getData());
+    }
 }

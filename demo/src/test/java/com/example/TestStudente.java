@@ -4,10 +4,10 @@ import org.junit.*;
 import java.io.*;
 import static org.junit.Assert.*;
 
-class StudenteTest {
+public class TestStudente {
 
     @Test
-    void testUsaDatiPagamento() {
+    public void testUsaDatiPagamento() {
         // Arrange
         Studente studente = new Studente("Mario", "Rossi", "1990-01-01", "Roma", "Via Roma, 1", "2024-01-01", "Avanzato");
 
@@ -27,8 +27,8 @@ class StudenteTest {
 
         // Assert
         assertNotNull(datiPagamento);
-        assertEquals(numeroCarta, datiPagamento.getNumeroCarta(), "Il numero della carta deve corrispondere.");
-        assertEquals(nome, datiPagamento.getNome(), "Il nome deve corrispondere.");
-        assertEquals(cognome, datiPagamento.getCognome(), "Il cognome deve corrispondere.");
+        assertEquals(numeroCarta, datiPagamento.getNumeroCarta());
+        assertEquals(nome, datiPagamento.getNome());
+        assertEquals(cognome, datiPagamento.getCognome());
     }
 }
