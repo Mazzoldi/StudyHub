@@ -158,7 +158,7 @@ public class TestStudyHub
         assertEquals(5, result);
     }
 
-    //Test per caricare l'appunto
+    //Test caricaAppunto
     @Test
     public void testCaricaAppunto() {
         // Dati di input per il caricamento dell'appunto
@@ -168,14 +168,16 @@ public class TestStudyHub
         String file = "appunti_matematica.pdf";
         String data = "2024-12-21";
 
+        Appunto appunto = new Appunto(titolo, data, formato, file);
+
         // Esegui il metodo di caricamento degli appunti
-        studyHub.caricaAppunto(titolo, formato, file, data);
+        mockStudente.aggiungiAppunto(appunto);
 
         // Verifica che l'appunto sia stato aggiunto correttamente
         assertNotNull(mockStudente.getMappaAppunti());
         assertFalse(mockStudente.getMappaAppunti().isEmpty());
 
-        Appunto appuntoCaricato = mockStudente.getMappaAppunti().get(0); // Supponendo che gli appunti siano in una lista
+        Appunto appuntoCaricato = mockStudente.getMappaAppunti().get(appunto.getId());
 
         assertNotNull(appuntoCaricato);
         assertEquals(titolo, appuntoCaricato.getTitolo());
