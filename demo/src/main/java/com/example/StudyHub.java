@@ -41,9 +41,8 @@ public class StudyHub
     }
 
     // Visualizzazione di un menu di scelta
-    public int menu()
+    public int menu(Scanner scanner)
     {
-        Scanner scanner = new Scanner(System.in);
         int scelta;
 
         System.out.println("Menu:");
@@ -54,8 +53,6 @@ public class StudyHub
 
         System.out.print("Seleziona un'opzione: ");
         scelta = scanner.nextInt();
-
-        scanner.close();
 
         return scelta;
     }
@@ -108,7 +105,7 @@ public class StudyHub
         String lingua;
 
         do {
-                scelta = studyHub.menu();
+                scelta = studyHub.menu(scanner);
 
                 switch (scelta) 
                 {
@@ -137,7 +134,7 @@ public class StudyHub
                         livello = scanner.nextLine();
                         id = scanner.nextLine();
                         lingua = scanner.nextLine();
-                        studyHub.selezionaCorso(studyHub.cercaCorso(nome, livello, id, lingua));
+                        studyHub.selezionaCorso(studyHub.cercaCorso(nome, livello, id, lingua), scanner);
                         studyHub.iscrizioneCorso(studyHub.studente, studyHub.corsoSelezionato);
                         break;
                     case 4:
@@ -148,9 +145,7 @@ public class StudyHub
                         break;
                 }
         } while (scelta != 4);
-
         scanner.close();
-        
     }
 
     //UC1
@@ -267,7 +262,7 @@ public class StudyHub
     }
 
     //Funzione per selezionare un corso
-    public void selezionaCorso(Map<String, Corso> mappaCorsiCercati)
+    public void selezionaCorso(Map<String, Corso> mappaCorsiCercati, Scanner scanner)
     {
         System.out.println("I corsi trovati sono: ");
         for(Corso corso: mappaCorsiCercati.values())
@@ -277,7 +272,6 @@ public class StudyHub
         }
 
         System.out.println("Inserisci l'id di un corso: ");
-        Scanner scanner = new Scanner(System.in);
         String id = scanner.nextLine();
         scanner.close();
 

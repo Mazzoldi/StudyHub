@@ -12,6 +12,7 @@ public class TestStudyHub
     private Studente mockStudente;
     private Corso mockCorso;
     private Iscrizione mockIscrizione;
+    Scanner scanner;
     
     //Recupera istanza di StudyHub
     @BeforeClass
@@ -35,7 +36,7 @@ public class TestStudyHub
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
 
-        int result = studyHub.menu();
+        int result = studyHub.menu(scanner);
 
         // Verifica che l'output sia corretto
         assertEquals(1, result);
@@ -48,7 +49,7 @@ public class TestStudyHub
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
 
-        int result = studyHub.menu();
+        int result = studyHub.menu(scanner);
 
         // Verifica che l'output sia corretto
         assertEquals(2, result);
@@ -61,7 +62,7 @@ public class TestStudyHub
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
 
-        int result = studyHub.menu();
+        int result = studyHub.menu(scanner);
 
         // Verifica che l'output sia corretto
         assertEquals(3, result);
@@ -92,7 +93,7 @@ public class TestStudyHub
         String simulatedInput = mockCorso.getId();
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
-        studyHub.selezionaCorso(mockMappaCorsiCercati);
+        studyHub.selezionaCorso(mockMappaCorsiCercati, scanner);
         assertEquals(mockCorso, studyHub.getCorsoSelezionato());
     }
 
@@ -139,7 +140,7 @@ public class TestStudyHub
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
 
-        int result = studyHub.menu();
+        int result = studyHub.menu(scanner);
 
         // Verifica che l'output sia corretto
         assertEquals(4, result);
@@ -152,7 +153,7 @@ public class TestStudyHub
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
 
-        int result = studyHub.menu();
+        int result = studyHub.menu(scanner);
 
         // Verifica che l'output sia corretto
         assertEquals(5, result);
