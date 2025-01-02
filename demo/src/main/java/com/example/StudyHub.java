@@ -13,6 +13,7 @@ public class StudyHub
     private Map<String, Corso> mappaCorsiTotali;
     private Map<String, Studente> studenti;
     private Map<String, Appunto> appunti;
+    private static Scanner scanner;
 
     private StudyHub()
     {
@@ -41,10 +42,10 @@ public class StudyHub
     }
 
     // Visualizzazione di un menu di scelta
-    public int menu(Scanner scanner)
+    public int menu()
     {
         int scelta;
-
+        scanner = new Scanner(System.in);
         System.out.println("Menu:");
         System.out.println("1. Carica appunto");
         System.out.println("2. Carica contenuto");
@@ -53,7 +54,7 @@ public class StudyHub
 
         System.out.print("Seleziona un'opzione: ");
         scelta = scanner.nextInt();
-
+        scanner.nextLine();
         return scelta;
     }
 
@@ -91,8 +92,6 @@ public class StudyHub
     public static void main(String[] args) 
     {
         StudyHub studyHub = new StudyHub();
-
-        Scanner scanner = new Scanner(System.in);
         int scelta;
 
         String titolo;
@@ -105,7 +104,7 @@ public class StudyHub
         String lingua;
 
         do {
-                scelta = studyHub.menu(scanner);
+                scelta = studyHub.menu();
 
                 switch (scelta) 
                 {
@@ -134,7 +133,7 @@ public class StudyHub
                         livello = scanner.nextLine();
                         id = scanner.nextLine();
                         lingua = scanner.nextLine();
-                        studyHub.selezionaCorso(studyHub.cercaCorso(nome, livello, id, lingua), scanner);
+                        studyHub.selezionaCorso(studyHub.cercaCorso(nome, livello, id, lingua));
                         studyHub.iscrizioneCorso(studyHub.studente, studyHub.corsoSelezionato);
                         break;
                     case 4:
@@ -262,7 +261,7 @@ public class StudyHub
     }
 
     //Funzione per selezionare un corso
-    public void selezionaCorso(Map<String, Corso> mappaCorsiCercati, Scanner scanner)
+    public void selezionaCorso(Map<String, Corso> mappaCorsiCercati)
     {
         System.out.println("I corsi trovati sono: ");
         for(Corso corso: mappaCorsiCercati.values())
@@ -272,6 +271,7 @@ public class StudyHub
         }
 
         System.out.println("Inserisci l'id di un corso: ");
+        scanner = new Scanner(System.in);
         String id = scanner.nextLine();
         scanner.close();
 
