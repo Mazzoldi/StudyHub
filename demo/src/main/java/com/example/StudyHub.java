@@ -75,7 +75,8 @@ public class StudyHub
             System.out.println("2. Carica appunto");
             System.out.println("3. Carica contenuto");
             System.out.println("4. Iscrizione ad un corso");
-            System.out.println("5. Esci");
+            System.out.println("5. Logout");
+            System.out.println("6. Esci");
             System.out.print("Seleziona un'opzione: ");
         }
         scelta = scanner.nextInt();
@@ -234,6 +235,10 @@ public class StudyHub
                         studyHub.iscrizioneCorso(studyHub.studente, studyHub.corsoSelezionato);
                         break;
                     case 5:
+                        System.out.println("Hai selezionato Logout");
+                        isLogged = false;
+                        break;
+                    case 6:
                         System.out.println("Uscita dal programma...");
                         break;
                     default:
@@ -241,7 +246,7 @@ public class StudyHub
                         break;
                 }
             }
-        } while (scelta != 5);
+        } while (scelta != 6);
         scanner.close();
     }
 
