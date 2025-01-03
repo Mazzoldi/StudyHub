@@ -9,13 +9,13 @@ public class TestStudente {
     @Test
     public void testUsaDatiPagamento() {
         // Arrange
-        Studente studente = new Studente("Mario", "Rossi", "1990-01-01", "Roma", "Via Roma, 1", "2024-01-01", "Avanzato");
+        Studente studente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "02/01/2025", "Laurea Magistrale");
 
         // Simulazione di dati di pagamento esistenti
         String metodo = "Carta di Credito";
         String numeroCarta = "1234567890123456";
-        String nome = "Mario";
-        String cognome = "Rossi";
+        String nome = "Nicolò";
+        String cognome = "Mazzola";
         studente.creaDatiPagamento(metodo, numeroCarta, nome, cognome);
 
         // Simulazione input scanner

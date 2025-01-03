@@ -12,6 +12,7 @@ public class TestStudyHub
     private Studente mockStudente;
     private Corso mockCorso;
     private Iscrizione mockIscrizione;
+    private boolean isLogged;
     
     //Recupera istanza di StudyHub
     @BeforeClass
@@ -31,11 +32,12 @@ public class TestStudyHub
     //Test per l'opzione 1 del menu a scelta
     @Test
     public void testMenuOption1() {
+        isLogged = false;
         String simulatedInput = "1\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
 
-        int result = studyHub.menu();
+        int result = studyHub.menu(isLogged);
 
         // Verifica che l'output sia corretto
         assertEquals(1, result);
@@ -44,11 +46,12 @@ public class TestStudyHub
     //Test per l'opzione 2 del menu a scelta
     @Test
     public void testMenuOption2() {
+        isLogged = false;
         String simulatedInput = "2\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
 
-        int result = studyHub.menu();
+        int result = studyHub.menu(isLogged);
 
         // Verifica che l'output sia corretto
         assertEquals(2, result);
@@ -57,11 +60,12 @@ public class TestStudyHub
     //Test per l'opzione 3 del menu a scelta
     @Test
     public void testMenuOption3() {
+        isLogged = false;
         String simulatedInput = "3\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
 
-        int result = studyHub.menu();
+        int result = studyHub.menu(isLogged);
 
         // Verifica che l'output sia corretto
         assertEquals(3, result);
@@ -100,7 +104,7 @@ public class TestStudyHub
     @Test
     public void testIscrizioneCorsoGratuito()
     {
-        mockStudente = new Studente("Nicolò", "Mazzola", "01/01/2000", "Roma", "Roma", "01/01/2021", "Laurea Triennale");
+        mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "02/01/2025", "Laurea Magistrale");
         mockCorso = new Corso("Ingegneria del Software", "Difficile", 0, "Nicolò Mazzola", "italiano", 100);
         studyHub.iscrizioneCorso(mockStudente, mockCorso);
         assertNotNull(mockStudente.getMappaIscrizioni().get(mockCorso.getId()));
@@ -114,7 +118,7 @@ public class TestStudyHub
     @Test
     public void testPagamentoIscrizione()
     {
-        mockStudente = new Studente("Nicolò", "Mazzola", "01/01/2000", "Roma", "Roma", "01/01/2021", "Laurea Triennale");
+        mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "02/01/2025", "Laurea Magistrale");
         mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, "Nicolò Mazzola", "italiano", 100);
         mockStudente.creaDatiPagamento("carta", "123456789", mockStudente.getNome(), mockStudente.getCognome());
         studyHub.setCorsoSelezionato(mockCorso);
@@ -135,11 +139,12 @@ public class TestStudyHub
     //Test per l'opzione 4 del menu a scelta
     @Test
     public void testMenuExitOption() {
+        isLogged = false;
         String simulatedInput = "4\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
 
-        int result = studyHub.menu();
+        int result = studyHub.menu(isLogged);
 
         // Verifica che l'output sia corretto
         assertEquals(4, result);
@@ -148,11 +153,12 @@ public class TestStudyHub
     //Test per l'opzione 5 del menu a scelta
     @Test
     public void testInvalidMenuOption() {
+        isLogged = false;
         String simulatedInput = "5\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
 
-        int result = studyHub.menu();
+        int result = studyHub.menu(isLogged);
 
         // Verifica che l'output sia corretto
         assertEquals(5, result);
@@ -161,8 +167,7 @@ public class TestStudyHub
     //Test caricaAppunto
     @Test
     public void testCaricaAppunto() {
-        // Dati di input per il caricamento dell'appunto
-        mockStudente = new Studente("Mario", "Rossi", "1995-05-10", "Roma", "Via Roma 1", "2024-12-01", "L1");
+        mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "02/01/2025", "Laurea Magistrale");
         String titolo = "Appunto di Matematica";
         String formato = "PDF";
         String file = "appunti_matematica.pdf";

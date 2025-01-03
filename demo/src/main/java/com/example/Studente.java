@@ -4,6 +4,8 @@ import java.util.*;
 
 public class Studente
 {
+    private String username;
+    private String password;
     private String nome;
     private String cognome;
     private String dataNascita;
@@ -19,8 +21,10 @@ public class Studente
     private Map<String, DatiPagamento> mappaDatiPagamento;
     private Map<String, Corso> mappaCorsiCreati;
 
-    public Studente(String nome, String cognome, String dataNascita, String luogoNascita, String residenza, String dataIscrizioneSito, String livello)
+    public Studente(String username, String password, String nome, String cognome, String dataNascita, String luogoNascita, String residenza, String dataIscrizioneSito, String livello)
     {
+        this.username = username;
+        this.password = password;
         this.nome = nome;
         this.cognome = cognome;
         this.dataNascita = dataNascita;
@@ -103,9 +107,39 @@ public class Studente
         mappaAppunti.put(appunto.getId(), appunto);
     }
 
+    public boolean verificaPassword(String password)
+    {
+        return this.password.equals(password);
+    }
+
+    public String getUsername()
+    {
+        return username;
+    }
+
+    public void setUsername(String username)
+    {
+        this.username = username;
+    }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+
     public String getNome()
     {
         return nome;
+    }
+
+    public void setNome(String nome)
+    {
+        this.nome = nome;
     }
 
     public String getCognome()
@@ -113,9 +147,19 @@ public class Studente
         return cognome;
     }
 
+    public void setCognome(String cognome)
+    {
+        this.cognome = cognome;
+    }
+
     public String getDataNascita()
     {
         return dataNascita;
+    }
+
+    public void setDataNascita(String dataNascita)
+    {
+        this.dataNascita = dataNascita;
     }
 
     public String getLuogoNascita()
@@ -123,9 +167,19 @@ public class Studente
         return luogoNascita;
     }
 
+    public void setLuogoNascita(String luogoNascita)
+    {
+        this.luogoNascita = luogoNascita;
+    }
+
     public String getResidenza()
     {
         return residenza;
+    }
+
+    public void setResidenza(String residenza)
+    {
+        this.residenza = residenza;
     }
 
     public String getDataIscrizioneSito()
@@ -133,14 +187,29 @@ public class Studente
         return dataIscrizioneSito;
     }
 
+    public void setDataIscrizioneSito(String dataIscrizioneSito)
+    {
+        this.dataIscrizioneSito = dataIscrizioneSito;
+    }
+
     public String getLivello()
     {
         return livello;
     }
 
+    public void setLivello(String livello)
+    {
+        this.livello = livello;
+    }
+
     public int getNumeroCorsi()
     {
         return numeroCorsi;
+    }
+
+    public void setNumeroCorsi(int numeroCorsi)
+    {
+        this.numeroCorsi = numeroCorsi;
     }
 
     public Map<String, Appunto> getMappaAppunti()
