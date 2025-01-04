@@ -15,6 +15,7 @@ public class StudyHub
     private Map<String, Appunto> appunti;
     private static Scanner scanner;
 
+    //Costruttore privato per la classe StudyHub
     private StudyHub()
     {
         this.studenti = new HashMap<String, Studente>();
@@ -25,6 +26,7 @@ public class StudyHub
         loadData();
     }
 
+    //Funzione per caricare i dati di prova
     private void loadData(){
         Corso corso1 = new Corso("Matematica", "Laurea Magistrale", 0, "Mario Rossi", "Italiano", 30);
         Corso corso2 = new Corso("Fisica", "Laurea Triennale", 0, "Mario Rossi", "Italiano", 30);
@@ -62,14 +64,16 @@ public class StudyHub
     {
         int scelta;
         scanner = new Scanner(System.in);
-        if (isLogged == false){
+        if (isLogged == false)
+        {
             System.out.println("Menu:");
             System.out.println("1. Registrazione");
             System.out.println("2. Login");
             System.out.println("3. Esci");
             System.out.print("Seleziona un'opzione: ");
         }
-        else{
+        else
+        {
             System.out.println("Menu:");
             System.out.println("1. Modifica profilo");
             System.out.println("2. Carica appunto");
@@ -301,7 +305,8 @@ public class StudyHub
             studente.setLivello(livello);
         }
     }
-    //UC3
+
+    //UC2
 
     //Funzione per il caricamento di un contenuto
     public void caricaContenuto(String titolo, String formato, String file, String data)
@@ -311,7 +316,25 @@ public class StudyHub
         corsoSelezionato.aggiungiContenuto(contenuto);
     }
 
-    //UC4
+    //Funzione per selezionare un corso
+    public void selezionaCorso(Map<String, Corso> mappaCorsiCercati)
+    {
+        System.out.println("I corsi trovati sono: ");
+        for(Corso corso: mappaCorsiCercati.values())
+        {
+            System.out.println(corso.getNome());
+            System.out.println(corso.getId());
+        }
+
+        System.out.println("Inserisci l'id di un corso: ");
+        scanner = new Scanner(System.in);
+        String id = scanner.nextLine();
+        scanner.close();
+
+        corsoSelezionato = mappaCorsiCercati.get(id);
+    }
+
+    //UC3
 
     //Funzione per il collegmaneto di un iscrizione tra studente e corso
     public void aggiungiIscrizione(Studente studente, Corso corso, Iscrizione iscrizione)
@@ -424,24 +447,6 @@ public class StudyHub
         return mappaCorsiCercati;
     }
 
-    //Funzione per selezionare un corso
-    public void selezionaCorso(Map<String, Corso> mappaCorsiCercati)
-    {
-        System.out.println("I corsi trovati sono: ");
-        for(Corso corso: mappaCorsiCercati.values())
-        {
-            System.out.println(corso.getNome());
-            System.out.println(corso.getId());
-        }
-
-        System.out.println("Inserisci l'id di un corso: ");
-        scanner = new Scanner(System.in);
-        String id = scanner.nextLine();
-        scanner.close();
-
-        corsoSelezionato = mappaCorsiCercati.get(id);
-    }
-
     //Funzione per selezionare uno dei corsi creati da uno studente
     public void selezionaCorsoCreato(Studente studente)
     {
@@ -461,7 +466,7 @@ public class StudyHub
         corsoSelezionato = mappaCorsiCreati.get(id);
     }
 
-    //UC7
+    //UC4
     
     //Funzione per caricare un appunto tra quelli dello studente
     public void caricaAppunto(String titolo, String formato, String file, String data)
