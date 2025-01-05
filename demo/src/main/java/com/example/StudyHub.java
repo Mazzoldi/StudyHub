@@ -13,6 +13,7 @@ public class StudyHub
     private Map<String, Corso> mappaCorsiTotali;
     private Map<String, Studente> studenti;
     private Map<String, Appunto> appunti;
+    private Map<String, GruppoStudio> gruppiStudio;
     private static Scanner scanner;
 
     //Costruttore privato per la classe StudyHub
@@ -21,13 +22,15 @@ public class StudyHub
         this.studenti = new HashMap<String, Studente>();
         this.mappaCorsiTotali = new HashMap<String, Corso>();
         this.appunti = new HashMap<String, Appunto>();
+        this.gruppiStudio = new HashMap<String, GruppoStudio>();
         this.studente = null;
         this.corsoSelezionato = null;
         loadData();
     }
 
     //Funzione per caricare i dati di prova
-    private void loadData(){
+    private void loadData()
+    {
         Corso corso1 = new Corso("Matematica", "Laurea Magistrale", 0, "Mario Rossi", "Italiano", 30);
         Corso corso2 = new Corso("Fisica", "Laurea Triennale", 0, "Mario Rossi", "Italiano", 30);
         Corso corso3 = new Corso("Inglese", "Laurea Triennale", 0, "Mario Rossi", "Italiano", 30);
@@ -40,6 +43,18 @@ public class StudyHub
         mappaCorsiTotali.put(corso5.getId(), corso5);
         studente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "02/01/2025", "Laurea Magistrale");
         studenti.put(studente.getId(), studente);
+        Appunto appunto1 = new Appunto("Appunto1", "pdf", "appunto1.pdf", "02/01/2025");
+        Appunto appunto2 = new Appunto("Appunto2", "pdf", "appunto2.pdf", "02/01/2025");
+        Appunto appunto3 = new Appunto("Appunto3", "pdf", "appunto3.pdf", "02/01/2025");
+        appunti.put(appunto1.getId(), appunto1);
+        appunti.put(appunto2.getId(), appunto2);
+        appunti.put(appunto3.getId(), appunto3);
+        GruppoStudio gruppo1 = new GruppoStudio("Gruppo1", "Mazzoldi", "1111", "Italiano", 30);
+        GruppoStudio gruppo2 = new GruppoStudio("Gruppo2", "Mazzoldi", "1111", "Italiano", 30);
+        GruppoStudio gruppo3 = new GruppoStudio("Gruppo3", "Mazzoldi", "1111", "Italiano", 30);
+        gruppiStudio.put(gruppo1.getId(), gruppo1);
+        gruppiStudio.put(gruppo2.getId(), gruppo2);
+        gruppiStudio.put(gruppo3.getId(), gruppo3);
     }
 
     //Funzione per ottenre l'istanza di StudyHub
@@ -123,6 +138,7 @@ public class StudyHub
         StudyHub studyHub = new StudyHub();
         int scelta;
         boolean isLogged = false;
+        boolean running = true;
         String titolo;
         String formato;
         String file;
@@ -141,7 +157,7 @@ public class StudyHub
 
         do {
             scelta = studyHub.menu(isLogged);
-            if (!isLogged){
+            if (!isLogged) {
                 switch (scelta) 
                 {
                     case 1:
@@ -171,20 +187,25 @@ public class StudyHub
                             {
                                 studyHub.studente = studente;
                                 isLogged = true;
+                                System.out.println("Login effettuato con successo");
                                 break;
                             }
                         }
-                        System.out.println("Username o password errati. Riprova.");
+                        if (isLogged == false)
+                        {
+                            System.out.println("Username o password errati");
+                        }
                         break;
                     case 3:
                         System.out.println("Uscita dal programma...");
+                        running = false;
                         break;
                     default:
                         System.out.println("Scelta non valida. Riprova.");
                         break;
                 }
             }
-            else{
+            else {
                 switch (scelta) 
                 {
                     case 1:
@@ -239,18 +260,46 @@ public class StudyHub
                         studyHub.iscrizioneCorso(studyHub.studente, studyHub.corsoSelezionato);
                         break;
                     case 5:
+                        System.out.println("Hai selezionato Iscrizione ad un gruppo studio");
+                        System.out.println("Inserisci i dati relativi al gruppo studio: ");
+                        System.out.println("Inserisci l'id del gruppo studio: ");
+                        id = scanner.nextLine();
+                        System.out.println("Inserisci la password del gruppo studio: ");
+                        password = scanner.nextLine();
+                        GruppoStudio gruppoStudio = studyHub.gruppiStudio.get(id);
+                        if(gruppoStudio != null)
+                        {
+                            if(gruppoStudio.verificaPassword(studyHub.studente, password))
+                            {
+                                System.out.println("Password corretta, iscrizione avvenuta con successo");
+                                System.out.println("Benvenuto nel gruppo studio " + gruppoStudio.getNome());
+                                System.out.println("Admin: " + gruppoStudio.getAdmin());
+                                System.out.println("Lingua: " + gruppoStudio.getLingua());
+                                System.out.println("Numero studenti: " + gruppoStudio.getNumeroStudenti());
+                            }
+                            else
+                            {
+                                System.out.println("Password errata, iscrizione non avvenuta");
+                            }
+                        }
+                        else
+                        {
+                            System.out.println("Gruppo studio non trovato, iscrizione non avvenuta");
+                        }
+                    case 6:
                         System.out.println("Hai selezionato Logout");
                         isLogged = false;
                         break;
-                    case 6:
+                    case 7:
                         System.out.println("Uscita dal programma...");
+                        running = false;
                         break;
                     default:
                         System.out.println("Scelta non valida. Riprova.");
                         break;
                 }
             }
-        } while (scelta != 6);
+        } while (running);
         scanner.close();
     }
 
