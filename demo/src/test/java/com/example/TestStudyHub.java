@@ -104,7 +104,7 @@ public class TestStudyHub
     @Test
     public void testIscrizioneCorsoGratuito()
     {
-        mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "02/01/2025", "Laurea Magistrale");
+        mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         mockCorso = new Corso("Ingegneria del Software", "Difficile", 0, "Nicolò Mazzola", "italiano", 100);
         studyHub.iscrizioneCorso(mockStudente, mockCorso);
         assertNotNull(mockStudente.getMappaIscrizioni().get(mockCorso.getId()));
@@ -118,7 +118,7 @@ public class TestStudyHub
     @Test
     public void testPagamentoIscrizione()
     {
-        mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "02/01/2025", "Laurea Magistrale");
+        mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, "Nicolò Mazzola", "italiano", 100);
         mockStudente.creaDatiPagamento("carta", "123456789", mockStudente.getNome(), mockStudente.getCognome());
         studyHub.setCorsoSelezionato(mockCorso);
@@ -167,7 +167,7 @@ public class TestStudyHub
     //Test caricaAppunto
     @Test
     public void testCaricaAppunto() {
-        mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "02/01/2025", "Laurea Magistrale");
+        mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         String titolo = "Appunto di Matematica";
         String formato = "PDF";
         String file = "appunti_matematica.pdf";

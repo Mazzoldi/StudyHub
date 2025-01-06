@@ -9,7 +9,7 @@ public class TestStudente {
     @Test
     public void testUsaDatiPagamento() {
         // Arrange
-        Studente studente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "02/01/2025", "Laurea Magistrale");
+        Studente studente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
 
         // Simulazione di dati di pagamento esistenti
         String metodo = "Carta di Credito";

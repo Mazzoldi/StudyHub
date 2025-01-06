@@ -1,6 +1,7 @@
 package com.example;
 
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 public class Studente
 {
@@ -21,7 +22,7 @@ public class Studente
     private Map<String, DatiPagamento> mappaDatiPagamento;
     private Map<String, Corso> mappaCorsiCreati;
 
-    public Studente(String username, String password, String nome, String cognome, String dataNascita, String luogoNascita, String residenza, String dataIscrizioneSito, String livello)
+    public Studente(String username, String password, String nome, String cognome, String dataNascita, String luogoNascita, String residenza, String livello)
     {
         this.username = username;
         this.password = password;
@@ -30,7 +31,8 @@ public class Studente
         this.dataNascita = dataNascita;
         this.luogoNascita = luogoNascita;
         this.residenza = residenza;
-        this.dataIscrizioneSito = dataIscrizioneSito;
+        SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
+        this.dataIscrizioneSito = data.format(new Date());
         this.livello = livello;
         this.numeroCorsi = 0;
         this.id = StudyHub.generaId();

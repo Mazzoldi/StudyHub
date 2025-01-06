@@ -1,6 +1,7 @@
 package com.example;
 
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 public class GruppoStudio {
     private String nome;
@@ -8,6 +9,8 @@ public class GruppoStudio {
     private String password;
     private String admin;
     private String lingua;
+    private String dataCreazione;
+    private int durata;
     private int numeroStudenti;
     private Map<String, Studente> mappaStudenti;
 
@@ -18,24 +21,36 @@ public class GruppoStudio {
         this.password = password;
         this.lingua = lingua;
         this.numeroStudenti = 0;
+        SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
+        this.dataCreazione = data.format(new Date());
+        this.durata = durata;
         this.id = StudyHub.generaId();
         creaMappaStudenti();
     }
 
-    public boolean verificaPassword(Studente studente, String password)
+    public boolean verificaIscrizione(Studente studente)
     {
-        if (this.password.equals(password))
+        if (mappaStudenti.containsKey(studente.getId()))
         {
-            aggiungiStudente(studente);
             return true;
         }
         return false;
     }
 
-    private void aggiungiStudente(Studente studente)
+    public boolean passwordCorretta(String password)
+    {
+        if (this.password.equals(password))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean aggiungiStudente(Studente studente)
     {
         mappaStudenti.put(studente.getId(), studente);
         numeroStudenti++;
+        return true;
     }
 
     public void rimuoviStudente(Studente studente)
@@ -70,6 +85,16 @@ public class GruppoStudio {
         return lingua;
     }
 
+    public String getDataCreazione()
+    {
+        return dataCreazione;
+    }
+
+    public int getDurata()
+    {
+        return durata;
+    }
+
     public int getNumeroStudenti()
     {
         return numeroStudenti;
@@ -93,6 +118,11 @@ public class GruppoStudio {
     public void setLingua(String lingua)
     {
         this.lingua = lingua;
+    }
+
+    public void setDurata(int durata)
+    {
+        this.durata = durata;
     }
 
     public void setMappaStudenti(Map<String, Studente> mappaStudenti)
