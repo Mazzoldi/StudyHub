@@ -1,5 +1,6 @@
 package com.example;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Iscrizione 
@@ -10,12 +11,19 @@ public class Iscrizione
     private String idCorso;
     private Map<String, Pagamento> mappaPagamenti;
 
-    public Iscrizione(String dataIscrizione, String dataScadenza, String idStudente, String idCorso)
+    public Iscrizione(String idStudente, String idCorso)
     {
-        this.dataIscrizione = dataIscrizione;
-        this.dataScadenza = dataScadenza;
         this.idStudente = idStudente;
         this.idCorso = idCorso;
+        Calendar cal = Calendar.getInstance();
+        Date currentDate = cal.getTime();
+        cal.add(Calendar.DATE, 30);
+        Date futureDate = cal.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedCurrentDate = dateFormat.format(currentDate);
+        this.dataIscrizione = formattedCurrentDate;
+        String formattedFutureDate = dateFormat.format(futureDate);
+        this.dataScadenza = formattedFutureDate;
         creaMappaPagamenti();
     }
 

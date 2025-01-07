@@ -1,5 +1,8 @@
 package com.example;
 
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 public class Pagamento 
 {
     private String id;
@@ -7,10 +10,14 @@ public class Pagamento
     private float costo;
     private DatiPagamento datiPagamento;
     
-    public Pagamento(String dataPagamento, float costo, DatiPagamento datiPagamento)
+    public Pagamento(float costo, DatiPagamento datiPagamento)
     {
         this.id = StudyHub.generaId();
-        this.dataPagamento = dataPagamento;
+        Calendar cal = Calendar.getInstance();
+        Date currentDate = cal.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedCurrentDate = dateFormat.format(currentDate);
+        this.dataPagamento = formattedCurrentDate;
         this.costo = costo;
         this.datiPagamento = datiPagamento;
     }

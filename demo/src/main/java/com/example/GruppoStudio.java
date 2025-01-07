@@ -9,7 +9,7 @@ public class GruppoStudio {
     private String password;
     private String admin;
     private String lingua;
-    private String dataCreazione;
+    private String data;
     private int durata;
     private int numeroStudenti;
     private Map<String, Studente> mappaStudenti;
@@ -21,8 +21,8 @@ public class GruppoStudio {
         this.password = password;
         this.lingua = lingua;
         this.numeroStudenti = 0;
-        SimpleDateFormat data = new SimpleDateFormat("dd/MM/yyyy");
-        this.dataCreazione = data.format(new Date());
+        SimpleDateFormat dataCreazione = new SimpleDateFormat("dd/MM/yyyy");
+        this.data = dataCreazione.format(new Date());
         this.durata = durata;
         this.id = StudyHub.generaId();
         creaMappaStudenti();
@@ -92,7 +92,7 @@ public class GruppoStudio {
 
     public String getDataCreazione()
     {
-        return dataCreazione;
+        return data;
     }
 
     public int getDurata()

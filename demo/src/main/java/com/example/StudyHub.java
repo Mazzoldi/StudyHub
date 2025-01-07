@@ -1,7 +1,6 @@
 package com.example;
 
 import java.util.*;
-import java.text.SimpleDateFormat;
 
 public class StudyHub 
 {
@@ -18,6 +17,8 @@ public class StudyHub
     private Corso corsoSelezionato;
     //Scanner per l'input da tastiera
     private static Scanner scanner;
+    //Booleano per la verifica del login
+    boolean isLogged = false;
 
     //Costruttore privato per la classe StudyHub2
     private StudyHub()
@@ -27,9 +28,10 @@ public class StudyHub
         this.studenti = new HashMap<String, Studente>();
         this.mappaCorsiTotali = new HashMap<String, Corso>();
         this.gruppiStudio = new HashMap<String, GruppoStudio>();
-        //Inizializzazione dello studente e del corso selezionato
+        //Inizializzazione dello studente, del corso selezionato e del login
         this.studente = null;
         this.corsoSelezionato = null;
+        this.isLogged = false;
         //Caricamento dei dati di prova
         loadData();
     }
@@ -38,11 +40,11 @@ public class StudyHub
     private void loadData()
     {
         //Dati sui corsi
-        Corso corso1 = new Corso("Matematica", "Laurea Magistrale", 0, "Mario Rossi", "Italiano", 30);
-        Corso corso2 = new Corso("Fisica", "Laurea Triennale", 0, "Mario Rossi", "Italiano", 30);
-        Corso corso3 = new Corso("Inglese", "Laurea Triennale", 0, "Mario Rossi", "Italiano", 30);
-        Corso corso4 = new Corso("Italiano", "Laurea Triennale", 20, "Mario Rossi", "Italiano", 30);
-        Corso corso5 = new Corso("Storia", "Laurea Magistrale", 10, "Mario Rossi", "Italiano", 30);
+        Corso corso1 = new Corso("Matematica", "Laurea Magistrale", 0, "Nicolò Mazzola", "Italiano", 30);
+        Corso corso2 = new Corso("Fisica", "Laurea Triennale", 10, "Danilo Verde", "Inglese", 30);
+        Corso corso3 = new Corso("Inglese", "Liceo", 0, "Mario Rossi", "Italiano", 30);
+        Corso corso4 = new Corso("Italiano", "Laurea Triennale", 20, "Andrea Bianchi", "Italiano", 30);
+        Corso corso5 = new Corso("Storia", "Liceo", 10, "Mario Rossi", "Inglese", 30);
         mappaCorsiTotali.put(corso1.getId(), corso1);
         mappaCorsiTotali.put(corso2.getId(), corso2);
         mappaCorsiTotali.put(corso3.getId(), corso3);
@@ -54,15 +56,17 @@ public class StudyHub
         studenti.put(studente1.getId(), studente1);
         studenti.put(studente2.getId(), studente2);
         //Dati sugli appunti
-        Appunto appunto1 = new Appunto("Appunto1", "pdf", "appunto1.pdf", "02/01/2025");
-        Appunto appunto2 = new Appunto("Appunto2", "pdf", "appunto2.pdf", "02/01/2025");
-        Appunto appunto3 = new Appunto("Appunto3", "pdf", "appunto3.pdf", "02/01/2025");
+        Appunto appunto1 = new Appunto("Appunto1", "pdf", "appunto1.pdf");
+        Appunto appunto2 = new Appunto("Appunto2", "pdf", "appunto2.pdf");
+        Appunto appunto3 = new Appunto("Appunto3", "pdf", "appunto3.pdf");
         //Dati sugli appunti degli studenti
         appunti.put(appunto1.getId(), appunto1);
         appunti.put(appunto2.getId(), appunto2);
         appunti.put(appunto3.getId(), appunto3);
         //Dati sui pagamenti
         studente1.creaDatiPagamento("Carta di credito", "1234-5678-1234-5678", "Nicolò", "Mazzola");
+        studente1.aggiungiCorsoCreato(corso1);
+        studente1.aggiungiCorsoCreato(corso2);
         //Dati sui gruppi studio
         GruppoStudio gruppo1 = new GruppoStudio("Gruppo1", null, "1111", "Italiano", 30);
         GruppoStudio gruppo2 = new GruppoStudio("Gruppo2", null, "1111", "Italiano", 30);
@@ -128,6 +132,11 @@ public class StudyHub
         return mappaCorsiTotali;
     }
 
+    public void setMappaCorsiTotali(Map<String, Corso> mappaCorsiTotali)
+    {
+        this.mappaCorsiTotali = mappaCorsiTotali;
+    }
+
     //Funzione per ottenere gli studenti
     public Map<String, Studente> getStudenti()
     {
@@ -140,45 +149,62 @@ public class StudyHub
         return appunti;
     }
 
-    //Funzione per ottenere i gruppi studio 
+    //Funzione per ottenere i gruppi di studio
+    public Map<String, GruppoStudio> getGruppiStudio()
+    {
+        return gruppiStudio;
+    }
+
+    //Funzione per ottenere lo studente loggato
     public Studente getStudente()
     {
         return studente;
     }
 
-    //Funzione per ottenere i gruppi studio
+    //Funzione per ottenere il corso selezionato
     public Corso getCorsoSelezionato()
     {
         return corsoSelezionato;
     }
+
+    //Funzione per ottenere lo status del login
+    public boolean getIsLogged()
+    {
+        return isLogged;
+    }
     
-    //Funzione per ottenere i gruppi studio
+    //Funzione per settare il corso selezionato
     public void setCorsoSelezionato(Corso corsoSelezionato)
     {
         this.corsoSelezionato = corsoSelezionato;
     }
 
+    //Funzione per settare lo studente loggato
+    public void setStudente(Studente studente)
+    {
+        this.studente = studente;
+    }
+
     public static void main(String[] args) 
     {
         StudyHub studyHub = new StudyHub();
-        boolean isLogged = false;
         boolean running = true;
         int scelta;
 
         do 
         {
-            scelta = studyHub.menu(isLogged);
-            if (isLogged == false) 
+            scelta = studyHub.menu(studyHub.isLogged);
+            if (studyHub.isLogged == false) 
             {
                 switch (scelta) 
                 {
                     case 1:
                         System.out.println("Hai selezionato Registrazione");
-                        isLogged = studyHub.creaProfilo(isLogged);
+                        studyHub.isLogged = studyHub.creaProfilo();
                         break;
                     case 2:
                         System.out.println("Hai selezionato Login");
-                        isLogged = studyHub.login(isLogged);
+                        studyHub.isLogged = studyHub.login();
                         break;
                     case 3:
                         System.out.println("Uscita dal programma...");
@@ -222,7 +248,7 @@ public class StudyHub
                         break;            
                     case 7:
                         System.out.println("Hai selezionato Logout");
-                        isLogged = false;
+                        studyHub.isLogged = false;
                         break;
                     case 8:
                         System.out.println("Uscita dal programma...");
@@ -238,10 +264,11 @@ public class StudyHub
     }
 
     //Funzione per il login di uno studente
-    public boolean login(boolean isLogged)
+    public boolean login()
     {
         String username;
         String password;
+        boolean login = false;
         System.out.println("Inserisci username: ");
         username = scanner.nextLine();
         System.out.println("Inserisci password: ");
@@ -251,25 +278,25 @@ public class StudyHub
         {
             if(stud.getUsername().equals(username) && stud.verificaPassword(password))
             {
-                isLogged = true;
+                login = true;
                 studente = stud;
                 System.out.println("Login effettuato con successo");
                 System.out.println("Benvenuto " + studente.getNome() + " " + studente.getCognome());
             }
         }
 
-        if (isLogged == false)
+        if (login == false)
         {
             System.out.println("Username o password errati");
         }
 
-        return isLogged;
+        return login;
     }
 
     //UC1
 
     //Funzione per la registrazione di un utente
-    public boolean creaProfilo(boolean isLogged)
+    public boolean creaProfilo()
     {
         String nome;
         String cognome;
@@ -300,7 +327,7 @@ public class StudyHub
         Studente stud = new Studente(username, password, nome, cognome, dataNascita, luogoNascita, residenza, livello);
         studente = stud;
         studenti.put(studente.getId(), studente);
-        return isLogged;
+        return true;
     }
 
     //UC2
@@ -313,12 +340,15 @@ public class StudyHub
         String dataNascita;
         String luogoNascita;
         String residenza;
-        String dataIscrizioneSito;
         String livello;
         String username;
         String password;
 
         System.out.println("Inserisci i dati che vuoi modificare, invio per lasciarli immutati: ");
+        System.out.println("Inserisci lo username, attuale: " + studente.getUsername());
+        username = scanner.nextLine();
+        System.out.println("Inserisci la password, attuale: " + studente.getPassword());
+        password = scanner.nextLine();
         System.out.println("Inserisci il nome, attuale: " + studente.getNome());
         nome = scanner.nextLine();
         System.out.println("Inserisci il cognome, attuale: " + studente.getCognome());
@@ -329,14 +359,8 @@ public class StudyHub
         luogoNascita = scanner.nextLine();
         System.out.println("Inserisci la residenza, attuale: " + studente.getResidenza());
         residenza = scanner.nextLine();
-        System.out.println("Inserisci la data di iscrizione al sito, attuale: " + studente.getDataIscrizioneSito());
-        dataIscrizioneSito = scanner.nextLine();
         System.out.println("Inserisci il livello, attuale: " + studente.getLivello());
         livello = scanner.nextLine();
-        System.out.println("Inserisci lo username, attuale: " + studente.getUsername());
-        username = scanner.nextLine();
-        System.out.println("Inserisci la password, attuale: " + studente.getPassword());
-        password = scanner.nextLine();
 
         if (username != "")
         {
@@ -366,10 +390,6 @@ public class StudyHub
         {
             studente.setResidenza(residenza);
         }
-        if (dataIscrizioneSito != "")
-        {
-            studente.setDataIscrizioneSito(dataIscrizioneSito);
-        }
         if (livello != "")
         {
             studente.setLivello(livello);
@@ -377,30 +397,64 @@ public class StudyHub
     }
 
     //UC3
+    //Funzione per la creazione di un corso
+    public void creaCorso()
+    {
+        String nome;
+        String livello;
+        float costo;
+        String lingua;
+        int durata;
+
+        System.out.println("Inserisci il nome del corso: ");
+        nome = scanner.nextLine();
+        System.out.println("Inserisci il livello del corso: ");
+        livello = scanner.nextLine();
+        System.out.println("Inserisci il costo del corso: ");
+        costo = scanner.nextFloat();
+        scanner.nextLine();
+        System.out.println("Inserisci la lingua del corso: ");
+        lingua = scanner.nextLine();
+        System.out.println("Inserisci la durata del corso: ");
+        durata = scanner.nextInt();
+        scanner.nextLine();
+
+        Corso corso = new Corso(nome, livello, costo, studente.getId(), lingua, durata);
+        studente.aggiungiCorsoCreato(corso);
+        mappaCorsiTotali.put(corso.getId(), corso);
+    }
 
     //Funzione per selezionare un corso
     public void selezionaCorsoCreato()
     {
         Map<String, Corso> mappaCorsiCreati = studente.getMappaCorsiCreati();
+       
+        if (mappaCorsiCreati.isEmpty())
+        {
+            System.out.println("Non hai creato nessun corso");
+            return;
+        }
 
         System.out.println("I tuoi corsi sono: ");
         for(Corso corso: mappaCorsiCreati.values())
         {
-            System.out.print(corso.getNome());
+            System.out.print(corso.getNome() + " ");
             System.out.println(corso.getId());
         }
 
-        System.out.print("Inserisci l'id di un corso: ");
-        Scanner scanner = new Scanner(System.in);
-        String id = scanner.nextLine();
-        scanner.close();
-
-        corsoSelezionato = mappaCorsiCreati.get(id);
-        
-        if(corsoSelezionato == null)
+        do
         {
-            System.out.println("Corso non trovato");
-        }
+            System.out.print("Inserisci l'id di un corso: ");
+            Scanner scanner = new Scanner(System.in);
+            String id = scanner.nextLine();
+            scanner.close();
+
+            corsoSelezionato = mappaCorsiCreati.get(id);
+            if(corsoSelezionato == null)
+            {
+                System.out.println("Corso non trovato");
+            }
+        } while(corsoSelezionato == null);
     }
 
     //Funzione per il caricamento di un contenuto
@@ -409,7 +463,6 @@ public class StudyHub
         String titolo;
         String formato;
         String file;
-        String data;
 
         System.out.println("Inserisci i dati relativi al contenuto: ");
         System.out.println("Inserisci il titolo: ");
@@ -418,10 +471,8 @@ public class StudyHub
         formato = scanner.nextLine();
         System.out.println("Inserisci il file: ");
         file = scanner.nextLine();
-        System.out.println("Inserisci la data: ");
-        data = scanner.nextLine();
 
-        Contenuto contenuto = new Contenuto(titolo, formato, file, data);
+        Contenuto contenuto = new Contenuto(titolo, formato, file);
         corsoSelezionato.aggiungiContenuto(contenuto);
     }
 
@@ -433,13 +484,15 @@ public class StudyHub
         // Input dati da parte dell'utente
         System.out.println("Inserisci i dati relativi al corso: ");
         System.out.println("Inserisci il nome del corso (lascia vuoto se non lo conosci): ");
-        String nome = scanner.nextLine().trim();
+        String nome = scanner.nextLine();
         System.out.println("Inserisci il livello del corso (lascia vuoto se non lo conosci): ");
-        String livello = scanner.nextLine().trim();
+        String livello = scanner.nextLine();
+        System.out.println("Inserisci il creatore del corso (lascia vuoto se non lo conosci): ");
+        String creatore = scanner.nextLine();
         System.out.println("Inserisci l'ID del corso (lascia vuoto se non lo conosci): ");
-        String id = scanner.nextLine().trim();
+        String id = scanner.nextLine();
         System.out.println("Inserisci la lingua del corso (lascia vuoto se non la conosci): ");
-        String lingua = scanner.nextLine().trim();
+        String lingua = scanner.nextLine();
 
         // Mappa per inerire i risultati
         Map<String, Corso> mappaCorsiCercati = new HashMap<>();
@@ -451,8 +504,9 @@ public class StudyHub
             if (corso != null) 
             {
                 mappaCorsiCercati.put(id, corso);
+                return mappaCorsiCercati;
             } 
-        } 
+        }
         else 
         {
             // Ricerca filtrata per altri parametri
@@ -461,8 +515,9 @@ public class StudyHub
                 boolean nomeCorrisponde = nome.isEmpty() || corso.getNome().equalsIgnoreCase(nome);
                 boolean livelloCorrisponde = livello.isEmpty() || corso.getLivello().equalsIgnoreCase(livello);
                 boolean linguaCorrisponde = lingua.isEmpty() || corso.getLingua().equalsIgnoreCase(lingua);
+                boolean creatoreCorrisponde = creatore.isEmpty() || corso.getCreatore().equalsIgnoreCase(creatore);
 
-                if (nomeCorrisponde && livelloCorrisponde && linguaCorrisponde) 
+                if (nomeCorrisponde && livelloCorrisponde && linguaCorrisponde && creatoreCorrisponde) 
                 {
                     mappaCorsiCercati.put(corso.getId(), corso);
                 }
@@ -501,23 +556,15 @@ public class StudyHub
     {
         float costo = corsoSelezionato.getCosto();
 
-        Calendar cal = Calendar.getInstance();
-        Date currentDate = cal.getTime();
-        cal.add(Calendar.DATE, 30);
-        Date futureDate = cal.getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedCurrentDate = dateFormat.format(currentDate);
-        String formattedFutureDate = dateFormat.format(futureDate);
-        
         if (costo == 0)
         {
-            Iscrizione iscrizione = new Iscrizione(formattedCurrentDate, formattedFutureDate, studente.getId(), corsoSelezionato.getId());
+            Iscrizione iscrizione = new Iscrizione(studente.getId(), corsoSelezionato.getId());
             aggiungiIscrizione(iscrizione);
         }
         else
         {
             Iscrizione iscrizione = pagamentoIscrizione(costo);
-            if(iscrizione==null)
+            if (iscrizione == null)
             {
                 System.out.println("Pagamento non andato a buon fine");
             }
@@ -527,13 +574,6 @@ public class StudyHub
     //Funzione per il pagamento dell'iscrizione
     public Iscrizione pagamentoIscrizione(float costo)
     {
-        Calendar cal = Calendar.getInstance();
-        Date currentDate = cal.getTime();
-        cal.add(Calendar.DATE, 30);
-        Date futureDate = cal.getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedCurrentDate = dateFormat.format(currentDate);
-        String formattedFutureDate = dateFormat.format(futureDate);
         boolean confermaPagamento = false;
 
         DatiPagamento datiPagamento = studente.usaDatiPagamento();
@@ -549,10 +589,10 @@ public class StudyHub
 
         if(confermaPagamento)
         {
-            Iscrizione iscrizione = new Iscrizione(formattedCurrentDate, formattedFutureDate, studente.getId(), corsoSelezionato.getId());
+            Iscrizione iscrizione = new Iscrizione(studente.getId(), corsoSelezionato.getId());
             aggiungiIscrizione(iscrizione);
 
-            Pagamento pagamento = new Pagamento(formattedCurrentDate, costo, datiPagamento);
+            Pagamento pagamento = new Pagamento(costo, datiPagamento);
 
             iscrizione.aggiungiPagamento(pagamento);
 
@@ -566,7 +606,7 @@ public class StudyHub
         }
     }
 
-    //Funzione per il collegmaneto di un iscrizione tra studente e corso
+    //Funzione per il collegamento di un iscrizione tra studente e corso
     public void aggiungiIscrizione(Iscrizione iscrizione)
     {
         corsoSelezionato.aggiungiIscrizione(studente, iscrizione);
@@ -582,7 +622,6 @@ public class StudyHub
         String titolo;
         String formato;
         String file;
-        String data;
 
         System.out.println("Inserisci i dati relativi all'appunto: ");
         System.out.println("Inserisci il titolo: ");
@@ -591,10 +630,8 @@ public class StudyHub
         formato = scanner.nextLine();
         System.out.println("Inserisci il file: ");
         file = scanner.nextLine();
-        System.out.println("Inserisci la data: ");
-        data = scanner.nextLine();
 
-        Appunto appunto = new Appunto(titolo, formato, file, data);
+        Appunto appunto = new Appunto(titolo, formato, file);
         studente.aggiungiAppunto(appunto);
     }
     
@@ -619,6 +656,7 @@ public class StudyHub
 
         GruppoStudio gruppoStudio = new GruppoStudio(nome, studente.getId(), password, lingua, durata);
         gruppoStudio.aggiungiStudente(studente);
+        studente.aggiungiGruppoStudio(gruppoStudio);
         return gruppoStudio;
     }
 
@@ -642,6 +680,7 @@ public class StudyHub
                     if (gruppoStudio.verificaIscrizione(studente) == false)
                     {
                         gruppoStudio.aggiungiStudente(studente);
+                        studente.aggiungiGruppoStudio(gruppoStudio);
                         System.out.println("Password corretta, iscrizione avvenuta con successo");
                         System.out.println("Benvenuto nel gruppo studio " + gruppoStudio.getNome());
                         System.out.println("Admin: " + gruppoStudio.getAdmin());

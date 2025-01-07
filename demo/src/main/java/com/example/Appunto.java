@@ -1,5 +1,8 @@
 package com.example;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Appunto 
 {
     private String titolo;
@@ -8,10 +11,11 @@ public class Appunto
     private String file;
     private String id;
 
-    public Appunto(String titolo, String data, String formato, String file)
+    public Appunto(String titolo, String formato, String file)
     {
         this.titolo = titolo;
-        this.data = data;
+        SimpleDateFormat dataCreazione = new SimpleDateFormat("dd/MM/yyyy");
+        this.data = dataCreazione.format(new Date());
         this.file = file;
         this.formato = formato;
         this.id = StudyHub.generaId();

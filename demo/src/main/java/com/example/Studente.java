@@ -23,6 +23,7 @@ public class Studente
     private Map<String, Iscrizione> mappaIscrizioni;
     private Map<String, DatiPagamento> mappaDatiPagamento;
     private Map<String, Corso> mappaCorsiCreati;
+    private Map<String, GruppoStudio> mappaGruppiStudio;
 
     public Studente(String username, String password, String nome, String cognome, String dataNascita, String luogoNascita, String residenza, String livello)
     {
@@ -42,6 +43,7 @@ public class Studente
         creaMappaIscrizioni();
         creaMappaDatiPagamento();
         creaMappaCorsiCreati();
+        creaMappaGruppiStudio();
     }
 
     public DatiPagamento creaDatiPagamento(String metodo, String numeroCarta, String nome, String cognome)
@@ -60,6 +62,32 @@ public class Studente
     {
         mappaIscrizioni.put(corso.getId(), iscrizione);
         numeroCorsi++;
+    }
+
+    public void aggiungiCorsoCreato(Corso corso)
+    {
+        mappaCorsiCreati.put(corso.getId(), corso);
+    }
+
+    public void aggiungiGruppoStudio(GruppoStudio gruppo)
+    {
+        mappaGruppiStudio.put(gruppo.getId(), gruppo);
+    }
+
+    public void rimuoviIscrizione(Corso corso)
+    {
+        mappaIscrizioni.remove(corso.getId());
+        numeroCorsi--;
+    }
+
+    public void rimuoviCorsoCreato(Corso corso)
+    {
+        mappaCorsiCreati.remove(corso.getId());
+    }
+
+    public void rimuoviGruppoStudio(GruppoStudio gruppo)
+    {
+        mappaGruppiStudio.remove(gruppo.getId());
     }
 
     private Map<String, Appunto> creaMappaAppunti()
@@ -86,6 +114,12 @@ public class Studente
         return mappaCorsiCreati;
     }
 
+    public Map<String, GruppoStudio> creaMappaGruppiStudio()
+    {
+        this.mappaGruppiStudio = new HashMap<String, GruppoStudio>();
+        return mappaGruppiStudio;
+    }
+
     public String getId()
     {
         return this.id;
@@ -97,11 +131,6 @@ public class Studente
         String numeroCarta = scanner.nextLine();
 
         return mappaDatiPagamento.get(numeroCarta);
-    }
-
-    public Map<String, Corso> getMappaCorsiCreati()
-    {
-        return mappaCorsiCreati;
     }
 
     public void aggiungiAppunto(Appunto appunto)
@@ -189,11 +218,6 @@ public class Studente
         return dataIscrizioneSito;
     }
 
-    public void setDataIscrizioneSito(String dataIscrizioneSito)
-    {
-        this.dataIscrizioneSito = dataIscrizioneSito;
-    }
-
     public String getLivello()
     {
         return livello;
@@ -227,5 +251,15 @@ public class Studente
     public Map<String, DatiPagamento> getMappaDatiPagamento()
     {
         return mappaDatiPagamento;
+    }
+
+    public Map<String, Corso> getMappaCorsiCreati()
+    {
+        return mappaCorsiCreati;
+    }
+
+    public Map<String, GruppoStudio> getMappaGruppiStudio()
+    {
+        return mappaGruppiStudio;
     }
 }
