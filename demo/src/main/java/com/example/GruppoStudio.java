@@ -80,6 +80,11 @@ public class GruppoStudio {
         return nome;
     }
 
+    public String getPassword()
+    {
+        return password;
+    }
+
     public String getLingua()
     {
         return lingua;

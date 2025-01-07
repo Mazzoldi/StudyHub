@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 
 public class Studente
 {
+    Scanner scanner = new Scanner(System.in);
+
     private String username;
     private String password;
     private String nome;
@@ -91,10 +93,8 @@ public class Studente
 
     public DatiPagamento usaDatiPagamento()
     {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Inserisci il numero della carta: ");
+        System.out.println("Inserisci il numero della carta (formato XXXX-XXXX-XXXX-XXXX): ");
         String numeroCarta = scanner.nextLine();
-        scanner.close();
 
         return mappaDatiPagamento.get(numeroCarta);
     }
