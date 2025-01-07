@@ -114,11 +114,12 @@ public class StudyHub
             System.out.println("1. Modifica profilo");
             System.out.println("2. Carica appunto");
             System.out.println("3. Carica contenuto");
-            System.out.println("4. Iscrizione ad un corso");
-            System.out.println("5. Crea un gruppo di studio");
-            System.out.println("6. Iscriviti ad un gruppo studio");
-            System.out.println("7. Logout");
-            System.out.println("8. Esci");
+            System.out.println("4. Creazione di un corso");
+            System.out.println("5. Iscrizione ad un corso");
+            System.out.println("6. Crea un gruppo di studio");
+            System.out.println("7. Iscriviti ad un gruppo studio");
+            System.out.println("8. Logout");
+            System.out.println("9. Esci");
             System.out.print("Seleziona un'opzione: ");
         }
         scelta = scanner.nextInt();
@@ -233,24 +234,28 @@ public class StudyHub
                         studyHub.caricaContenuto();
                         break;
                     case 4:
+                        System.out.println("Hai selezionato Creazione di un corso");
+                        studyHub.creaCorso();
+                        break;
+                    case 5:
                         System.out.println("Hai selezionato Iscrizione ad un corso");
                         studyHub.selezionaCorso(studyHub.cercaCorso());
                         studyHub.iscrizioneCorso();
                         break;
-                    case 5:
+                    case 6:
                         System.out.println("Hai selezionato Creazione Gruppo Studio");
                         GruppoStudio gruppoStudio = studyHub.creaGruppoStudio();
                         studyHub.gruppiStudio.put(gruppoStudio.getId(), gruppoStudio);
                         break;   
-                    case 6:
+                    case 7:
                         System.out.println("Hai selezionato Iscrizione ad un gruppo studio");
                         studyHub.iscrizioneGruppoStudio();
                         break;            
-                    case 7:
+                    case 8:
                         System.out.println("Hai selezionato Logout");
                         studyHub.isLogged = false;
                         break;
-                    case 8:
+                    case 9:
                         System.out.println("Uscita dal programma...");
                         running = false;
                         break;

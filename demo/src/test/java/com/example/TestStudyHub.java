@@ -155,7 +155,7 @@ public class TestStudyHub
         int result = studyHub.menu(isLogged);
         String output = outputStream.toString();
 
-        assertTrue(output.contains("Hai selezionato Iscrizione ad un corso"));
+        assertTrue(output.contains("Hai selezionato Creazione di un corso"));
         assertEquals(4, result);
     }
 
@@ -172,7 +172,7 @@ public class TestStudyHub
         int result = studyHub.menu(isLogged);
         String output = outputStream.toString();
 
-        assertTrue(output.contains("Hai selezionato Creazione Gruppo Studio"));
+        assertTrue(output.contains("Hai selezionato Iscrizione ad un corso"));
         assertEquals(5, result);
     }
 
@@ -189,7 +189,7 @@ public class TestStudyHub
         int result = studyHub.menu(isLogged);
         String output = outputStream.toString();
 
-        assertTrue(output.contains("Hai selezionato Iscrizione ad un gruppo studio"));
+        assertTrue(output.contains("Hai selezionato Creazione Gruppo Studio"));
         assertEquals(6, result);
     }
 
@@ -206,7 +206,7 @@ public class TestStudyHub
         int result = studyHub.menu(isLogged);
         String output = outputStream.toString();
 
-        assertTrue(output.contains("Hai selezionato Logout"));
+        assertTrue(output.contains("Hai selezionato Iscrizione ad un gruppo studio"));
         assertEquals(7, result);
     }
 
@@ -223,7 +223,7 @@ public class TestStudyHub
         int result = studyHub.menu(isLogged);
         String output = outputStream.toString();
 
-        assertTrue(output.contains("Uscita dal programma..."));
+        assertTrue(output.contains("Hai selezionato Logout."));
         assertEquals(8, result);
     }
 
@@ -240,8 +240,25 @@ public class TestStudyHub
         int result = studyHub.menu(isLogged);
         String output = outputStream.toString();
 
-        assertTrue(output.contains("Scelta non valida. Riprova."));
+        assertTrue(output.contains("Uscita dal programma..."));
         assertEquals(9, result);
+    }
+
+    //Test per l'opzione 10 del menu a scelta
+    @Test
+    public void testMenuOption10() {
+        isLogged = false;
+        String simulatedInput = "10\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        int result = studyHub.menu(isLogged);
+        String output = outputStream.toString();
+
+        assertTrue(output.contains("Scelta non valida. Riprova."));
+        assertEquals(10, result);
     }
 
     //Test login
