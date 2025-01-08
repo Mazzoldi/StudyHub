@@ -16,7 +16,7 @@ public class StudyHub
     //Corso selezionato durante una ricerca o un'iscrizione
     private Corso corsoSelezionato;
     //Scanner per l'input da tastiera
-    private static Scanner scanner;
+    private static Scanner scanner = new Scanner(System.in);
     //Booleano per la verifica del login
     boolean isLogged = false;
 
@@ -52,7 +52,7 @@ public class StudyHub
         mappaCorsiTotali.put(corso5.getId(), corso5);
         //Dati sugli studenti
         Studente studente1 = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
-        Studente studente2 = new Studente("Rossi", "1111", "Mario", "Rossi", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
+        Studente studente2 = new Studente("MarioRossi", "1111", "Mario", "Rossi", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         studenti.put(studente1.getId(), studente1);
         studenti.put(studente2.getId(), studente2);
         //Dati sugli appunti
@@ -72,7 +72,11 @@ public class StudyHub
         GruppoStudio gruppo2 = new GruppoStudio("Gruppo2", null, "1111", "Italiano", 30);
         GruppoStudio gruppo3 = new GruppoStudio("Gruppo3", null, "1111", "Italiano", 30);
         gruppo1.aggiungiStudente(studente1);
+        gruppo1.setAdmin(studente1.getId());
         gruppo2.aggiungiStudente(studente2);
+        gruppo2.setAdmin(studente2.getId());
+        gruppo3.aggiungiStudente(studente1);
+        gruppo3.setAdmin(studente1.getId());
         gruppiStudio.put(gruppo1.getId(), gruppo1);
         gruppiStudio.put(gruppo2.getId(), gruppo2);
         gruppiStudio.put(gruppo3.getId(), gruppo3);
@@ -156,6 +160,11 @@ public class StudyHub
         return gruppiStudio;
     }
 
+    public void setGruppiStudio(Map<String, GruppoStudio> gruppiStudio)
+    {
+        this.gruppiStudio = gruppiStudio;
+    }
+
     //Funzione per ottenere lo studente loggato
     public Studente getStudente()
     {
@@ -201,7 +210,8 @@ public class StudyHub
                 {
                     case 1:
                         System.out.println("Hai selezionato Registrazione");
-                        studyHub.isLogged = studyHub.creaProfilo();
+                        Studente stud = studyHub.datiProfilo(true);
+                        studyHub.isLogged = studyHub.creaProfilo(stud);
                         break;
                     case 2:
                         System.out.println("Hai selezionato Login");
@@ -222,7 +232,8 @@ public class StudyHub
                 {
                     case 1:
                         System.out.println("Hai selezionato Modifica profilo");
-                        studyHub.modificaProfilo();
+                        studyHub.datiProfilo(false);
+                        studyHub.modificaProfilo(studyHub.studente);
                         break;
                     case 2:
                         System.out.println("Hai selezionato Carica appunto");
@@ -253,6 +264,7 @@ public class StudyHub
                         break;            
                     case 8:
                         System.out.println("Hai selezionato Logout");
+                        studyHub.studente = null;
                         studyHub.isLogged = false;
                         break;
                     case 9:
@@ -271,6 +283,7 @@ public class StudyHub
     //Funzione per il login di uno studente
     public boolean login()
     {
+        scanner = new Scanner(System.in);
         String username;
         String password;
         boolean login = false;
@@ -294,24 +307,26 @@ public class StudyHub
         {
             System.out.println("Username o password errati");
         }
-
         return login;
     }
 
-    //UC1
-
-    //Funzione per la registrazione di un utente
-    public boolean creaProfilo()
+    //Funzione per l'inserimento dei dati dello studente
+    public Studente datiProfilo(boolean nuovo)
     {
+        scanner = new Scanner(System.in);
+        String username;
+        String password;
         String nome;
         String cognome;
         String dataNascita;
         String luogoNascita;
         String residenza;
         String livello;
-        String username;
-        String password;
-
+        
+        System.out.println("Inserisci lo username: ");
+        username = scanner.nextLine();
+        System.out.println("Inserisci la password: ");
+        password = scanner.nextLine();
         System.out.println("Inserisci il nome: ");
         nome = scanner.nextLine();
         System.out.println("Inserisci il cognome: ");
@@ -324,87 +339,69 @@ public class StudyHub
         residenza = scanner.nextLine();
         System.out.println("Inserisci il livello: ");
         livello = scanner.nextLine();
-        System.out.println("Inserisci lo username: ");
-        username = scanner.nextLine();
-        System.out.println("Inserisci la password: ");
-        password = scanner.nextLine();
+        if (nuovo){
+            studente = new Studente(username, password, nome, cognome, dataNascita, luogoNascita, residenza, livello);
+            return studente;
+        }
+        else{
+            return studente;
+        }
+    }
 
-        Studente stud = new Studente(username, password, nome, cognome, dataNascita, luogoNascita, residenza, livello);
-        studente = stud;
+    //UC1
+    
+    //Funzione per la creazione di un profilo
+    public boolean creaProfilo(Studente studente)
+    {
         studenti.put(studente.getId(), studente);
+        System.out.println("Profilo creato con successo");
         return true;
     }
 
     //UC2
 
     //Funzione per la modifica del profilo
-    public void modificaProfilo()
+    public void modificaProfilo(Studente stud)
     {
-        String nome;
-        String cognome;
-        String dataNascita;
-        String luogoNascita;
-        String residenza;
-        String livello;
-        String username;
-        String password;
-
-        System.out.println("Inserisci i dati che vuoi modificare, invio per lasciarli immutati: ");
-        System.out.println("Inserisci lo username, attuale: " + studente.getUsername());
-        username = scanner.nextLine();
-        System.out.println("Inserisci la password, attuale: " + studente.getPassword());
-        password = scanner.nextLine();
-        System.out.println("Inserisci il nome, attuale: " + studente.getNome());
-        nome = scanner.nextLine();
-        System.out.println("Inserisci il cognome, attuale: " + studente.getCognome());
-        cognome = scanner.nextLine();
-        System.out.println("Inserisci la data di nascita, attuale: " + studente.getDataNascita());
-        dataNascita = scanner.nextLine();
-        System.out.println("Inserisci il luogo di nascita, attuale: " + studente.getLuogoNascita());
-        luogoNascita = scanner.nextLine();
-        System.out.println("Inserisci la residenza, attuale: " + studente.getResidenza());
-        residenza = scanner.nextLine();
-        System.out.println("Inserisci il livello, attuale: " + studente.getLivello());
-        livello = scanner.nextLine();
-
-        if (username != "")
+        if (!stud.getUsername().isEmpty())
         {
-            studente.setUsername(username);
+            studente.setUsername(stud.getUsername());
         }
-        if (password != "")
+        if (!stud.getPassword().isEmpty())
         {
-            studente.setPassword(password);
+            studente.setPassword(stud.getPassword());
         }
-        if (nome != "")
+        if (stud.getNome() != "")
         {
-            studente.setNome(nome);
+            studente.setNome(stud.getNome());
         }
-        if (cognome != "")
+        if (stud.getCognome() != "")
         {
-            studente.setCognome(cognome);
+            studente.setCognome(stud.getCognome());
         }
-        if (dataNascita != "")
+        if (stud.getDataNascita() != "")
         {
-            studente.setDataNascita(dataNascita);
+            studente.setDataNascita(stud.getDataNascita());
         }
-        if (luogoNascita != "")
+        if (stud.getLuogoNascita() != "")
         {
-            studente.setLuogoNascita(luogoNascita);
+            studente.setLuogoNascita(stud.getLuogoNascita());
         }
-        if (residenza != "")
+        if (stud.getResidenza() != "")
         {
-            studente.setResidenza(residenza);
+            studente.setResidenza(stud.getResidenza());
         }
-        if (livello != "")
+        if (stud.getLivello() != "")
         {
-            studente.setLivello(livello);
+            studente.setLivello(stud.getLivello());
         }
     }
 
     //UC3
     //Funzione per la creazione di un corso
-    public void creaCorso()
+    public Corso creaCorso()
     {
+        scanner = new Scanner(System.in);
         String nome;
         String livello;
         float costo;
@@ -427,11 +424,14 @@ public class StudyHub
         Corso corso = new Corso(nome, livello, costo, studente.getId(), lingua, durata);
         studente.aggiungiCorsoCreato(corso);
         mappaCorsiTotali.put(corso.getId(), corso);
+        System.out.println("Corso creato con successo");
+        return corso;
     }
 
     //Funzione per selezionare un corso
     public void selezionaCorsoCreato()
     {
+        scanner = new Scanner(System.in);
         Map<String, Corso> mappaCorsiCreati = studente.getMappaCorsiCreati();
        
         if (mappaCorsiCreati.isEmpty())
@@ -450,9 +450,7 @@ public class StudyHub
         do
         {
             System.out.print("Inserisci l'id di un corso: ");
-            Scanner scanner = new Scanner(System.in);
             String id = scanner.nextLine();
-            scanner.close();
 
             corsoSelezionato = mappaCorsiCreati.get(id);
             if(corsoSelezionato == null)
@@ -463,8 +461,9 @@ public class StudyHub
     }
 
     //Funzione per il caricamento di un contenuto
-    public void caricaContenuto()
+    public Contenuto caricaContenuto()
     {
+        scanner = new Scanner(System.in);
         String titolo;
         String formato;
         String file;
@@ -479,6 +478,8 @@ public class StudyHub
 
         Contenuto contenuto = new Contenuto(titolo, formato, file);
         corsoSelezionato.aggiungiContenuto(contenuto);
+        System.out.println("Contenuto caricato con successo");
+        return contenuto;
     }
 
     //UC4
@@ -486,7 +487,7 @@ public class StudyHub
     // Funzione per la ricerca di un corso a cui iscriversi
     public Map<String, Corso> cercaCorso() 
     {
-        // Input dati da parte dell'utente
+        scanner = new Scanner(System.in);
         System.out.println("Inserisci i dati relativi al corso: ");
         System.out.println("Inserisci il nome del corso (lascia vuoto se non lo conosci): ");
         String nome = scanner.nextLine();
@@ -499,10 +500,8 @@ public class StudyHub
         System.out.println("Inserisci la lingua del corso (lascia vuoto se non la conosci): ");
         String lingua = scanner.nextLine();
 
-        // Mappa per inerire i risultati
         Map<String, Corso> mappaCorsiCercati = new HashMap<>();
 
-        // Ricerca per ID prioritario
         if (!id.isEmpty()) 
         {
             Corso corso = mappaCorsiTotali.get(id);
@@ -514,7 +513,6 @@ public class StudyHub
         }
         else 
         {
-            // Ricerca filtrata per altri parametri
             for (Corso corso : mappaCorsiTotali.values()) 
             {
                 boolean nomeCorrisponde = nome.isEmpty() || corso.getNome().equalsIgnoreCase(nome);
@@ -529,12 +527,10 @@ public class StudyHub
             }
         }
 
-        // Risultati finali
         if (mappaCorsiCercati.isEmpty()) 
         {
             System.out.println("Nessun corso trovato con i criteri forniti.");
         }
-
         return mappaCorsiCercati;
     }
 
@@ -542,6 +538,7 @@ public class StudyHub
     //Funzione per selezionare un corso da quelli cercati
     public void selezionaCorso(Map<String, Corso> mappaCorsiCercati)
     {
+        scanner = new Scanner(System.in);
         System.out.println("I corsi trovati sono: ");
         for(Corso corso: mappaCorsiCercati.values())
         {
@@ -550,9 +547,7 @@ public class StudyHub
         }
 
         System.out.println("Inserisci l'id di un corso: ");
-        scanner = new Scanner(System.in);
         String id = scanner.nextLine();
-
         corsoSelezionato = mappaCorsiCercati.get(id);
     }
 
@@ -622,8 +617,9 @@ public class StudyHub
     //UC5
     
     //Funzione per caricare un appunto tra quelli dello studente
-    public void caricaAppunto()
+    public Appunto caricaAppunto()
     {
+        scanner = new Scanner(System.in);
         String titolo;
         String formato;
         String file;
@@ -638,6 +634,9 @@ public class StudyHub
 
         Appunto appunto = new Appunto(titolo, formato, file);
         studente.aggiungiAppunto(appunto);
+        appunti.put(appunto.getId(), appunto);
+        System.out.println("Appunto caricato con successo");
+        return appunto;
     }
     
     //UC6
@@ -645,6 +644,7 @@ public class StudyHub
     //Funzione per la creazione di un gruppo studio
     public GruppoStudio creaGruppoStudio()
     {
+        scanner = new Scanner(System.in);
         String nome;
         String password;
         String lingua;
@@ -662,14 +662,18 @@ public class StudyHub
         GruppoStudio gruppoStudio = new GruppoStudio(nome, studente.getId(), password, lingua, durata);
         gruppoStudio.aggiungiStudente(studente);
         studente.aggiungiGruppoStudio(gruppoStudio);
+        gruppiStudio.put(gruppoStudio.getId(), gruppoStudio);
+        System.out.println("Gruppo studio creato con successo");
         return gruppoStudio;
     }
 
     //Funzione per l'iscrizione ad un gruppo studio
     public void iscrizioneGruppoStudio()
     {
+        scanner = new Scanner(System.in);
         String nome;
         String password;
+        boolean trovato = false;
 
         System.out.println("Inserisci il nome del gruppo studio: ");
         nome = scanner.nextLine();
@@ -680,6 +684,7 @@ public class StudyHub
         {
             if(gruppoStudio.getNome().equals(nome))
             {
+                trovato = true;
                 if(gruppoStudio.passwordCorretta(password))
                 {
                     if (gruppoStudio.verificaIscrizione(studente) == false)
@@ -691,6 +696,7 @@ public class StudyHub
                         System.out.println("Admin: " + gruppoStudio.getAdmin());
                         System.out.println("Lingua: " + gruppoStudio.getLingua());
                         System.out.println("Numero studenti: " + gruppoStudio.getNumeroStudenti());
+                        break;
                     }
                     else
                     {
@@ -702,10 +708,10 @@ public class StudyHub
                     System.out.println("Password errata, iscrizione non avvenuta");
                 }
             }
-            else
-            {
-                System.out.println("Gruppo studio non trovato");
-            }
+        }
+        if(trovato == false)
+        {
+            System.out.println("Gruppo studio non trovato");
         }
     }
 }

@@ -127,6 +127,7 @@ public class Studente
 
     public DatiPagamento usaDatiPagamento()
     {
+        scanner = new Scanner(System.in);
         System.out.println("Inserisci il numero della carta (formato XXXX-XXXX-XXXX-XXXX): ");
         String numeroCarta = scanner.nextLine();
 

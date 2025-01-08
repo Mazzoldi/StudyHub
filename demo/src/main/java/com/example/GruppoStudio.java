@@ -72,7 +72,7 @@ public class GruppoStudio {
 
     public String getAdmin()
     {
-        return admin;
+        return mappaStudenti.get(admin).getUsername();
     }
 
     public String getNome()
