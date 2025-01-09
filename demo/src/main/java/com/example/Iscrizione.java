@@ -7,14 +7,14 @@ public class Iscrizione
 {
     private String dataIscrizione;
     private String dataScadenza;
-    private String idStudente;
-    private String idCorso;
+    private String studente;
+    private String corso;
     private Map<String, Pagamento> mappaPagamenti;
 
-    public Iscrizione(String idStudente, String idCorso)
+    public Iscrizione(String studente, String corso)
     {
-        this.idStudente = idStudente;
-        this.idCorso = idCorso;
+        this.studente = studente;
+        this.corso = corso;
         Calendar cal = Calendar.getInstance();
         Date currentDate = cal.getTime();
         cal.add(Calendar.DATE, 30);
@@ -38,14 +38,14 @@ public class Iscrizione
         mappaPagamenti.put(pagamento.getId(), pagamento);
     }
 
-    public String getIdStudente()
+    public String getStudente()
     {
-        return idStudente;
+        return studente;
     }
 
-    public String getIdCorso()
+    public String getCorso()
     {
-        return idCorso;
+        return corso;
     }
 
     public String getDataScadenza()
