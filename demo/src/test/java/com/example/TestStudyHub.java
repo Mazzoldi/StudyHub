@@ -159,10 +159,11 @@ public class TestStudyHub
         String simulatedInput = "MarioRossi\n1111\nMario\nRossi\n01/01/1900\nRoma\nRoma\nLaurea\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
-        mockStudente = studyHub.datiProfilo(true);
+        int numeroStudenti = studyHub.getStudenti().size();
+        mockStudente = studyHub.datiProfilo();
         studyHub.creaProfilo(mockStudente);
         assertNotNull(studyHub.getStudente());
-        assertEquals(3, studyHub.getStudenti().size());
+        assertEquals(numeroStudenti + 1, studyHub.getStudenti().size());
         assertEquals(mockStudente, studyHub.getStudente());
         assertEquals(mockStudente, studyHub.getStudenti().get(mockStudente.getId()));
         assertEquals(mockStudente.getUsername(), studyHub.getStudente().getUsername());
@@ -182,21 +183,24 @@ public class TestStudyHub
     {
         mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         studyHub.setStudente(mockStudente);
+        Map<String, Studente> mockStudenti = new HashMap<String, Studente>();
+        mockStudenti.put(mockStudente.getId(), mockStudente);
+        studyHub.setStudenti(mockStudenti);
         String simulatedInput = "AndreaBianchi\n1111\nAndrea\nBianchi\n02/02/2000\nMilano\nMilano\nLaurea Magistrale\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
-        mockStudente = studyHub.datiProfilo(false);
-        studyHub.modificaProfilo(mockStudente);
+        Studente mockNewStudente = studyHub.datiProfilo();
+        studyHub.modificaProfilo(mockNewStudente);
         assertNotNull(studyHub.getStudente());
-        assertEquals(mockStudente, studyHub.getStudente());
-        assertEquals(mockStudente.getUsername(), studyHub.getStudente().getUsername());
-        assertEquals(mockStudente.getPassword(), studyHub.getStudente().getPassword());
-        assertEquals(mockStudente.getNome(), studyHub.getStudente().getNome());
-        assertEquals(mockStudente.getCognome(), studyHub.getStudente().getCognome());
-        assertEquals(mockStudente.getDataNascita(), studyHub.getStudente().getDataNascita());
-        assertEquals(mockStudente.getLuogoNascita(), studyHub.getStudente().getLuogoNascita());
-        assertEquals(mockStudente.getResidenza(), studyHub.getStudente().getResidenza());
-        assertEquals(mockStudente.getLivello(), studyHub.getStudente().getLivello());
+        assertEquals(studyHub.getStudenti().get(mockStudente.getId()), studyHub.getStudente());
+        assertEquals(mockNewStudente.getUsername(), studyHub.getStudente().getUsername());
+        assertEquals(mockNewStudente.getPassword(), studyHub.getStudente().getPassword());
+        assertEquals(mockNewStudente.getNome(), studyHub.getStudente().getNome());
+        assertEquals(mockNewStudente.getCognome(), studyHub.getStudente().getCognome());
+        assertEquals(mockNewStudente.getDataNascita(), studyHub.getStudente().getDataNascita());
+        assertEquals(mockNewStudente.getLuogoNascita(), studyHub.getStudente().getLuogoNascita());
+        assertEquals(mockNewStudente.getResidenza(), studyHub.getStudente().getResidenza());
+        assertEquals(mockNewStudente.getLivello(), studyHub.getStudente().getLivello());
     }
 
     //UC3
