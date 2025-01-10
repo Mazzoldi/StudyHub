@@ -50,13 +50,22 @@ public class GruppoStudio {
     {
         mappaStudenti.put(studente.getId(), studente);
         numeroStudenti++;
-        return true;
+        if(mappaStudenti.containsKey(studente.getId()))
+        {
+            return true;
+        }
+        return false;
     }
 
-    public void rimuoviStudente(Studente studente)
+    public boolean rimuoviStudente(Studente studente)
     {
         mappaStudenti.remove(studente.getId());
         numeroStudenti--;
+        if(mappaStudenti.containsKey(studente.getId()))
+        {
+            return true;
+        }
+        return false;
     }
 
     private Map<String, Studente> creaMappaStudenti()

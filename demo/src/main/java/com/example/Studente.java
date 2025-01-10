@@ -58,6 +58,14 @@ public class Studente
         return nuoviDatiPagamento;
     }
 
+    public DatiPagamento usaDatiPagamento()
+    {
+        scanner = new Scanner(System.in);
+        System.out.println("Inserisci il numero della carta (formato XXXX-XXXX-XXXX-XXXX): ");
+        String numeroCarta = scanner.nextLine();
+        return mappaDatiPagamento.get(numeroCarta);
+    }
+
     public void aggiungiIscrizione(Corso corso, Iscrizione iscrizione)
     {
         mappaIscrizioni.put(corso.getId(), iscrizione);
@@ -125,15 +133,6 @@ public class Studente
         return this.id;
     }
 
-    public DatiPagamento usaDatiPagamento()
-    {
-        scanner = new Scanner(System.in);
-        System.out.println("Inserisci il numero della carta (formato XXXX-XXXX-XXXX-XXXX): ");
-        String numeroCarta = scanner.nextLine();
-
-        return mappaDatiPagamento.get(numeroCarta);
-    }
-
     public void aggiungiAppunto(Appunto appunto)
     {
         mappaAppunti.put(appunto.getId(), appunto);
@@ -172,6 +171,10 @@ public class Studente
     public void setNome(String nome)
     {
         this.nome = nome;
+        for (DatiPagamento datiPagamento : mappaDatiPagamento.values())
+        {
+            datiPagamento.setNome(nome);
+        }
     }
 
     public String getCognome()
@@ -182,6 +185,10 @@ public class Studente
     public void setCognome(String cognome)
     {
         this.cognome = cognome;
+        for (DatiPagamento datiPagamento : mappaDatiPagamento.values())
+        {
+            datiPagamento.setCognome(cognome);
+        }
     }
 
     public String getDataNascita()
