@@ -7,7 +7,8 @@ public class Contenuto
 {
     private String titolo;
     private String file;
-    private String data;
+    private String dataCreazione;
+    private String dataUltimaModifica;
     private String formato;
     private String id;
 
@@ -15,10 +16,19 @@ public class Contenuto
     {
         this.titolo = titolo;
         SimpleDateFormat dataCreazione = new SimpleDateFormat("dd/MM/yyyy");
-        this.data = dataCreazione.format(new Date());
+        this.dataCreazione = dataCreazione.format(new Date());
+        this.dataUltimaModifica = dataCreazione.format(new Date());
         this.formato = formato;
         this.file = file;
         this.id = StudyHub.generaId();
+    }
+
+    public void modificaContenuto(String titolo, String file)
+    {
+        this.titolo = titolo;
+        this.file = file;
+        SimpleDateFormat dataUltimaModifica = new SimpleDateFormat("dd/MM/yyyy");
+        this.dataUltimaModifica = dataUltimaModifica.format(new Date());
     }
 
     public String getId()
@@ -32,9 +42,14 @@ public class Contenuto
         return titolo;
     }
 
-    public String getData()
+    public String getDataCreazione()
     {
-        return data;
+        return dataCreazione;
+    }
+
+    public String getDataUltimaModifica()
+    {
+        return dataUltimaModifica;
     }
 
     public String getFormato()

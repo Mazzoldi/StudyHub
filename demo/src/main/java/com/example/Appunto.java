@@ -6,7 +6,8 @@ import java.util.Date;
 public class Appunto 
 {
     private String titolo;
-    private String data;
+    private String dataCreazione;
+    private String dataUltimaModifica;
     private String formato;
     private String file;
     private String id;
@@ -15,10 +16,19 @@ public class Appunto
     {
         this.titolo = titolo;
         SimpleDateFormat dataCreazione = new SimpleDateFormat("dd/MM/yyyy");
-        this.data = dataCreazione.format(new Date());
+        this.dataCreazione = dataCreazione.format(new Date());
+        this.dataUltimaModifica = dataCreazione.format(new Date());
         this.file = file;
         this.formato = formato;
         this.id = StudyHub.generaId();
+    }
+
+    public void modificaAppunto(String titolo, String file)
+    {
+        this.titolo = titolo;
+        this.file = file;
+        SimpleDateFormat dataModifica = new SimpleDateFormat("dd/MM/yyyy");
+        this.dataUltimaModifica = dataModifica.format(new Date());
     }
 
     public String getId()
@@ -31,9 +41,9 @@ public class Appunto
         return titolo;
     }
 
-    public String getData()
+    public String getDataCreazione()
     {
-        return data;
+        return dataCreazione;
     }
 
     public String getFormato()
@@ -44,5 +54,10 @@ public class Appunto
     public String getFile()
     {
         return file;
+    }
+
+    public String getDataUltimaModifica()
+    {
+        return dataUltimaModifica;
     }
 }

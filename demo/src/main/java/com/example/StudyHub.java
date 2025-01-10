@@ -223,28 +223,28 @@ public class StudyHub
         return studente;
     }
 
+    //Funzione per settare lo studente loggato
+    public void setStudente(Studente studente)
+    {
+        this.studente = studente;
+    }
+
     //Funzione per ottenere il corso selezionato
     public Corso getCorsoSelezionato()
     {
         return corsoSelezionato;
     }
 
-    //Funzione per ottenere lo status del login
-    public boolean getIsLogged()
-    {
-        return isLogged;
-    }
-    
     //Funzione per settare il corso selezionato
     public void setCorsoSelezionato(Corso corsoSelezionato)
     {
         this.corsoSelezionato = corsoSelezionato;
     }
 
-    //Funzione per settare lo studente loggato
-    public void setStudente(Studente studente)
+    //Funzione per ottenere lo status del login
+    public boolean getIsLogged()
     {
-        this.studente = studente;
+        return isLogged;
     }
 
     public static void main(String[] args) 
@@ -832,6 +832,8 @@ public class StudyHub
                             System.out.println("Titolo: " + contenuto.getTitolo().toString());
                             System.out.println("Formato: " + contenuto.getFormato().toString());
                             System.out.println("File: " + contenuto.getFile().toString());
+                            System.out.println("Data creazione: " + contenuto.getDataCreazione().toString());
+                            System.out.println("Data ultima modifica: " + contenuto.getDataUltimaModifica().toString());
                         }
                     }
                 }
@@ -884,7 +886,8 @@ public class StudyHub
                     System.out.println("Titolo: " + appunto.getTitolo().toString());
                     System.out.println("Formato: " + appunto.getFormato().toString());
                     System.out.println("File: " + appunto.getFile().toString());
-                    System.out.println("Data: " + appunto.getData().toString());
+                    System.out.println("Data creazione: " + appunto.getDataCreazione().toString());
+                    System.out.println("Data ultima modifica: " + appunto.getDataUltimaModifica().toString());
                 }
             }
             Map<String, DatiPagamento> mappaDatiPagamento = stud.getMappaDatiPagamento();
@@ -968,6 +971,8 @@ public class StudyHub
                     System.out.println("Titolo: " + contenuto.getTitolo().toString());
                     System.out.println("Formato: " + contenuto.getFormato().toString());
                     System.out.println("File: " + contenuto.getFile().toString());
+                    System.out.println("Data creazione: " + contenuto.getDataCreazione().toString());
+                    System.out.println("Data ultima modifica: " + contenuto.getDataUltimaModifica().toString());
                 }
             }
             Map<String, Iscrizione> mappaIscrizioni = corso.getMappaIscrizioni();
@@ -1013,7 +1018,8 @@ public class StudyHub
             System.out.println("Titolo: " + appunto.getTitolo().toString());
             System.out.println("Formato: " + appunto.getFormato().toString());
             System.out.println("File: " + appunto.getFile().toString());
-            System.out.println("Data: " + appunto.getData().toString());
+            System.out.println("Data creazione: " + appunto.getDataCreazione().toString());
+            System.out.println("Data ultima modifica: " + appunto.getDataUltimaModifica().toString());
         }
         System.out.println("Gruppi studio: ");
         for(GruppoStudio gruppo: gruppiStudio.values())

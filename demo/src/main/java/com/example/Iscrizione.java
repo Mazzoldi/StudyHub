@@ -5,6 +5,7 @@ import java.util.*;
 
 public class Iscrizione 
 {
+    private String id;
     private String dataIscrizione;
     private String dataScadenza;
     private String studente;
@@ -24,6 +25,7 @@ public class Iscrizione
         this.dataIscrizione = formattedCurrentDate;
         String formattedFutureDate = dateFormat.format(futureDate);
         this.dataScadenza = formattedFutureDate;
+        this.id = StudyHub.generaId();
         creaMappaPagamenti();
     }
 
@@ -36,6 +38,20 @@ public class Iscrizione
     public void aggiungiPagamento(Pagamento pagamento)
     {
         mappaPagamenti.put(pagamento.getId(), pagamento);
+    }
+
+    public boolean verificaPagamento(String idPagamento)
+    {
+        if (mappaPagamenti.containsKey(idPagamento))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public String getId()
+    {
+        return id;
     }
 
     public String getStudente()
