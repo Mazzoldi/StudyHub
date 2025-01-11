@@ -420,39 +420,40 @@ public class StudyHub
     {
         if (!stud.getUsername().isEmpty())
         {
-            studenti.get(studente.getId()).setUsername(stud.getUsername());
+            studente.setUsername(stud.getUsername());
         }
         if (!stud.getPassword().isEmpty())
         {
-            studenti.get(studente.getId()).setPassword(stud.getPassword());
+            studente.setPassword(stud.getPassword());
         }
         if (stud.getNome() != "")
         {
-            studenti.get(studente.getId()).setNome(stud.getNome());
+            studente.setNome(stud.getNome());
         }
         if (stud.getCognome() != "")
         {
-            studenti.get(studente.getId()).setCognome(stud.getCognome());
+            studente.setCognome(stud.getCognome());
         }
         if (stud.getDataNascita() != "")
         {
-            studenti.get(studente.getId()).setDataNascita(stud.getDataNascita());
+            studente.setDataNascita(stud.getDataNascita());
         }
         if (stud.getLuogoNascita() != "")
         {
-            studenti.get(studente.getId()).setLuogoNascita(stud.getLuogoNascita());
+            studente.setLuogoNascita(stud.getLuogoNascita());
         }
         if (stud.getResidenza() != "")
         {
-            studenti.get(studente.getId()).setResidenza(stud.getResidenza());
+            studente.setResidenza(stud.getResidenza());
         }
         if (stud.getLivello() != "")
         {
-            studenti.get(studente.getId()).setLivello(stud.getLivello());
+            studente.setLivello(stud.getLivello());
         }
     }
 
     //UC3
+
     //Funzione per la creazione di un corso
     public Corso creaCorso()
     {
@@ -481,60 +482,6 @@ public class StudyHub
         mappaCorsiTotali.put(corso.getId(), corso);
         System.out.println("Corso creato con successo");
         return corso;
-    }
-
-    //Funzione per selezionare un corso
-    public void selezionaCorsoCreato()
-    {
-        scanner = new Scanner(System.in);
-        Map<String, Corso> mappaCorsiCreati = studente.getMappaCorsiCreati();
-       
-        if (mappaCorsiCreati.isEmpty())
-        {
-            System.out.println("Non hai creato nessun corso");
-            return;
-        }
-
-        System.out.println("I tuoi corsi sono: ");
-        for(Corso corso: mappaCorsiCreati.values())
-        {
-            System.out.print(corso.getNome() + " ");
-            System.out.println(corso.getId());
-        }
-
-        do
-        {
-            System.out.print("Inserisci l'id di un corso: ");
-            String id = scanner.nextLine();
-
-            corsoSelezionato = mappaCorsiCreati.get(id);
-            if(corsoSelezionato == null)
-            {
-                System.out.println("Corso non trovato");
-            }
-        } while(corsoSelezionato == null);
-    }
-
-    //Funzione per il caricamento di un contenuto
-    public Contenuto caricaContenuto()
-    {
-        scanner = new Scanner(System.in);
-        String titolo;
-        String formato;
-        String file;
-
-        System.out.println("Inserisci i dati relativi al contenuto: ");
-        System.out.println("Inserisci il titolo: ");
-        titolo = scanner.nextLine();
-        System.out.println("Inserisci il formato: ");
-        formato = scanner.nextLine();
-        System.out.println("Inserisci il file: ");
-        file = scanner.nextLine();
-
-        Contenuto contenuto = new Contenuto(titolo, formato, file);
-        corsoSelezionato.aggiungiContenuto(contenuto);
-        System.out.println("Contenuto caricato con successo");
-        return contenuto;
     }
 
     //UC4
@@ -670,31 +617,6 @@ public class StudyHub
     }
 
     //UC5
-    
-    //Funzione per caricare un appunto tra quelli dello studente
-    public Appunto caricaAppunto()
-    {
-        scanner = new Scanner(System.in);
-        String titolo;
-        String formato;
-        String file;
-
-        System.out.println("Inserisci i dati relativi all'appunto: ");
-        System.out.println("Inserisci il titolo: ");
-        titolo = scanner.nextLine();
-        System.out.println("Inserisci il formato: ");
-        formato = scanner.nextLine();
-        System.out.println("Inserisci il file: ");
-        file = scanner.nextLine();
-
-        Appunto appunto = new Appunto(titolo, formato, file);
-        studente.aggiungiAppunto(appunto);
-        appunti.put(appunto.getId(), appunto);
-        System.out.println("Appunto caricato con successo");
-        return appunto;
-    }
-    
-    //UC6
 
     //Funzione per la creazione di un gruppo studio
     public GruppoStudio creaGruppoStudio()
@@ -721,6 +643,8 @@ public class StudyHub
         System.out.println("Gruppo studio creato con successo");
         return gruppoStudio;
     }
+
+    //UC6
 
     //Funzione per l'iscrizione ad un gruppo studio
     public void iscrizioneGruppoStudio()
@@ -770,6 +694,90 @@ public class StudyHub
         }
     }
 
+    //UC7
+
+    //Funzione per selezionare un corso
+    public void selezionaCorsoCreato()
+    {
+        scanner = new Scanner(System.in);
+        Map<String, Corso> mappaCorsiCreati = studente.getMappaCorsiCreati();
+       
+        if (mappaCorsiCreati.isEmpty())
+        {
+            System.out.println("Non hai creato nessun corso");
+            return;
+        }
+
+        System.out.println("I tuoi corsi sono: ");
+        for(Corso corso: mappaCorsiCreati.values())
+        {
+            System.out.print(corso.getNome() + " ");
+            System.out.println(corso.getId());
+        }
+
+        do
+        {
+            System.out.print("Inserisci l'id di un corso: ");
+            String id = scanner.nextLine();
+
+            corsoSelezionato = mappaCorsiCreati.get(id);
+            if(corsoSelezionato == null)
+            {
+                System.out.println("Corso non trovato");
+            }
+        } while(corsoSelezionato == null);
+    }
+
+    //Funzione per il caricamento di un contenuto
+    public Contenuto caricaContenuto()
+    {
+        scanner = new Scanner(System.in);
+        String titolo;
+        String formato;
+        String file;
+
+        System.out.println("Inserisci i dati relativi al contenuto: ");
+        System.out.println("Inserisci il titolo: ");
+        titolo = scanner.nextLine();
+        System.out.println("Inserisci il formato: ");
+        formato = scanner.nextLine();
+        System.out.println("Inserisci il file: ");
+        file = scanner.nextLine();
+
+        Contenuto contenuto = new Contenuto(titolo, formato, file);
+        corsoSelezionato.aggiungiContenuto(contenuto);
+        System.out.println("Contenuto caricato con successo");
+        return contenuto;
+    }
+
+    //UC8
+
+    //Funzione per caricare un appunto tra quelli dello studente
+    public Appunto caricaAppunto()
+    {
+        scanner = new Scanner(System.in);
+        String titolo;
+        String formato;
+        String file;
+
+        System.out.println("Inserisci i dati relativi all'appunto: ");
+        System.out.println("Inserisci il titolo: ");
+        titolo = scanner.nextLine();
+        System.out.println("Inserisci il formato: ");
+        formato = scanner.nextLine();
+        System.out.println("Inserisci il file: ");
+        file = scanner.nextLine();
+
+        Appunto appunto = new Appunto(titolo, formato, file);
+        studente.aggiungiAppunto(appunto);
+        appunti.put(appunto.getId(), appunto);
+        System.out.println("Appunto caricato con successo");
+        return appunto;
+    }
+
+    //UC GENERALE
+
+    //Funzione per visualizzare tutti i dati
     public void visualizzaTuttiIDati()
     {
         if(studente == null)
