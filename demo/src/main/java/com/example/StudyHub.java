@@ -262,8 +262,7 @@ public class StudyHub
                 {
                     case 1:
                         System.out.println("Hai selezionato Registrazione");
-                        studyHub.studente = studyHub.datiProfilo();
-                        studyHub.isLogged = studyHub.creaProfilo(studyHub.studente);
+                        studyHub.isLogged = studyHub.creaProfilo();
                         break;
                     case 2:
                         System.out.println("Hai selezionato Login");
@@ -288,7 +287,7 @@ public class StudyHub
                 {
                     case 1:
                         System.out.println("Hai selezionato Modifica profilo");
-                        studyHub.modificaProfilo(studyHub.datiProfilo());
+                        studyHub.modificaProfilo();
                         break;
                     case 2:
                         System.out.println("Hai selezionato Carica appunto");
@@ -405,8 +404,9 @@ public class StudyHub
     //UC1
     
     //Funzione per la creazione di un profilo
-    public boolean creaProfilo(Studente stud)
+    public boolean creaProfilo()
     {
+        Studente stud = datiProfilo();
         studenti.put(stud.getId(), stud);
         studente = stud;
         System.out.println("Profilo creato con successo");
@@ -416,8 +416,9 @@ public class StudyHub
     //UC2
 
     //Funzione per la modifica del profilo
-    public void modificaProfilo(Studente stud)
+    public void modificaProfilo()
     {
+        Studente stud = datiProfilo();
         if (!stud.getUsername().isEmpty())
         {
             studente.setUsername(stud.getUsername());
@@ -796,6 +797,7 @@ public class StudyHub
             System.out.println("Luogo di nascita: " + studente.getLuogoNascita().toString());
             System.out.println("Residenza: " + studente.getResidenza().toString());
             System.out.println("Livello: " + studente.getLivello().toString());
+            System.out.println("Data iscrizione: " + studente.getDataIscrizioneSito().toString());
         }
         System.out.println("Studenti: ");
         for(Studente stud: studenti.values())
@@ -810,6 +812,7 @@ public class StudyHub
             System.out.println("Luogo di nascita: " + stud.getLuogoNascita().toString());
             System.out.println("Residenza: " + stud.getResidenza().toString());
             System.out.println("Livello: " + stud.getLivello().toString());
+            System.out.println("Data iscrizione: " + stud.getDataIscrizioneSito().toString());
             Map<String, Corso> mappaCorsiCreati = stud.getMappaCorsiCreati();
             if(mappaCorsiCreati.isEmpty())
             {
@@ -950,6 +953,7 @@ public class StudyHub
                             System.out.println("Luogo nascita: " + studente.getLuogoNascita().toString());
                             System.out.println("Residenza: " + studente.getResidenza().toString());
                             System.out.println("Livello: " + studente.getLivello().toString());
+                            System.out.println("Data iscrizione: " + studente.getDataIscrizioneSito().toString());
                         }
                     }
                 }
@@ -1058,6 +1062,7 @@ public class StudyHub
                     System.out.println("Luogo nascita: " + studente.getLuogoNascita().toString());
                     System.out.println("Residenza: " + studente.getResidenza().toString());
                     System.out.println("Livello: " + studente.getLivello().toString());
+                    System.out.println("Data iscrizione: " + studente.getDataIscrizioneSito().toString());
                 }
             }
             System.out.println("-------------------------------------------------");

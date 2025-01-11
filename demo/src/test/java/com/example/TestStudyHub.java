@@ -160,8 +160,8 @@ public class TestStudyHub
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
         int numeroStudenti = studyHub.getStudenti().size();
-        mockStudente = studyHub.datiProfilo();
-        studyHub.creaProfilo(mockStudente);
+        studyHub.creaProfilo();
+        mockStudente = studyHub.getStudente();
         assertNotNull(studyHub.getStudente());
         assertEquals(numeroStudenti + 1, studyHub.getStudenti().size());
         assertEquals(mockStudente, studyHub.getStudente());
@@ -189,8 +189,8 @@ public class TestStudyHub
         String simulatedInput = "AndreaBianchi\n1111\nAndrea\nBianchi\n02/02/2000\nMilano\nMilano\nLaurea Magistrale\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
-        Studente mockNewStudente = studyHub.datiProfilo();
-        studyHub.modificaProfilo(mockNewStudente);
+        studyHub.modificaProfilo();
+        Studente mockNewStudente = studyHub.getStudente();
         assertNotNull(studyHub.getStudente());
         assertEquals(studyHub.getStudenti().get(mockStudente.getId()), studyHub.getStudente());
         assertEquals(mockNewStudente.getUsername(), studyHub.getStudente().getUsername());
