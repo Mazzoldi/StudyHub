@@ -10,9 +10,10 @@ public class Appunto
     private String dataUltimaModifica;
     private String formato;
     private String file;
+    private int dimensione;
     private String id;
 
-    public Appunto(String titolo, String formato, String file)
+    public Appunto(String titolo, String formato, String file, int dimensione)
     {
         this.titolo = titolo;
         SimpleDateFormat dataCreazione = new SimpleDateFormat("dd/MM/yyyy");
@@ -20,6 +21,7 @@ public class Appunto
         this.dataUltimaModifica = dataCreazione.format(new Date());
         this.file = file;
         this.formato = formato;
+        this.dimensione = dimensione;
         this.id = StudyHub.generaId();
     }
 
@@ -59,5 +61,10 @@ public class Appunto
     public String getDataUltimaModifica()
     {
         return dataUltimaModifica;
+    }
+
+    public int getDimensione()
+    {
+        return dimensione;
     }
 }

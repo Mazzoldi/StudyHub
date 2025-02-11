@@ -48,15 +48,15 @@ public class StudyHub
         studente1.creaDatiPagamento("Carta di credito", "1234-5678-1234-5678", "Nicolò", "Mazzola");
         studente2.creaDatiPagamento("Carta di credito", "1234-5678-1234-5678", "Mario", "Rossi");
         //Dati sui corsi
-        Corso corso1 = new Corso("Matematica", "Laurea Magistrale", 0, studente1.getId(), "Italiano", 30);
+        Corso corso1 = new Corso("Matematica", "Laurea Magistrale", 0, studente1.getId(), "Italiano", 30, 15);
         studente1.aggiungiCorsoCreato(corso1);
-        Corso corso2 = new Corso("Fisica", "Laurea Triennale", 10, studente2.getId(), "Inglese", 30);
+        Corso corso2 = new Corso("Fisica", "Laurea Triennale", 10, studente2.getId(), "Inglese", 30, 15);
         studente2.aggiungiCorsoCreato(corso2);
-        Corso corso3 = new Corso("Inglese", "Liceo", 0, studente1.getId(), "Italiano", 30);
+        Corso corso3 = new Corso("Inglese", "Liceo", 0, studente1.getId(), "Italiano", 30, 15);
         studente1.aggiungiCorsoCreato(corso3);
-        Corso corso4 = new Corso("Italiano", "Laurea Triennale", 20, studente1.getId(), "Italiano", 30);
+        Corso corso4 = new Corso("Italiano", "Laurea Triennale", 20, studente1.getId(), "Italiano", 30, 15);
         studente1.aggiungiCorsoCreato(corso4);
-        Corso corso5 = new Corso("Storia", "Liceo", 10, studente2.getId(), "Inglese", 30);
+        Corso corso5 = new Corso("Storia", "Liceo", 10, studente2.getId(), "Inglese", 30, 15);
         studente2.aggiungiCorsoCreato(corso5);
         Iscrizione iscrizione1 = new Iscrizione(studente2.getId(), corso1.getId());
         studente2.aggiungiIscrizione(corso1, iscrizione1);
@@ -87,9 +87,9 @@ public class StudyHub
         mappaCorsiTotali.put(corso4.getId(), corso4);
         mappaCorsiTotali.put(corso5.getId(), corso5);
         //Dati sugli appunti
-        Appunto appunto1 = new Appunto("Appunto1", "pdf", "appunto1.pdf");
-        Appunto appunto2 = new Appunto("Appunto2", "pdf", "appunto2.pdf");
-        Appunto appunto3 = new Appunto("Appunto3", "pdf", "appunto3.pdf");
+        Appunto appunto1 = new Appunto("Appunto1", "pdf", "appunto1.pdf", 10);
+        Appunto appunto2 = new Appunto("Appunto2", "pdf", "appunto2.pdf", 10);
+        Appunto appunto3 = new Appunto("Appunto3", "pdf", "appunto3.pdf", 10);
         //Dati sugli appunti degli studenti
         appunti.put(appunto1.getId(), appunto1);
         studente1.aggiungiAppunto(appunto1);
@@ -98,12 +98,12 @@ public class StudyHub
         appunti.put(appunto3.getId(), appunto3);
         studente1.aggiungiAppunto(appunto3);
         //Dati sui contenuti
-        Contenuto contenuto1 = new Contenuto("Contenuto1", "pdf", "contenuto1.pdf");
-        Contenuto contenuto2 = new Contenuto("Contenuto2", "pdf", "contenuto2.pdf");
-        Contenuto contenuto3 = new Contenuto("Contenuto3", "pdf", "contenuto3.pdf");
-        Contenuto contenuto4 = new Contenuto("Contenuto4", "pdf", "contenuto4.pdf");
-        Contenuto contenuto5 = new Contenuto("Contenuto5", "pdf", "contenuto5.pdf");
-        Contenuto contenuto6 = new Contenuto("Contenuto6", "pdf", "contenuto6.pdf");
+        Contenuto contenuto1 = new Contenuto("Contenuto1", "pdf", "contenuto1.pdf", 10);
+        Contenuto contenuto2 = new Contenuto("Contenuto2", "pdf", "contenuto2.pdf", 10);
+        Contenuto contenuto3 = new Contenuto("Contenuto3", "pdf", "contenuto3.pdf", 10);
+        Contenuto contenuto4 = new Contenuto("Contenuto4", "pdf", "contenuto4.pdf", 10);
+        Contenuto contenuto5 = new Contenuto("Contenuto5", "pdf", "contenuto5.pdf", 10);
+        Contenuto contenuto6 = new Contenuto("Contenuto6", "pdf", "contenuto6.pdf", 10);
         //Dati sui contenuti dei corsi
         corso1.aggiungiContenuto(contenuto1);
         corso1.aggiungiContenuto(contenuto6);
@@ -112,9 +112,9 @@ public class StudyHub
         corso4.aggiungiContenuto(contenuto4);
         corso5.aggiungiContenuto(contenuto5);
         //Dati sui gruppi studio
-        GruppoStudio gruppo1 = new GruppoStudio("Gruppo1", null, "1111", "Italiano", 30);
-        GruppoStudio gruppo2 = new GruppoStudio("Gruppo2", null, "1111", "Italiano", 30);
-        GruppoStudio gruppo3 = new GruppoStudio("Gruppo3", null, "1111", "Italiano", 30);
+        GruppoStudio gruppo1 = new GruppoStudio("Gruppo1", null, "1111", "Italiano", 30, 5);
+        GruppoStudio gruppo2 = new GruppoStudio("Gruppo2", null, "1111", "Italiano", 30, 5);
+        GruppoStudio gruppo3 = new GruppoStudio("Gruppo3", null, "1111", "Italiano", 30, 5);
         gruppo1.aggiungiStudente(studente1);
         gruppo1.setAdmin(studente1.getId());
         studente1.aggiungiGruppoStudio(gruppo1);
@@ -407,9 +407,42 @@ public class StudyHub
     public boolean creaProfilo()
     {
         Studente stud = datiProfilo();
+        if (!controllaDatiProfilo(stud))
+        {
+            System.out.println("Dati mancanti");
+            return false;
+        }
+        if (!controllaUsername(stud.getUsername()))
+        {
+            System.out.println("Username già esistente");
+            return false;
+        }
         studenti.put(stud.getId(), stud);
         studenteCorrente = stud;
         System.out.println("Profilo creato con successo");
+        return true;
+    }
+
+    //Funzione per il controllo dei dati del profilo
+    public boolean controllaDatiProfilo(Studente stud)
+    {
+        if(stud.getUsername().isEmpty() || stud.getPassword().isEmpty() || stud.getNome().isEmpty() || stud.getCognome().isEmpty() || stud.getDataNascita().isEmpty() || stud.getLuogoNascita().isEmpty() || stud.getResidenza().isEmpty() || stud.getLivello().isEmpty())
+        {
+            return false;
+        }
+        return true;
+    }
+
+    //Funzione per il controllo dell'unicità dello username
+    public boolean controllaUsername(String username)
+    {
+        for(Studente stud: studenti.values())
+        {
+            if(stud.getUsername().equals(username))
+            {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -476,13 +509,37 @@ public class StudyHub
         lingua = scanner.nextLine();
         System.out.println("Inserisci la durata del corso: ");
         durata = scanner.nextInt();
+        System.out.println("Inserisci la dimensione massima dei contenuti: ");
+        int dimensioneMassima = scanner.nextInt();
         scanner.nextLine();
 
-        Corso corso = new Corso(nome, livello, costo, studenteCorrente.getId(), lingua, durata);
+        if (!controllaNomeCorso(nome))
+        {
+            System.out.println("Nome corso non valido");
+            return null;
+        }
+
+        Corso corso = new Corso(nome, livello, costo, studenteCorrente.getId(), lingua, durata, dimensioneMassima);
         studenteCorrente.aggiungiCorsoCreato(corso);
         mappaCorsiTotali.put(corso.getId(), corso);
         System.out.println("Corso creato con successo");
         return corso;
+    }
+
+    public boolean controllaNomeCorso(String nome)
+    {
+        if(nome.matches("[a-zA-Z0-9]+"))
+        {
+            return true;
+        }
+        for(Corso corso: mappaCorsiTotali.values())
+        {
+            if(corso.getNome().equals(nome))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     //UC4
@@ -557,8 +614,12 @@ public class StudyHub
     //Funzione per l'iscrizione ad un corso
     public void iscrizioneCorso()
     {
+        if (conrollaIscrizione(corsoSelezionato))
+        {
+            System.out.println("Sei già iscritto a questo corso");
+            return;
+        }
         float costo = corsoSelezionato.getCosto();
-
         if (costo == 0)
         {
             Iscrizione iscrizione = new Iscrizione(studenteCorrente.getId(), corsoSelezionato.getId());
@@ -572,6 +633,19 @@ public class StudyHub
                 System.out.println("Pagamento non andato a buon fine");
             }
         }
+    }
+
+    //Funzione per il controllo dell'iscrizione ad un corso
+    public boolean conrollaIscrizione(Corso corso)
+    {
+        for(Iscrizione iscrizione: studenteCorrente.getMappaIscrizioni().values())
+        {
+            if(iscrizione.getCorso().equals(corso.getId()))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     //Funzione per il pagamento dell'iscrizione
@@ -636,13 +710,32 @@ public class StudyHub
         lingua = scanner.nextLine();
         System.out.println("Inserisci la durata del gruppo studio: ");
         durata = scanner.nextInt();
+        System.out.println("Inserisci il numero massimo di studenti: ");
+        int numeroMaxStudenti = scanner.nextInt();
 
-        GruppoStudio gruppoStudio = new GruppoStudio(nome, studenteCorrente.getId(), password, lingua, durata);
+        if (!controllaNomeGruppo(nome))
+        {
+            System.out.println("Nome del gruppo studio già esistente");
+            return null;
+        }
+        GruppoStudio gruppoStudio = new GruppoStudio(nome, studenteCorrente.getId(), password, lingua, durata, numeroMaxStudenti);
         gruppoStudio.aggiungiStudente(studenteCorrente);
         studenteCorrente.aggiungiGruppoStudio(gruppoStudio);
         gruppiStudio.put(gruppoStudio.getId(), gruppoStudio);
         System.out.println("Gruppo studio creato con successo");
         return gruppoStudio;
+    }
+
+    public boolean controllaNomeGruppo(String nome)
+    {
+        for(GruppoStudio gruppoStudio: gruppiStudio.values())
+        {
+            if(gruppoStudio.getNome().equals(nome))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     //UC6
@@ -669,14 +762,21 @@ public class StudyHub
                 {
                     if (gruppoStudio.verificaIscrizione(studenteCorrente) == false)
                     {
-                        gruppoStudio.aggiungiStudente(studenteCorrente);
-                        studenteCorrente.aggiungiGruppoStudio(gruppoStudio);
-                        System.out.println("Password corretta, iscrizione avvenuta con successo");
-                        System.out.println("Benvenuto nel gruppo studio " + gruppoStudio.getNome());
-                        System.out.println("Admin: " + gruppoStudio.getAdmin());
-                        System.out.println("Lingua: " + gruppoStudio.getLingua());
-                        System.out.println("Numero studenti: " + gruppoStudio.getNumeroStudenti());
-                        break;
+                        if (gruppoStudio.getNumeroStudenti() < gruppoStudio.getNumeroMaxStudenti())
+                        {
+                            gruppoStudio.aggiungiStudente(studenteCorrente);
+                            studenteCorrente.aggiungiGruppoStudio(gruppoStudio);
+                            System.out.println("Password corretta, iscrizione avvenuta con successo");
+                            System.out.println("Benvenuto nel gruppo studio " + gruppoStudio.getNome());
+                            System.out.println("Admin: " + gruppoStudio.getAdmin());
+                            System.out.println("Lingua: " + gruppoStudio.getLingua());
+                            System.out.println("Numero studenti: " + gruppoStudio.getNumeroStudenti());
+                            break;
+                        }
+                        else
+                        {
+                            System.out.println("Il gruppo studio è pieno");
+                        }
                     }
                     else
                     {
@@ -744,11 +844,34 @@ public class StudyHub
         formato = scanner.nextLine();
         System.out.println("Inserisci il file: ");
         file = scanner.nextLine();
+        System.out.println("Inserisci la dimensione: ");
+        int dimensione = scanner.nextInt();
+        scanner.nextLine();
 
-        Contenuto contenuto = new Contenuto(titolo, formato, file);
+        if(!controllaContenuto(dimensione, formato))
+        {
+            return null;
+        }
+
+        Contenuto contenuto = new Contenuto(titolo, formato, file, dimensione);
         corsoSelezionato.aggiungiContenuto(contenuto);
         System.out.println("Contenuto caricato con successo");
         return contenuto;
+    }
+
+    public boolean controllaContenuto(int dimensione, String formato)
+    {
+        if(dimensione > corsoSelezionato.getDimensioneMassima())
+        {
+            System.out.println("Dimensione massima superata");
+            return false;
+        }
+        if(formato != "pdf" && formato != "doc" && formato != "txt")
+        {
+            System.out.println("Formato non valido");
+            return false;
+        }
+        return true;
     }
 
     //UC8
@@ -768,12 +891,37 @@ public class StudyHub
         formato = scanner.nextLine();
         System.out.println("Inserisci il file: ");
         file = scanner.nextLine();
+        System.out.println("Inserisci la dimensione: ");
+        int dimensione = scanner.nextInt();
 
-        Appunto appunto = new Appunto(titolo, formato, file);
+        if(!controllaAppunto(new Appunto(titolo, formato, file, dimensione)))
+        {
+            System.out.println("Appunto non valido");
+            return null;
+        }
+
+        Appunto appunto = new Appunto(titolo, formato, file, dimensione);
         studenteCorrente.aggiungiAppunto(appunto);
         appunti.put(appunto.getId(), appunto);
         System.out.println("Appunto caricato con successo");
         return appunto;
+    }
+
+    public boolean controllaAppunto(Appunto appunto)
+    {
+        if(appunto.getTitolo().isEmpty() || appunto.getFormato().isEmpty() || appunto.getFile().isEmpty())
+        {
+            return false;
+        }
+        //Controlla che non sia già stato caricato
+        for(Appunto app: appunti.values())
+        {
+            if(appunto.getTitolo().equals(app.getTitolo()))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     //UC GENERALE
@@ -843,6 +991,7 @@ public class StudyHub
                             System.out.println("Titolo: " + contenuto.getTitolo().toString());
                             System.out.println("Formato: " + contenuto.getFormato().toString());
                             System.out.println("File: " + contenuto.getFile().toString());
+                            System.out.println("Dimensione: " + contenuto.getDimensione());
                             System.out.println("Data creazione: " + contenuto.getDataCreazione().toString());
                             System.out.println("Data ultima modifica: " + contenuto.getDataUltimaModifica().toString());
                         }
@@ -897,6 +1046,7 @@ public class StudyHub
                     System.out.println("Titolo: " + appunto.getTitolo().toString());
                     System.out.println("Formato: " + appunto.getFormato().toString());
                     System.out.println("File: " + appunto.getFile().toString());
+                    System.out.println("Dimensione: " + appunto.getDimensione());
                     System.out.println("Data creazione: " + appunto.getDataCreazione().toString());
                     System.out.println("Data ultima modifica: " + appunto.getDataUltimaModifica().toString());
                 }
@@ -935,6 +1085,7 @@ public class StudyHub
                     System.out.println("Data creazione: " + gruppo.getDataCreazione().toString());
                     System.out.println("Durata: " + gruppo.getDurata());
                     System.out.println("Numero studenti: " + gruppo.getNumeroStudenti());
+                    System.out.println("Numero massimo studenti: " + gruppo.getNumeroMaxStudenti());
                     Map<String, Studente> mappaStudenti = gruppo.getMappaStudenti();
                     if(mappaStudenti.isEmpty())
                     {
@@ -983,6 +1134,7 @@ public class StudyHub
                     System.out.println("Titolo: " + contenuto.getTitolo().toString());
                     System.out.println("Formato: " + contenuto.getFormato().toString());
                     System.out.println("File: " + contenuto.getFile().toString());
+                    System.out.println("Dimensione: " + contenuto.getDimensione());
                     System.out.println("Data creazione: " + contenuto.getDataCreazione().toString());
                     System.out.println("Data ultima modifica: " + contenuto.getDataUltimaModifica().toString());
                 }
@@ -1030,6 +1182,7 @@ public class StudyHub
             System.out.println("Titolo: " + appunto.getTitolo().toString());
             System.out.println("Formato: " + appunto.getFormato().toString());
             System.out.println("File: " + appunto.getFile().toString());
+            System.out.println("Dimensione: " + appunto.getDimensione());
             System.out.println("Data creazione: " + appunto.getDataCreazione().toString());
             System.out.println("Data ultima modifica: " + appunto.getDataUltimaModifica().toString());
         }
@@ -1044,6 +1197,7 @@ public class StudyHub
             System.out.println("Data creazione: " + gruppo.getDataCreazione().toString());
             System.out.println("Durata: " + gruppo.getDurata());
             System.out.println("Numero studenti: " + gruppo.getNumeroStudenti());
+            System.out.println("Numero massimo studenti: " + gruppo.getNumeroMaxStudenti());
             Map<String, Studente> mappaStudenti = gruppo.getMappaStudenti();
             if(mappaStudenti.isEmpty())
             {

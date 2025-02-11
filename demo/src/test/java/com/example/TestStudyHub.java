@@ -224,7 +224,7 @@ public class TestStudyHub
     @Test
     public void testSelezionaCorsoCreato()
     {
-        mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, studyHub.getStudente().getId(), "italiano", 100);
+        mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, studyHub.getStudente().getId(), "italiano", 100, 15);
         studyHub.getStudente().getMappaCorsiCreati().put(mockCorso.getId(), mockCorso);
         String simulatedInput = mockCorso.getId();
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
@@ -238,7 +238,7 @@ public class TestStudyHub
     @Test
     public void testCaricaContenuto()
     {
-        mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, "", "italiano", 100);
+        mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, "", "italiano", 100, 15);
         studyHub.setCorsoSelezionato(mockCorso);
         String simulatedInput = "Lezione 1\nPDF\nappunti.pdf\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
@@ -255,11 +255,11 @@ public class TestStudyHub
     public void testCercaCorso()
     {
         Map<String, Corso> mockMappaCorsiTotali = new HashMap<String, Corso>();
-        Corso mockCorso1 = new Corso("Matematica", "Laurea Magistrale", 0, "Nicolò Mazzola", "Italiano", 30);
-        Corso mockCorso2 = new Corso("Fisica", "Laurea Triennale", 10, "Danilo Verde", "Inglese", 30);
-        Corso mockCorso3 = new Corso("Inglese", "Liceo", 0, "Mario Rossi", "Italiano", 30);
-        Corso mockCorso4 = new Corso("Italiano", "Laurea Triennale", 20, "Andrea Bianchi", "Italiano", 30);
-        Corso mockCorso5 = new Corso("Storia", "Liceo", 10, "Mario Rossi", "Inglese", 30);
+        Corso mockCorso1 = new Corso("Matematica", "Laurea Magistrale", 0, "Nicolò Mazzola", "Italiano", 30, 15);
+        Corso mockCorso2 = new Corso("Fisica", "Laurea Triennale", 10, "Danilo Verde", "Inglese", 30, 15);
+        Corso mockCorso3 = new Corso("Inglese", "Liceo", 0, "Mario Rossi", "Italiano", 30, 15);
+        Corso mockCorso4 = new Corso("Italiano", "Laurea Triennale", 20, "Andrea Bianchi", "Italiano", 30, 15);
+        Corso mockCorso5 = new Corso("Storia", "Liceo", 10, "Mario Rossi", "Inglese", 30, 15);
         mockMappaCorsiTotali.put(mockCorso1.getId(), mockCorso1);
         mockMappaCorsiTotali.put(mockCorso2.getId(), mockCorso2);
         mockMappaCorsiTotali.put(mockCorso3.getId(), mockCorso3);
@@ -332,8 +332,8 @@ public class TestStudyHub
     public void testSelezionaCorso()
     {
         Map<String, Corso> mockMappaCorsiCercati = new HashMap<String, Corso>();
-        Corso mockCorso1 = new Corso("Ingegneria", "Difficile", 49, "Nicolò Mazzola", "italiano", 100);
-        Corso mockCorso2 = new Corso("Matematica", "Difficile", 49, "Nicolò Mazzola", "italiano", 100);
+        Corso mockCorso1 = new Corso("Ingegneria", "Difficile", 49, "Nicolò Mazzola", "italiano", 100, 15);
+        Corso mockCorso2 = new Corso("Matematica", "Difficile", 49, "Nicolò Mazzola", "italiano", 100, 15);
         mockMappaCorsiCercati.put(mockCorso1.getId(), mockCorso1);
         mockMappaCorsiCercati.put(mockCorso2.getId(), mockCorso2);
         String simulatedInput = mockCorso1.getId();
@@ -350,7 +350,7 @@ public class TestStudyHub
     {
         mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         studyHub.setStudente(mockStudente);
-        mockCorso = new Corso("Ingegneria del Software", "Difficile", 0, "Nicolò Mazzola", "italiano", 100);
+        mockCorso = new Corso("Ingegneria del Software", "Difficile", 0, "Nicolò Mazzola", "italiano", 100, 15);
         studyHub.setCorsoSelezionato(mockCorso);
         studyHub.iscrizioneCorso();
         assertNotNull(mockStudente.getMappaIscrizioni().get(mockCorso.getId()));
@@ -365,7 +365,7 @@ public class TestStudyHub
     public void testPagamentoIscrizione()
     {
         mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
-        mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, "Nicolò Mazzola", "italiano", 100);
+        mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, "Nicolò Mazzola", "italiano", 100, 15);
         studyHub.setStudente(mockStudente);
         mockStudente.creaDatiPagamento("carta", "123456789", mockStudente.getNome(), mockStudente.getCognome());
         studyHub.setCorsoSelezionato(mockCorso);
@@ -389,7 +389,7 @@ public class TestStudyHub
     {
         mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         studyHub.setStudente(mockStudente);
-        mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, "Nicolò Mazzola", "italiano", 100);
+        mockCorso = new Corso("Ingegneria del Software", "Difficile", 49, "Nicolò Mazzola", "italiano", 100, 15);
         studyHub.setCorsoSelezionato(mockCorso);
         mockIscrizione = new Iscrizione(mockStudente.getId(), mockCorso.getId());
         studyHub.aggiungiIscrizione(mockIscrizione);
@@ -444,7 +444,7 @@ public class TestStudyHub
     {
         mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         studyHub.setStudente(mockStudente);
-        GruppoStudio mockGruppoStudio = new GruppoStudio("Gruppo 1", mockStudente.getId(), "1111", "Italiano", 30);
+        GruppoStudio mockGruppoStudio = new GruppoStudio("Gruppo 1", mockStudente.getId(), "1111", "Italiano", 30, 5);
         Map<String, GruppoStudio> mockGruppiStudio = new HashMap<String, GruppoStudio>();
         mockGruppiStudio.put(mockGruppoStudio.getId(), mockGruppoStudio);
         studyHub.setGruppiStudio(mockGruppiStudio);

@@ -10,9 +10,10 @@ public class Contenuto
     private String dataCreazione;
     private String dataUltimaModifica;
     private String formato;
+    private int dimensione;
     private String id;
 
-    public Contenuto(String titolo, String formato, String file)
+    public Contenuto(String titolo, String formato, String file, int dimensione)
     {
         this.titolo = titolo;
         SimpleDateFormat dataCreazione = new SimpleDateFormat("dd/MM/yyyy");
@@ -20,6 +21,7 @@ public class Contenuto
         this.dataUltimaModifica = dataCreazione.format(new Date());
         this.formato = formato;
         this.file = file;
+        this.dimensione = dimensione;
         this.id = StudyHub.generaId();
     }
 
@@ -60,5 +62,10 @@ public class Contenuto
     public String getFile()
     {
         return file;
+    }
+
+    public int getDimensione()
+    {
+        return dimensione;
     }
 }

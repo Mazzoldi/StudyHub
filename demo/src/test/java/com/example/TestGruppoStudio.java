@@ -7,7 +7,7 @@ public class TestGruppoStudio {
     
     @Test
     public void testVerificaIscrizione() {
-        GruppoStudio gruppoStudio = new GruppoStudio("Gruppo di Studio", "admin", "password", "Italiano", 2);
+        GruppoStudio gruppoStudio = new GruppoStudio("Gruppo di Studio", "admin", "password", "Italiano", 2, 5);
         Studente studente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         assertTrue(gruppoStudio.aggiungiStudente(studente));
         assertTrue(gruppoStudio.verificaIscrizione(studente));
@@ -16,13 +16,13 @@ public class TestGruppoStudio {
 
     @Test
     public void testPasswordCorretta() {
-        GruppoStudio gruppoStudio = new GruppoStudio("Gruppo di Studio", "admin", "password", "Italiano", 2);
+        GruppoStudio gruppoStudio = new GruppoStudio("Gruppo di Studio", "admin", "password", "Italiano", 2, 5);
         assertTrue(gruppoStudio.passwordCorretta("password"));
     }
 
     @Test
     public void testAggiungiStudente() {
-        GruppoStudio gruppoStudio = new GruppoStudio("Gruppo di Studio", "admin", "password", "Italiano", 2);
+        GruppoStudio gruppoStudio = new GruppoStudio("Gruppo di Studio", "admin", "password", "Italiano", 2, 5);
         Studente studente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         assertTrue(gruppoStudio.aggiungiStudente(studente));
         assertEquals(1, gruppoStudio.getNumeroStudenti());
@@ -31,7 +31,7 @@ public class TestGruppoStudio {
 
     @Test
     public void testRimuoviStudente() {
-        GruppoStudio gruppoStudio = new GruppoStudio("Gruppo di Studio", "admin", "password", "Italiano", 2);
+        GruppoStudio gruppoStudio = new GruppoStudio("Gruppo di Studio", "admin", "password", "Italiano", 2, 5);
         Studente studente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         assertTrue(gruppoStudio.aggiungiStudente(studente));
         assertTrue(gruppoStudio.verificaIscrizione(studente));

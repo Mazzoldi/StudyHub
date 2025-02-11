@@ -12,9 +12,10 @@ public class GruppoStudio {
     private String data;
     private int durata;
     private int numeroStudenti;
+    private int numeroMaxStudenti;
     private Map<String, Studente> mappaStudenti;
 
-    public GruppoStudio(String nome, String admin, String password, String lingua, int durata)
+    public GruppoStudio(String nome, String admin, String password, String lingua, int durata, int numeroMaxStudenti)
     {
         this.nome = nome;
         this.admin = admin;
@@ -24,6 +25,7 @@ public class GruppoStudio {
         SimpleDateFormat dataCreazione = new SimpleDateFormat("dd/MM/yyyy");
         this.data = dataCreazione.format(new Date());
         this.durata = durata;
+        this.numeroMaxStudenti = numeroMaxStudenti;
         this.id = StudyHub.generaId();
         creaMappaStudenti();
     }
@@ -114,6 +116,11 @@ public class GruppoStudio {
         return numeroStudenti;
     }
 
+    public int getNumeroMaxStudenti()
+    {
+        return numeroMaxStudenti;
+    }
+
     public Map<String, Studente> getMappaStudenti()
     {
         return mappaStudenti;
@@ -137,6 +144,11 @@ public class GruppoStudio {
     public void setDurata(int durata)
     {
         this.durata = durata;
+    }
+
+    public void setNumeroStudenti(int numeroStudenti)
+    {
+        this.numeroStudenti = numeroStudenti;
     }
 
     public void setMappaStudenti(Map<String, Studente> mappaStudenti)

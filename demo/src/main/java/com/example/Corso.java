@@ -11,12 +11,13 @@ public class Corso
     private String creatore;
     private String lingua;
     private int numeroStudenti;
+    private int dimensioneMassima;
     private int durata;
 
     private Map<String, Iscrizione> mappaIscrizioni;
     private Map<String, Contenuto> mappaContenuti;
 
-    public Corso(String nome, String livello, float costo, String creatore, String lingua, int durata)
+    public Corso(String nome, String livello, float costo, String creatore, String lingua, int durata, int dimensioneMassima)
     {
         this.nome = nome;
         this.livello = livello;
@@ -25,6 +26,7 @@ public class Corso
         this.lingua = lingua;
         this.numeroStudenti = 0;
         this.durata = durata;
+        this.dimensioneMassima = dimensioneMassima;
         this.id = StudyHub.generaId();
         creaMappaIscrizioni();
         creaMappaContenuti();
@@ -86,6 +88,11 @@ public class Corso
     public int getDurata()
     {
         return durata;
+    }
+
+    public int getDimensioneMassima()
+    {
+        return dimensioneMassima;
     }
 
     public Map<String, Iscrizione> getMappaIscrizioni()
