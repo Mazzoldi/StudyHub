@@ -48,15 +48,15 @@ public class StudyHub
         studente1.creaDatiPagamento("Carta di credito", "1234-5678-1234-5678", "Nicolò", "Mazzola");
         studente2.creaDatiPagamento("Carta di credito", "1234-5678-1234-5678", "Mario", "Rossi");
         //Dati sui corsi
-        Corso corso1 = new Corso("Matematica", "Laurea Magistrale", 0, studente1.getId(), "Italiano", 30, 15);
+        Corso corso1 = new Corso("Matematica", "Laurea Magistrale", 0, studente1.getId(), "Italiano", 30, 30);
         studente1.aggiungiCorsoCreato(corso1);
-        Corso corso2 = new Corso("Fisica", "Laurea Triennale", 10, studente2.getId(), "Inglese", 30, 15);
+        Corso corso2 = new Corso("Fisica", "Laurea Triennale", 10, studente2.getId(), "Inglese", 30, 30);
         studente2.aggiungiCorsoCreato(corso2);
-        Corso corso3 = new Corso("Inglese", "Liceo", 0, studente1.getId(), "Italiano", 30, 15);
+        Corso corso3 = new Corso("Inglese", "Liceo", 0, studente1.getId(), "Italiano", 30, 30);
         studente1.aggiungiCorsoCreato(corso3);
-        Corso corso4 = new Corso("Italiano", "Laurea Triennale", 20, studente1.getId(), "Italiano", 30, 15);
+        Corso corso4 = new Corso("Italiano", "Laurea Triennale", 20, studente1.getId(), "Italiano", 30, 30);
         studente1.aggiungiCorsoCreato(corso4);
-        Corso corso5 = new Corso("Storia", "Liceo", 10, studente2.getId(), "Inglese", 30, 15);
+        Corso corso5 = new Corso("Storia", "Liceo", 10, studente2.getId(), "Inglese", 30, 30);
         studente2.aggiungiCorsoCreato(corso5);
         Iscrizione iscrizione1 = new Iscrizione(studente2.getId(), corso1.getId());
         studente2.aggiungiIscrizione(corso1, iscrizione1);
@@ -112,9 +112,9 @@ public class StudyHub
         corso4.aggiungiContenuto(contenuto4);
         corso5.aggiungiContenuto(contenuto5);
         //Dati sui gruppi studio
-        GruppoStudio gruppo1 = new GruppoStudio("Gruppo1", null, "1111", "Italiano", 30, 5);
-        GruppoStudio gruppo2 = new GruppoStudio("Gruppo2", null, "1111", "Italiano", 30, 5);
-        GruppoStudio gruppo3 = new GruppoStudio("Gruppo3", null, "1111", "Italiano", 30, 5);
+        GruppoStudio gruppo1 = new GruppoStudio("Gruppo1", null, "1111", "Italiano", 30, 10);
+        GruppoStudio gruppo2 = new GruppoStudio("Gruppo2", null, "1111", "Italiano", 30, 10);
+        GruppoStudio gruppo3 = new GruppoStudio("Gruppo3", null, "1111", "Italiano", 30, 10);
         gruppo1.aggiungiStudente(studente1);
         gruppo1.setAdmin(studente1.getId());
         studente1.aggiungiGruppoStudio(gruppo1);
@@ -401,7 +401,7 @@ public class StudyHub
         return stud;
     }
 
-    //UC1
+    //UC1: Iscrizione profilo
     
     //Funzione per la creazione di un profilo
     public boolean creaProfilo()
@@ -446,7 +446,7 @@ public class StudyHub
         return true;
     }
 
-    //UC2
+    //UC2: Modifica profilo
 
     //Funzione per la modifica del profilo
     public void modificaProfilo()
@@ -486,7 +486,7 @@ public class StudyHub
         }
     }
 
-    //UC3
+    //UC3: Creazione di un corso
 
     //Funzione per la creazione di un corso
     public Corso creaCorso()
@@ -542,7 +542,7 @@ public class StudyHub
         return true;
     }
 
-    //UC4
+    //UC4: Iscrizione ad un corso
 
     // Funzione per la ricerca di un corso a cui iscriversi
     public Map<String, Corso> cercaCorso() 
@@ -691,7 +691,7 @@ public class StudyHub
         System.out.println("Iscrizione avvenuta con successo");
     }
 
-    //UC5
+    //UC5: Creazione di un gruppo studio
 
     //Funzione per la creazione di un gruppo studio
     public GruppoStudio creaGruppoStudio()
@@ -738,7 +738,7 @@ public class StudyHub
         return true;
     }
 
-    //UC6
+    //UC6: Iscrizione ad un gruppo studio
 
     //Funzione per l'iscrizione ad un gruppo studio
     public void iscrizioneGruppoStudio()
@@ -795,7 +795,7 @@ public class StudyHub
         }
     }
 
-    //UC7
+    //UC7: Caricamento di un contenuto
 
     //Funzione per selezionare un corso
     public void selezionaCorsoCreato()
@@ -874,7 +874,7 @@ public class StudyHub
         return true;
     }
 
-    //UC8
+    //UC8: Caricamento di un appunto
 
     //Funzione per caricare un appunto tra quelli dello studente
     public Appunto caricaAppunto()
