@@ -614,7 +614,7 @@ public class StudyHub
     //Funzione per l'iscrizione ad un corso
     public void iscrizioneCorso()
     {
-        if (conrollaIscrizione(corsoSelezionato))
+        if (controllaIscrizione(corsoSelezionato))
         {
             System.out.println("Sei già iscritto a questo corso");
             return;
@@ -636,7 +636,7 @@ public class StudyHub
     }
 
     //Funzione per il controllo dell'iscrizione ad un corso
-    public boolean conrollaIscrizione(Corso corso)
+    public boolean controllaIscrizione(Corso corso)
     {
         for(Iscrizione iscrizione: studenteCorrente.getMappaIscrizioni().values())
         {
