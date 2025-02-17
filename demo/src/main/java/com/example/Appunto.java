@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class Appunto 
 {
+    private String creatore;
     private String titolo;
     private String dataCreazione;
     private String dataUltimaModifica;
@@ -13,8 +14,9 @@ public class Appunto
     private int dimensione;
     private String id;
 
-    public Appunto(String titolo, String formato, String file, int dimensione)
+    public Appunto(String creatore, String titolo, String formato, String file, int dimensione)
     {
+        this.creatore = creatore;
         this.titolo = titolo;
         SimpleDateFormat dataCreazione = new SimpleDateFormat("dd/MM/yyyy");
         this.dataCreazione = dataCreazione.format(new Date());
@@ -36,6 +38,11 @@ public class Appunto
     public String getId()
     {
         return id;
+    }
+
+    public String getCreatore()
+    {
+        return creatore;
     }
 
     public String getTitolo()

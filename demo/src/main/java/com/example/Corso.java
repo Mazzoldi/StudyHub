@@ -38,6 +38,12 @@ public class Corso
         numeroStudenti++;
     }
 
+    public void rimuoviIscrizione(Studente studente)
+    {
+        mappaIscrizioni.remove(studente.getId());
+        numeroStudenti--;
+    }
+
     private Map<String, Iscrizione> creaMappaIscrizioni()
     {
          this.mappaIscrizioni = new HashMap<String, Iscrizione>();
@@ -78,6 +84,11 @@ public class Corso
     public void aggiungiContenuto(Contenuto contenuto)
     {
         mappaContenuti.put(contenuto.getId(), contenuto);
+    }
+
+    public void rimuoviContenuto(Contenuto contenuto)
+    {
+        mappaContenuti.remove(contenuto.getId());
     }
 
     public String getCreatore()

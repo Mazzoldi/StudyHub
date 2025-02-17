@@ -45,7 +45,7 @@ public class TestStudente {
     @Test
     public void testAggiungiAppunto() {
         Studente mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
-        Appunto mockAppunto = new Appunto("Appunto", "PDF", "Appunto.pdf", 10);
+        Appunto mockAppunto = new Appunto(mockStudente.getId(), "Appunto", "PDF", "Appunto.pdf", 10);
         mockStudente.aggiungiAppunto(mockAppunto);
         assertEquals(1, mockStudente.getMappaAppunti().size());
         assertTrue(mockStudente.getMappaAppunti().containsKey(mockAppunto.getId()));

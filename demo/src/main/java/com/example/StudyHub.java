@@ -20,7 +20,7 @@ public class StudyHub
     //Booleano per la verifica del login
     boolean isLogged = false;
 
-    //Costruttore privato per la classe StudyHub2
+    //Costruttore privato per la classe StudyHub
     private StudyHub()
     {
         //Inizializzazione delle mappe
@@ -58,6 +58,7 @@ public class StudyHub
         studente1.aggiungiCorsoCreato(corso4);
         Corso corso5 = new Corso("Storia", "Liceo", 10, studente2.getId(), "Inglese", 30, 30);
         studente2.aggiungiCorsoCreato(corso5);
+        //Dati sulle iscrizioni
         Iscrizione iscrizione1 = new Iscrizione(studente2.getId(), corso1.getId());
         studente2.aggiungiIscrizione(corso1, iscrizione1);
         corso1.aggiungiIscrizione(studente2, iscrizione1);
@@ -81,15 +82,16 @@ public class StudyHub
         corso5.aggiungiIscrizione(studente1, iscrizione5);
         Pagamento pagamentoIscrizione3 = new Pagamento(corso5.getCosto(), datiPagamento1);
         iscrizione5.aggiungiPagamento(pagamentoIscrizione3);
+        //Mappe per i corsi
         mappaCorsiTotali.put(corso1.getId(), corso1);
         mappaCorsiTotali.put(corso2.getId(), corso2);
         mappaCorsiTotali.put(corso3.getId(), corso3);
         mappaCorsiTotali.put(corso4.getId(), corso4);
         mappaCorsiTotali.put(corso5.getId(), corso5);
         //Dati sugli appunti
-        Appunto appunto1 = new Appunto("Appunto1", "pdf", "appunto1.pdf", 10);
-        Appunto appunto2 = new Appunto("Appunto2", "pdf", "appunto2.pdf", 10);
-        Appunto appunto3 = new Appunto("Appunto3", "pdf", "appunto3.pdf", 10);
+        Appunto appunto1 = new Appunto(studente1.getId() ,"Appunto1", "pdf", "appunto1.pdf", 10);
+        Appunto appunto2 = new Appunto(studente2.getId(), "Appunto2", "pdf", "appunto2.pdf", 10);
+        Appunto appunto3 = new Appunto(studente1.getId(), "Appunto3", "pdf", "appunto3.pdf", 10);
         //Dati sugli appunti degli studenti
         appunti.put(appunto1.getId(), appunto1);
         studente1.aggiungiAppunto(appunto1);
@@ -446,6 +448,50 @@ public class StudyHub
         return true;
     }
 
+    //Funzione per l'eliminazione del profilo
+    public void eliminaProfilo()
+    {
+        for(Corso corso: mappaCorsiTotali.values())
+        {
+            if (corso.getCreatore().equals(studenteCorrente.getId()))
+            {
+                mappaCorsiTotali.remove(corso.getId());
+            }
+            if (corso.getMappaIscrizioni().containsKey(studenteCorrente.getId()))
+            {
+                corso.rimuoviIscrizione(studenteCorrente);
+            }
+        }
+        for(GruppoStudio gruppoStudio: gruppiStudio.values())
+        {
+            if (gruppoStudio.getAdmin().equals(studenteCorrente.getId()))
+            {
+                gruppiStudio.remove(gruppoStudio.getId());
+            }
+            if (gruppoStudio.getMappaStudenti().containsKey(studenteCorrente.getId()))
+            {
+                gruppoStudio.rimuoviStudente(studenteCorrente);
+            }
+        }
+        for(Appunto appunto: appunti.values())
+        {
+            if (appunto.getCreatore().equals(studenteCorrente.getId()))
+            {
+                appunti.remove(appunto.getId());
+            }
+        }
+        studenteCorrente.getMappaIscrizioni().clear();
+        studenteCorrente.getMappaDatiPagamento().clear();
+        studenteCorrente.getMappaAppunti().clear();
+        studenteCorrente.getMappaCorsiCreati().clear();
+        studenteCorrente.getMappaGruppiStudio().clear();
+        studenti.remove(studenteCorrente.getId());
+        studenteCorrente = null;
+        corsoSelezionato = null;
+        isLogged = false;
+        System.out.println("Profilo eliminato con successo");
+    }
+
     //UC2: Modifica profilo
 
     //Funzione per la modifica del profilo
@@ -542,6 +588,30 @@ public class StudyHub
         return true;
     }
 
+    public void eliminaCorso()
+    {
+        if (corsoSelezionato.getCreatore().equals(studenteCorrente.getId()))
+        {
+            mappaCorsiTotali.remove(corsoSelezionato.getId());
+            studenteCorrente.rimuoviCorsoCreato(corsoSelezionato);
+            for(Studente stud: studenti.values())
+            {
+                if (stud.getMappaIscrizioni().containsKey(corsoSelezionato.getId()))
+                {
+                    corsoSelezionato.rimuoviIscrizione(stud);
+                    stud.rimuoviIscrizione(corsoSelezionato);
+                }
+            }
+            corsoSelezionato.getMappaIscrizioni().clear();
+            corsoSelezionato.getMappaContenuti().clear();
+            corsoSelezionato = null;
+        }
+        else
+        {
+            System.out.println("Non sei il creatore del corso");
+        }
+    }
+
     //UC4: Iscrizione ad un corso
 
     // Funzione per la ricerca di un corso a cui iscriversi
@@ -614,7 +684,7 @@ public class StudyHub
     //Funzione per l'iscrizione ad un corso
     public void iscrizioneCorso()
     {
-        if (conrollaIscrizione(corsoSelezionato))
+        if (controllaIscrizione(corsoSelezionato))
         {
             System.out.println("Sei già iscritto a questo corso");
             return;
@@ -636,7 +706,7 @@ public class StudyHub
     }
 
     //Funzione per il controllo dell'iscrizione ad un corso
-    public boolean conrollaIscrizione(Corso corso)
+    public boolean controllaIscrizione(Corso corso)
     {
         for(Iscrizione iscrizione: studenteCorrente.getMappaIscrizioni().values())
         {
@@ -691,6 +761,20 @@ public class StudyHub
         System.out.println("Iscrizione avvenuta con successo");
     }
 
+    public void eliminaIscrizione()
+    {
+        if (corsoSelezionato.getMappaIscrizioni().containsKey(studenteCorrente.getId()))
+        {
+            corsoSelezionato.rimuoviIscrizione(studenteCorrente);
+            studenteCorrente.rimuoviIscrizione(corsoSelezionato);
+            System.out.println("Iscrizione rimossa con successo");
+        }
+        else
+        {
+            System.out.println("Non sei iscritto a questo corso");
+        }
+    }
+
     //UC5: Creazione di un gruppo studio
 
     //Funzione per la creazione di un gruppo studio
@@ -736,6 +820,69 @@ public class StudyHub
             }
         }
         return true;
+    }
+
+    public GruppoStudio selezionaGruppoStudioCreato()
+    {
+        Map<String, GruppoStudio> mappaGruppiStudioCreati = studenteCorrente.getMappaGruppiStudio();
+        GruppoStudio gruppoStudioSelezionato = null;
+        if (mappaGruppiStudioCreati.isEmpty())
+        {
+            System.out.println("Non hai creato nessun gruppo studio");
+            return null;
+        }
+
+        System.out.println("I tuoi gruppi studio sono: ");
+        for(GruppoStudio gruppoStudio: mappaGruppiStudioCreati.values())
+        {
+            System.out.print(gruppoStudio.getNome() + " ");
+            System.out.println(gruppoStudio.getId());
+        }
+
+        do
+        {
+            System.out.print("Inserisci l'id di un gruppo studio: ");
+            String id = scanner.nextLine();
+
+            gruppoStudioSelezionato = mappaGruppiStudioCreati.get(id);
+            if(gruppoStudioSelezionato == null)
+            {
+                System.out.println("Gruppo studio non trovato");
+            }
+            else
+            {
+                return gruppoStudioSelezionato;
+            }
+        } while(true);
+    }
+
+    public void eliminaGruppoStudio()
+    {
+        GruppoStudio gruppoStudio = selezionaGruppoStudioCreato();
+        if (gruppoStudio == null)
+        {
+            return;
+        }
+        if (gruppoStudio.getAdmin().equals(studenteCorrente.getId()))
+        {
+            gruppiStudio.remove(gruppoStudio.getId());
+            studenteCorrente.rimuoviGruppoStudio(gruppoStudio);
+            Map<String, Studente> mappaStudenti = gruppoStudio.getMappaStudenti();
+            for(Studente stud: mappaStudenti.values())
+            {
+                if (stud.getMappaGruppiStudio().containsKey(gruppoStudio.getId()))
+                {
+                    gruppoStudio.rimuoviStudente(stud);
+                    stud.rimuoviGruppoStudio(gruppoStudio);
+                }
+            }
+            mappaStudenti.clear();
+            gruppoStudio = null;
+        }
+        else
+        {
+            System.out.println("Non sei l'admin del gruppo studio");
+        }
     }
 
     //UC6: Iscrizione ad un gruppo studio
@@ -792,6 +939,25 @@ public class StudyHub
         if(trovato == false)
         {
             System.out.println("Gruppo studio non trovato");
+        }
+    }
+
+    public void eliminaIscrizioneGruppoStudio()
+    {
+        GruppoStudio gruppoStudio = selezionaGruppoStudioCreato();
+        if (gruppoStudio == null)
+        {
+            return;
+        }
+        if (gruppoStudio.getMappaStudenti().containsKey(studenteCorrente.getId()))
+        {
+            gruppoStudio.rimuoviStudente(studenteCorrente);
+            studenteCorrente.rimuoviGruppoStudio(gruppoStudio);
+            System.out.println("Iscrizione rimossa con successo");
+        }
+        else
+        {
+            System.out.println("Non sei iscritto a questo gruppo studio");
         }
     }
 
@@ -874,6 +1040,58 @@ public class StudyHub
         return true;
     }
 
+    public Contenuto selezionaContenutoCreato()
+    {
+        Map<String, Contenuto> mappaContenuti = corsoSelezionato.getMappaContenuti();
+        Contenuto contenutoSelezionato = null;
+        if (mappaContenuti.isEmpty())
+        {
+            System.out.println("Non hai creato nessun contenuto per questo corso");
+            return null;
+        }
+
+        System.out.println("I tuoi contenuti sono: ");
+        for(Contenuto contenuto: mappaContenuti.values())
+        {
+            System.out.print(contenuto.getTitolo() + " ");
+            System.out.println(contenuto.getId());
+        }
+
+        do
+        {
+            System.out.print("Inserisci l'id di un contenuto: ");
+            String id = scanner.nextLine();
+
+            contenutoSelezionato = mappaContenuti.get(id);
+            if(contenutoSelezionato == null)
+            {
+                System.out.println("Contenuto non trovato");
+            }
+            else
+            {
+                return contenutoSelezionato;
+            }
+        } while(true);
+    }
+    public void eliminaContenuto()
+    {
+        selezionaCorsoCreato();
+        if (corsoSelezionato == null)
+        {
+            return;
+        }
+        Contenuto contenuto = selezionaContenutoCreato();
+        if (corsoSelezionato.getMappaContenuti().containsKey(contenuto.getId()))
+        {
+            corsoSelezionato.rimuoviContenuto(contenuto);
+            System.out.println("Contenuto rimosso con successo");
+        }
+        else
+        {
+            System.out.println("Contenuto non trovato");
+        }
+    }
+
     //UC8: Caricamento di un appunto
 
     //Funzione per caricare un appunto tra quelli dello studente
@@ -893,14 +1111,14 @@ public class StudyHub
         file = scanner.nextLine();
         System.out.println("Inserisci la dimensione: ");
         int dimensione = scanner.nextInt();
-
-        if(!controllaAppunto(new Appunto(titolo, formato, file, dimensione)))
+        
+        Appunto appunto = new Appunto(studenteCorrente.getId(), titolo, formato, file, dimensione);
+        if(!controllaAppunto(appunto))
         {
             System.out.println("Appunto non valido");
             return null;
         }
 
-        Appunto appunto = new Appunto(titolo, formato, file, dimensione);
         studenteCorrente.aggiungiAppunto(appunto);
         appunti.put(appunto.getId(), appunto);
         System.out.println("Appunto caricato con successo");
@@ -922,6 +1140,58 @@ public class StudyHub
             }
         }
         return true;
+    }
+
+    public Appunto selezionaAppunto()
+    {
+        Appunto appuntoSelezionato = null;
+        if (studenteCorrente.getMappaAppunti().isEmpty())
+        {
+            System.out.println("Non hai creato nessun appunto");
+            return null;
+        }
+
+        System.out.println("I tuoi appunti sono: ");
+        for(Appunto appunto: studenteCorrente.getMappaAppunti().values())
+        {
+            System.out.print(appunto.getTitolo() + " ");
+            System.out.println(appunto.getId());
+        }
+
+        do
+        {
+            System.out.print("Inserisci l'id di un appunto: ");
+            String id = scanner.nextLine();
+
+            appuntoSelezionato = studenteCorrente.getMappaAppunti().get(id);
+            if(appuntoSelezionato == null)
+            {
+                System.out.println("Appunto non trovato");
+            }
+            else
+            {
+                return appuntoSelezionato;
+            }
+        } while(true);
+    }
+
+    public void eliminaAppunto()
+    {
+        Appunto appunto = selezionaAppunto();
+        if (appunto == null)
+        {
+            return;
+        }
+        if (appunto.getCreatore().equals(studenteCorrente.getId()))
+        {
+            appunti.remove(appunto.getId());
+            studenteCorrente.rimuoviAppunto(appunto);
+            System.out.println("Appunto rimosso con successo");
+        }
+        else
+        {
+            System.out.println("Non sei il creatore dell'appunto");
+        }
     }
 
     //UC GENERALE

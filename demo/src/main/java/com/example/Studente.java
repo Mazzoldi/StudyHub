@@ -82,6 +82,11 @@ public class Studente
         mappaGruppiStudio.put(gruppo.getId(), gruppo);
     }
 
+    public void aggiungiAppunto(Appunto appunto)
+    {
+        mappaAppunti.put(appunto.getId(), appunto);
+    }
+
     public void rimuoviIscrizione(Corso corso)
     {
         mappaIscrizioni.remove(corso.getId());
@@ -96,6 +101,11 @@ public class Studente
     public void rimuoviGruppoStudio(GruppoStudio gruppo)
     {
         mappaGruppiStudio.remove(gruppo.getId());
+    }
+
+    public void rimuoviAppunto(Appunto appunto)
+    {
+        mappaAppunti.remove(appunto.getId());
     }
 
     private Map<String, Appunto> creaMappaAppunti()
@@ -131,11 +141,6 @@ public class Studente
     public String getId()
     {
         return this.id;
-    }
-
-    public void aggiungiAppunto(Appunto appunto)
-    {
-        mappaAppunti.put(appunto.getId(), appunto);
     }
 
     public boolean verificaPassword(String password)
