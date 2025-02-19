@@ -39,6 +39,28 @@ public class StudyHub
     //Funzione per caricare dei dati di prova
     public void loadData()
     {
+        //Ripulisco prima tutti i dati
+        for (Corso corso : mappaCorsiTotali.values())
+        {
+            corso.getMappaIscrizioni().clear();
+            corso.getMappaContenuti().clear();
+        }
+        for (Studente stud : studenti.values())
+        {
+            stud.getMappaIscrizioni().clear();
+            stud.getMappaDatiPagamento().clear();
+            stud.getMappaAppunti().clear();
+            stud.getMappaCorsiCreati().clear();
+            stud.getMappaGruppiStudio().clear();
+        }
+        for (GruppoStudio gruppo : gruppiStudio.values())
+        {
+            gruppo.getMappaStudenti().clear();
+        }
+        studenti.clear();
+        mappaCorsiTotali.clear();
+        appunti.clear();
+        gruppiStudio.clear();
         //Dati sugli studenti
         Studente studente1 = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         Studente studente2 = new Studente("MarioRossi", "1111", "Mario", "Rossi", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
@@ -58,6 +80,12 @@ public class StudyHub
         studente1.aggiungiCorsoCreato(corso4);
         Corso corso5 = new Corso("Storia", "Liceo", 10, studente2.getId(), "Inglese", 30, 30);
         studente2.aggiungiCorsoCreato(corso5);
+        //Mappe per i corsi
+        mappaCorsiTotali.put(corso1.getId(), corso1);
+        mappaCorsiTotali.put(corso2.getId(), corso2);
+        mappaCorsiTotali.put(corso3.getId(), corso3);
+        mappaCorsiTotali.put(corso4.getId(), corso4);
+        mappaCorsiTotali.put(corso5.getId(), corso5);
         //Dati sulle iscrizioni
         Iscrizione iscrizione1 = new Iscrizione(studente2.getId(), corso1.getId());
         studente2.aggiungiIscrizione(corso1, iscrizione1);
@@ -82,12 +110,6 @@ public class StudyHub
         corso5.aggiungiIscrizione(studente1, iscrizione5);
         Pagamento pagamentoIscrizione3 = new Pagamento(corso5.getCosto(), datiPagamento1);
         iscrizione5.aggiungiPagamento(pagamentoIscrizione3);
-        //Mappe per i corsi
-        mappaCorsiTotali.put(corso1.getId(), corso1);
-        mappaCorsiTotali.put(corso2.getId(), corso2);
-        mappaCorsiTotali.put(corso3.getId(), corso3);
-        mappaCorsiTotali.put(corso4.getId(), corso4);
-        mappaCorsiTotali.put(corso5.getId(), corso5);
         //Dati sugli appunti
         Appunto appunto1 = new Appunto(studente1.getId() ,"Appunto1", "pdf", "appunto1.pdf", 10);
         Appunto appunto2 = new Appunto(studente2.getId(), "Appunto2", "pdf", "appunto2.pdf", 10);
@@ -117,21 +139,25 @@ public class StudyHub
         GruppoStudio gruppo1 = new GruppoStudio("Gruppo1", studente1.getId(), "1111", "Italiano", 30, 10);
         GruppoStudio gruppo2 = new GruppoStudio("Gruppo2", studente2.getId(), "1111", "Italiano", 30, 10);
         GruppoStudio gruppo3 = new GruppoStudio("Gruppo3", studente1.getId(), "1111", "Italiano", 30, 10);
+        GruppoStudio gruppo4 = new GruppoStudio("Gruppo4", studente2.getId(), "1111", "Italiano", 30, 10);
         gruppo1.aggiungiStudente(studente1);
         gruppo1.aggiungiStudente(studente2);
         studente1.aggiungiGruppoStudio(gruppo1);
         studente2.aggiungiGruppoStudio(gruppo1);
-        gruppo2.aggiungiStudente(studente1);
         gruppo2.aggiungiStudente(studente2);
-        studente1.aggiungiGruppoStudio(gruppo2);
         studente2.aggiungiGruppoStudio(gruppo2);
         gruppo3.aggiungiStudente(studente1);
         gruppo3.aggiungiStudente(studente2);
         studente1.aggiungiGruppoStudio(gruppo3);
         studente2.aggiungiGruppoStudio(gruppo3);
+        gruppo4.aggiungiStudente(studente1);
+        gruppo4.aggiungiStudente(studente2);
+        studente1.aggiungiGruppoStudio(gruppo4);
+        studente2.aggiungiGruppoStudio(gruppo4);
         gruppiStudio.put(gruppo1.getId(), gruppo1);
         gruppiStudio.put(gruppo2.getId(), gruppo2);
         gruppiStudio.put(gruppo3.getId(), gruppo3);
+        gruppiStudio.put(gruppo4.getId(), gruppo4);
     }
 
     //Funzione per ottenre l'istanza di StudyHub
@@ -975,8 +1001,7 @@ public class StudyHub
     }
 
     //Funzione per l'eliminazione di un gruppo studio
-    public void eliminaGruppoStudio()
-    {
+    public void eliminaGruppoStudio() {
         GruppoStudio gruppoStudio = selezionaGruppoStudioCreato();
         if (gruppoStudio == null)
         {
@@ -986,8 +1011,8 @@ public class StudyHub
         {
             gruppiStudio.remove(gruppoStudio.getId());
             studenteCorrente.rimuoviGruppoStudio(gruppoStudio);
-            Map<String, Studente> mappaStudenti = gruppoStudio.getMappaStudenti();
-            for(Studente stud: mappaStudenti.values())
+            List<Studente> studentiCopia = new ArrayList<>(gruppoStudio.getMappaStudenti().values());
+            for (Studente stud : studentiCopia)
             {
                 if (stud.getMappaGruppiStudio().containsKey(gruppoStudio.getId()))
                 {
@@ -995,7 +1020,7 @@ public class StudyHub
                     stud.rimuoviGruppoStudio(gruppoStudio);
                 }
             }
-            mappaStudenti.clear();
+            gruppoStudio.getMappaStudenti().clear();
         }
         else
         {
@@ -1158,7 +1183,10 @@ public class StudyHub
             System.out.print("Inserisci l'id di un corso: ");
             String id = scanner.nextLine();
 
+            System.out.println(id);
             corsoSelezionato = mappaCorsiCreati.get(id);
+            System.out.println(corsoSelezionato.getNome());
+            System.out.println(corsoSelezionato.getId());
             if(corsoSelezionato == null)
             {
                 System.out.println("Corso non trovato");

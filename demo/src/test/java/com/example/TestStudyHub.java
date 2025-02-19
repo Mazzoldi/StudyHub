@@ -11,12 +11,13 @@ public class TestStudyHub
     static StudyHub studyHub;
     private static Studente mockStudente;
     private static Corso mockCorso;
+    private static Corso mockCorso2;
     private Iscrizione mockIscrizione;
     private boolean isLogged;
     
     //Recupera istanza di StudyHub
-    @BeforeClass
-    public static void init()
+    @Before
+    public void init()
     {
         studyHub = StudyHub.getIstance();
         studyHub.loadData();
@@ -33,6 +34,14 @@ public class TestStudyHub
             if (corso.getNome().equals("Matematica"))
             {
                 mockCorso = corso;
+                break;
+            }
+        }
+        for (Corso corso : studyHub.getMappaCorsiTotali().values())
+        {
+            if (corso.getNome().equals("Fisica"))
+            {
+                mockCorso2 = corso;
                 break;
             }
         }
@@ -329,6 +338,7 @@ public class TestStudyHub
         Map<String, Corso> mockCorsiTotali = studyHub.getMappaCorsiTotali();
         studyHub.setCorsoSelezionato(mockCorso);
         int numeroCorsi = mockStudente.getMappaCorsiCreati().size();
+        System.out.println(numeroCorsi);
         Map <String, Contenuto> mockContenuti = mockCorso.getMappaContenuti();
         Map<String, Iscrizione> mockIscrizioni = mockCorso.getMappaIscrizioni();
         String simulatedInput = mockCorso.getId() + "\n";
@@ -472,8 +482,8 @@ public class TestStudyHub
         int numeroCorsi = mockStudente.getMappaIscrizioni().size();
         int numeroStudenti = mockCorso.getNumeroStudenti();
         studyHub.iscrizioneCorso();
-        assertEquals(numeroCorsi, mockStudente.getMappaIscrizioni().size());
-        assertEquals(numeroStudenti, mockCorso.getNumeroStudenti());
+        assertEquals(numeroCorsi + 1, mockStudente.getMappaIscrizioni().size());
+        assertEquals(numeroStudenti + 1, mockCorso.getNumeroStudenti());
     }
 
     //Test pagamentoIscrizione
@@ -483,6 +493,8 @@ public class TestStudyHub
         studyHub.setStudente(mockStudente);
         mockStudente.creaDatiPagamento("carta", "123456789", mockStudente.getNome(), mockStudente.getCognome());
         studyHub.setCorsoSelezionato(mockCorso);
+        int numeroStudenti = mockCorso.getNumeroStudenti();
+        int numeroCorsi = mockStudente.getNumeroCorsi();
         assertNotNull(mockStudente.getMappaDatiPagamento().get("123456789"));
         String simulatedInput = "123456789\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
@@ -491,8 +503,8 @@ public class TestStudyHub
         assertNotNull(mockStudente.getMappaIscrizioni().get(mockCorso.getId()));
         assertNotNull(mockCorso.getMappaIscrizioni().get(mockStudente.getId()));
         assertEquals(mockStudente.getMappaIscrizioni().get(mockCorso.getId()), mockCorso.getMappaIscrizioni().get(mockStudente.getId()));
-        assertEquals(1, mockCorso.getNumeroStudenti());
-        assertEquals(1, mockStudente.getNumeroCorsi());
+        assertEquals(numeroStudenti + 1, mockCorso.getNumeroStudenti());
+        assertEquals(numeroCorsi + 1, mockStudente.getNumeroCorsi());
         assertNotNull(mockIscrizione.getMappaPagamenti().values().iterator().next());
         assertEquals(1, mockIscrizione.getMappaPagamenti().size());
     }
@@ -503,13 +515,15 @@ public class TestStudyHub
     {
         studyHub.setStudente(mockStudente);
         studyHub.setCorsoSelezionato(mockCorso);
+        int numeroStudenti = mockCorso.getNumeroStudenti();
+        int numeroCorsi = mockStudente.getNumeroCorsi();
         mockIscrizione = new Iscrizione(mockStudente.getId(), mockCorso.getId());
         studyHub.aggiungiIscrizione(mockIscrizione);
         assertNotNull(mockStudente.getMappaIscrizioni().get(mockCorso.getId()));
         assertNotNull(mockCorso.getMappaIscrizioni().get(mockStudente.getId()));
         assertEquals(mockStudente.getMappaIscrizioni().get(mockCorso.getId()), mockCorso.getMappaIscrizioni().get(mockStudente.getId()));
-        assertEquals(1, mockCorso.getNumeroStudenti());
-        assertEquals(1, mockStudente.getNumeroCorsi());
+        assertEquals(numeroStudenti + 1, mockCorso.getNumeroStudenti());
+        assertEquals(numeroCorsi + 1, mockStudente.getNumeroCorsi());
     }
 
     //Test eliminaIscrizione
@@ -517,17 +531,17 @@ public class TestStudyHub
     public void testEliminaIscrizione()
     {
         studyHub.setStudente(mockStudente);
-        studyHub.setCorsoSelezionato(mockCorso);
+        studyHub.setCorsoSelezionato(mockCorso2);
         int numeroCorsi = mockStudente.getMappaIscrizioni().size();
-        int numeroStudenti = mockCorso.getNumeroStudenti();
-        String simulatedInput = mockCorso.getId() + "\n";
+        int numeroStudenti = mockCorso2.getNumeroStudenti();
+        String simulatedInput = mockCorso2.getId() + "\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
         studyHub.eliminaIscrizione();
         assertEquals(numeroCorsi - 1, mockStudente.getMappaIscrizioni().size());
-        assertEquals(numeroStudenti - 1, mockCorso.getNumeroStudenti());
+        assertEquals(numeroStudenti - 1, mockCorso2.getNumeroStudenti());
         assertNull(mockStudente.getMappaIscrizioni().get(mockCorso.getId()));
-        assertNull(mockCorso.getMappaIscrizioni().get(mockStudente.getId()));
+        assertNull(mockCorso2.getMappaIscrizioni().get(mockStudente.getId()));
     }
     
     //UC6
@@ -599,22 +613,27 @@ public class TestStudyHub
     public void testIscrizioneGruppoStudio()
     {
         studyHub.setStudente(mockStudente);
-        GruppoStudio mockGruppoStudio = new GruppoStudio("Gruppo 1", mockStudente.getId(), "1111", "Italiano", 30, 5);
-        Map<String, GruppoStudio> mockGruppiStudio = new HashMap<String, GruppoStudio>();
-        mockGruppiStudio.put(mockGruppoStudio.getId(), mockGruppoStudio);
-        studyHub.setGruppiStudio(mockGruppiStudio);
-        String simulatedInput = "no\nGruppo 1\n1111\n";
+        GruppoStudio mockGruppoStudio = null;
+        for (GruppoStudio gruppoStudio : studyHub.getGruppiStudio().values())
+        {
+            if (gruppoStudio.getNome() == "Gruppo2")
+            {
+                mockGruppoStudio = gruppoStudio;
+            }
+        }
+        System.out.println(mockGruppoStudio.getNome());
+        int numeroStudenti = mockGruppoStudio.getNumeroStudenti();
+        int numeroGruppiStudio = mockStudente.getMappaGruppiStudio().size();
+        String simulatedInput = "no\nGruppo2\n1111\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
         studyHub.iscrizioneGruppoStudio();
         assertNotNull(mockStudente.getMappaGruppiStudio().get(mockGruppoStudio.getId()));
-        assertNotNull(studyHub.getGruppiStudio().get(mockGruppoStudio.getId()));
         assertNotNull(mockGruppoStudio.getMappaStudenti().get(mockStudente.getId()));
         assertEquals(mockGruppoStudio, mockStudente.getMappaGruppiStudio().get(mockGruppoStudio.getId()));
-        assertEquals(mockGruppoStudio, studyHub.getGruppiStudio().get(mockGruppoStudio.getId()));
         assertEquals(mockStudente, mockGruppoStudio.getMappaStudenti().get(mockStudente.getId()));
-        assertEquals(1, mockStudente.getMappaGruppiStudio().size());
-        assertEquals(1, mockGruppoStudio.getNumeroStudenti());
+        assertEquals(numeroGruppiStudio + 1, mockStudente.getMappaGruppiStudio().size());
+        assertEquals(numeroStudenti + 1, mockGruppoStudio.getNumeroStudenti());
     }
 
     //Test eliminaIscrizioneGruppoStudio
@@ -623,9 +642,9 @@ public class TestStudyHub
     {
         studyHub.setStudente(mockStudente);
         GruppoStudio mockGruppoStudio = null;
-        for (GruppoStudio gruppoStudio : mockStudente.getMappaGruppiStudio().values())
+        for (GruppoStudio gruppoStudio : studyHub.getGruppiStudio().values())
         {
-            if (gruppoStudio.getAdmin() != mockStudente.getUsername())
+            if (gruppoStudio.getNome() == "Gruppo4")
             {
                 mockGruppoStudio = gruppoStudio;
             }
