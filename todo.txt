@@ -1,0 +1,12 @@
+Iterazione 3:
+-Completare test
+-Rifinire file Astah (?)
+
+Iterazione 4:
+-Trovare dei pattern da usare
+-Refactoring generale
+-Refactor dell'eliminazione del profilo e dell'UC1
+-Riordino menu
+-Dividere mappaGruppiStudio di Studente in mappaGruppiStudioCreati e mappaGruppiStudioIscritti
+-Cambiare admin GruppoStudio (passare da username ad id)
+-Cambiare admin di un gruppo studio

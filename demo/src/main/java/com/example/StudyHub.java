@@ -37,7 +37,7 @@ public class StudyHub
     }
 
     //Funzione per caricare dei dati di prova
-    private void loadData()
+    public void loadData()
     {
         //Dati sugli studenti
         Studente studente1 = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
@@ -114,18 +114,21 @@ public class StudyHub
         corso4.aggiungiContenuto(contenuto4);
         corso5.aggiungiContenuto(contenuto5);
         //Dati sui gruppi studio
-        GruppoStudio gruppo1 = new GruppoStudio("Gruppo1", null, "1111", "Italiano", 30, 10);
-        GruppoStudio gruppo2 = new GruppoStudio("Gruppo2", null, "1111", "Italiano", 30, 10);
-        GruppoStudio gruppo3 = new GruppoStudio("Gruppo3", null, "1111", "Italiano", 30, 10);
+        GruppoStudio gruppo1 = new GruppoStudio("Gruppo1", studente1.getId(), "1111", "Italiano", 30, 10);
+        GruppoStudio gruppo2 = new GruppoStudio("Gruppo2", studente2.getId(), "1111", "Italiano", 30, 10);
+        GruppoStudio gruppo3 = new GruppoStudio("Gruppo3", studente1.getId(), "1111", "Italiano", 30, 10);
         gruppo1.aggiungiStudente(studente1);
-        gruppo1.setAdmin(studente1.getId());
+        gruppo1.aggiungiStudente(studente2);
         studente1.aggiungiGruppoStudio(gruppo1);
+        studente2.aggiungiGruppoStudio(gruppo1);
+        gruppo2.aggiungiStudente(studente1);
         gruppo2.aggiungiStudente(studente2);
-        gruppo2.setAdmin(studente2.getId());
+        studente1.aggiungiGruppoStudio(gruppo2);
         studente2.aggiungiGruppoStudio(gruppo2);
         gruppo3.aggiungiStudente(studente1);
-        gruppo3.setAdmin(studente1.getId());
+        gruppo3.aggiungiStudente(studente2);
         studente1.aggiungiGruppoStudio(gruppo3);
+        studente2.aggiungiGruppoStudio(gruppo3);
         gruppiStudio.put(gruppo1.getId(), gruppo1);
         gruppiStudio.put(gruppo2.getId(), gruppo2);
         gruppiStudio.put(gruppo3.getId(), gruppo3);
@@ -164,13 +167,13 @@ public class StudyHub
         else
         {
             System.out.println("Menu:");
-            System.out.println("1. Modifica profilo");
-            System.out.println("2. Carica appunto");
-            System.out.println("3. Carica contenuto");
-            System.out.println("4. Creazione di un corso");
-            System.out.println("5. Iscrizione ad un corso");
-            System.out.println("6. Crea un gruppo di studio");
-            System.out.println("7. Iscriviti ad un gruppo studio");
+            System.out.println("1. Modifica o elimina profilo");
+            System.out.println("2. Carica o elimina un appunto");
+            System.out.println("3. Carica o elimina un contenuto");
+            System.out.println("4. Crea o elimina un corso");
+            System.out.println("5. Iscriviti o disiscriviti ad un corso");
+            System.out.println("6. Crea o elimina un gruppo di studio");
+            System.out.println("7. Iscriviti o disiscriviti ad un gruppo studio");
             System.out.println("8. Logout");
             System.out.println("9. Esci");
             System.out.print("Seleziona un'opzione: ");
@@ -186,6 +189,7 @@ public class StudyHub
         return mappaCorsiTotali;
     }
 
+    //Funzione per settare i corsi
     public void setMappaCorsiTotali(Map<String, Corso> mappaCorsiTotali)
     {
         this.mappaCorsiTotali = mappaCorsiTotali;
@@ -197,6 +201,7 @@ public class StudyHub
         return studenti;
     }
 
+    //Funzione per settare gli studenti
     public void setStudenti(Map<String, Studente> studenti)
     {
         this.studenti = studenti;
@@ -214,6 +219,7 @@ public class StudyHub
         return gruppiStudio;
     }
 
+    //Funzione per settare i gruppi di studio
     public void setGruppiStudio(Map<String, GruppoStudio> gruppiStudio)
     {
         this.gruppiStudio = gruppiStudio;
@@ -249,6 +255,13 @@ public class StudyHub
         return isLogged;
     }
 
+    //Funzione per settare lo status del login
+    public void setIsLogged(boolean isLogged)
+    {
+        this.isLogged = isLogged;
+    }
+
+    //Main
     public static void main(String[] args) 
     {
         StudyHub studyHub = new StudyHub();
@@ -288,34 +301,34 @@ public class StudyHub
                 switch (scelta) 
                 {
                     case 1:
-                        System.out.println("Hai selezionato Modifica profilo");
+                        System.out.println("Hai selezionato Modifica o elimina profilo");
                         studyHub.modificaProfilo();
                         break;
                     case 2:
-                        System.out.println("Hai selezionato Carica appunto");
+                        System.out.println("Hai selezionato Carica o elimina appunto");
                         studyHub.caricaAppunto();
                         break;
                     case 3:
-                        System.out.println("Hai selezionato Carica contenuto");
+                        System.out.println("Hai selezionato Carica o elimina contenuto");
                         studyHub.selezionaCorsoCreato();
                         studyHub.caricaContenuto();
                         break;
                     case 4:
-                        System.out.println("Hai selezionato Creazione di un corso");
+                        System.out.println("Hai selezionato Crea o elimina un corso");
                         studyHub.creaCorso();
                         break;
                     case 5:
-                        System.out.println("Hai selezionato Iscrizione ad un corso");
+                        System.out.println("Hai selezionato Iscrizione o disiscrizione ad un corso");
                         studyHub.selezionaCorso(studyHub.cercaCorso());
                         studyHub.iscrizioneCorso();
                         break;
                     case 6:
-                        System.out.println("Hai selezionato Creazione Gruppo Studio");
+                        System.out.println("Hai selezionato Crea o elimina un gruppo di studio");
                         GruppoStudio gruppoStudio = studyHub.creaGruppoStudio();
                         studyHub.gruppiStudio.put(gruppoStudio.getId(), gruppoStudio);
                         break;   
                     case 7:
-                        System.out.println("Hai selezionato Iscrizione ad un gruppo studio");
+                        System.out.println("Hai selezionato Iscrizione o disiscrizione ad un gruppo studio");
                         studyHub.iscrizioneGruppoStudio();
                         break;            
                     case 8:
@@ -374,6 +387,17 @@ public class StudyHub
     public Studente datiProfilo()
     {
         scanner = new Scanner(System.in);
+        String risposta;
+        do
+        {
+            System.out.println("Vuoi eliminare il profilo? (si/no)");
+            risposta = scanner.nextLine();
+        } while (!risposta.equals("si") && !risposta.equals("no"));
+        if (risposta.equals("si"))
+        {
+            eliminaProfilo();
+            return null;
+        }
         String username;
         String password;
         String nome;
@@ -382,7 +406,7 @@ public class StudyHub
         String luogoNascita;
         String residenza;
         String livello;
-        
+
         System.out.println("Inserisci lo username: ");
         username = scanner.nextLine();
         System.out.println("Inserisci la password: ");
@@ -409,6 +433,10 @@ public class StudyHub
     public boolean creaProfilo()
     {
         Studente stud = datiProfilo();
+        if (stud == null)
+        {
+            return false;
+        }
         if (!controllaDatiProfilo(stud))
         {
             System.out.println("Dati mancanti");
@@ -451,33 +479,56 @@ public class StudyHub
     //Funzione per l'eliminazione del profilo
     public void eliminaProfilo()
     {
-        for(Corso corso: mappaCorsiTotali.values())
+        Iterator<Map.Entry<String, Corso>> corsoIterator = mappaCorsiTotali.entrySet().iterator();
+        while (corsoIterator.hasNext())
         {
+            Map.Entry<String, Corso> entry = corsoIterator.next();
+            Corso corso = entry.getValue();
             if (corso.getCreatore().equals(studenteCorrente.getId()))
             {
-                mappaCorsiTotali.remove(corso.getId());
+                corsoIterator.remove();
+                for (Studente stud : studenti.values())
+                {
+                    if (stud.getMappaIscrizioni().containsKey(corso.getId()))
+                    {
+                        corso.rimuoviIscrizione(stud);
+                        stud.rimuoviIscrizione(corso);
+                    }
+                }
+                corso.getMappaIscrizioni().clear();
+                corso.getMappaContenuti().clear();
             }
-            if (corso.getMappaIscrizioni().containsKey(studenteCorrente.getId()))
+            else if (corso.getMappaIscrizioni().containsKey(studenteCorrente.getId()))
             {
                 corso.rimuoviIscrizione(studenteCorrente);
             }
         }
-        for(GruppoStudio gruppoStudio: gruppiStudio.values())
+        Iterator<Map.Entry<String, GruppoStudio>> gruppoIterator = gruppiStudio.entrySet().iterator();
+        while (gruppoIterator.hasNext())
         {
+            Map.Entry<String, GruppoStudio> entry = gruppoIterator.next();
+            GruppoStudio gruppoStudio = entry.getValue();
             if (gruppoStudio.getAdmin().equals(studenteCorrente.getId()))
             {
-                gruppiStudio.remove(gruppoStudio.getId());
+                for (Studente stud : new ArrayList<>(gruppoStudio.getMappaStudenti().values()))
+                {
+                    stud.rimuoviGruppoStudio(gruppoStudio);
+                    gruppoStudio.rimuoviStudente(stud);
+                }
+                gruppoIterator.remove();
             }
-            if (gruppoStudio.getMappaStudenti().containsKey(studenteCorrente.getId()))
+            else if (gruppoStudio.getMappaStudenti().containsKey(studenteCorrente.getId()))
             {
                 gruppoStudio.rimuoviStudente(studenteCorrente);
             }
         }
-        for(Appunto appunto: appunti.values())
+        Iterator<Map.Entry<String, Appunto>> appuntiIterator = appunti.entrySet().iterator();
+        while (appuntiIterator.hasNext())
         {
-            if (appunto.getCreatore().equals(studenteCorrente.getId()))
+            Map.Entry<String, Appunto> entry = appuntiIterator.next();
+            if (entry.getValue().getCreatore().equals(studenteCorrente.getId()))
             {
-                appunti.remove(appunto.getId());
+                appuntiIterator.remove();
             }
         }
         studenteCorrente.getMappaIscrizioni().clear();
@@ -538,6 +589,17 @@ public class StudyHub
     public Corso creaCorso()
     {
         scanner = new Scanner(System.in);
+        String risposta;
+        do
+        {
+            System.out.println("Vuoi eliminare il corso? (si/no)");
+            risposta = scanner.nextLine();
+        } while (!risposta.equals("si") && !risposta.equals("no"));
+        if (risposta.equals("si"))
+        {
+            eliminaCorso();
+            return null;
+        }
         String nome;
         String livello;
         float costo;
@@ -557,7 +619,6 @@ public class StudyHub
         durata = scanner.nextInt();
         System.out.println("Inserisci la dimensione massima dei contenuti: ");
         int dimensioneMassima = scanner.nextInt();
-        scanner.nextLine();
 
         if (!controllaNomeCorso(nome))
         {
@@ -572,15 +633,16 @@ public class StudyHub
         return corso;
     }
 
+    //Funzione per il controllo del nome del corso
     public boolean controllaNomeCorso(String nome)
     {
-        if(nome.matches("[a-zA-Z0-9]+"))
-        {
-            return true;
-        }
         for(Corso corso: mappaCorsiTotali.values())
         {
             if(corso.getNome().equals(nome))
+            {
+                return false;
+            }
+            else if(!nome.matches("[a-zA-Z0-9 ]+"))
             {
                 return false;
             }
@@ -588,19 +650,18 @@ public class StudyHub
         return true;
     }
 
+    //Funzione per l'eliminazione di un corso
     public void eliminaCorso()
     {
+        selezionaCorsoCreato();
         if (corsoSelezionato.getCreatore().equals(studenteCorrente.getId()))
         {
             mappaCorsiTotali.remove(corsoSelezionato.getId());
             studenteCorrente.rimuoviCorsoCreato(corsoSelezionato);
-            for(Studente stud: studenti.values())
+            for(Iscrizione iscrizione : corsoSelezionato.getMappaIscrizioni().values())
             {
-                if (stud.getMappaIscrizioni().containsKey(corsoSelezionato.getId()))
-                {
-                    corsoSelezionato.rimuoviIscrizione(stud);
-                    stud.rimuoviIscrizione(corsoSelezionato);
-                }
+                Studente stud = studenti.get(iscrizione.getStudente());
+                stud.rimuoviIscrizione(corsoSelezionato);
             }
             corsoSelezionato.getMappaIscrizioni().clear();
             corsoSelezionato.getMappaContenuti().clear();
@@ -618,6 +679,17 @@ public class StudyHub
     public Map<String, Corso> cercaCorso() 
     {
         scanner = new Scanner(System.in);
+        String risposta;
+        do 
+        {
+            System.out.println("Vuoi disiscriverti da un corso? (si/no)");
+            risposta = scanner.nextLine();
+        } while (!risposta.equals("si") && !risposta.equals("no"));
+        if (risposta.equals("si")) 
+        {
+            eliminaCorso();
+            return null;
+        }
         System.out.println("Inserisci i dati relativi al corso: ");
         System.out.println("Inserisci il nome del corso (lascia vuoto se non lo conosci): ");
         String nome = scanner.nextLine();
@@ -664,7 +736,6 @@ public class StudyHub
         return mappaCorsiCercati;
     }
 
-
     //Funzione per selezionare un corso da quelli cercati
     public void selezionaCorso(Map<String, Corso> mappaCorsiCercati)
     {
@@ -684,7 +755,7 @@ public class StudyHub
     //Funzione per l'iscrizione ad un corso
     public void iscrizioneCorso()
     {
-        if (controllaIscrizione(corsoSelezionato))
+        if (!controllaIscrizione(corsoSelezionato))
         {
             System.out.println("Sei già iscritto a questo corso");
             return;
@@ -712,10 +783,10 @@ public class StudyHub
         {
             if(iscrizione.getCorso().equals(corso.getId()))
             {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     //Funzione per il pagamento dell'iscrizione
@@ -761,8 +832,41 @@ public class StudyHub
         System.out.println("Iscrizione avvenuta con successo");
     }
 
+    //Funzione per la selezione di un corso a cui si è iscritti
+    public void selezionaCorsoIscritto()
+    {
+        scanner = new Scanner(System.in);
+        Map<String, Iscrizione> mappaCorsiIscritti = studenteCorrente.getMappaIscrizioni();
+        if (mappaCorsiIscritti.isEmpty())
+        {
+            System.out.println("Non sei iscritto a nessun corso");
+            return;
+        }
+
+        System.out.println("I tuoi corsi sono: ");
+        for(Iscrizione iscrizione: mappaCorsiIscritti.values())
+        {
+            System.out.print(iscrizione.getCorso() + " ");
+            System.out.println(iscrizione.getId());
+        }
+
+        do
+        {
+            System.out.print("Inserisci l'id di un corso: ");
+            String id = scanner.nextLine();
+
+            corsoSelezionato = mappaCorsiTotali.get(id);
+            if(corsoSelezionato == null)
+            {
+                System.out.println("Corso non trovato");
+            }
+        } while(corsoSelezionato == null);
+    }
+
+    //Funzione per l'eliminazione di un'iscrizione
     public void eliminaIscrizione()
     {
+        selezionaCorsoIscritto();
         if (corsoSelezionato.getMappaIscrizioni().containsKey(studenteCorrente.getId()))
         {
             corsoSelezionato.rimuoviIscrizione(studenteCorrente);
@@ -781,6 +885,17 @@ public class StudyHub
     public GruppoStudio creaGruppoStudio()
     {
         scanner = new Scanner(System.in);
+        String risposta;
+        do
+        {
+            System.out.println("Vuoi eliminare il gruppo studio? (si/no)");
+            risposta = scanner.nextLine();
+        } while (!risposta.equals("si") && !risposta.equals("no"));
+        if (risposta.equals("si"))
+        {
+            eliminaGruppoStudio();
+            return null;
+        }
         String nome;
         String password;
         String lingua;
@@ -810,6 +925,7 @@ public class StudyHub
         return gruppoStudio;
     }
 
+    //Funzione per il controllo del nome del gruppo studio
     public boolean controllaNomeGruppo(String nome)
     {
         for(GruppoStudio gruppoStudio: gruppiStudio.values())
@@ -822,8 +938,10 @@ public class StudyHub
         return true;
     }
 
+    //Funzione per la selezione di un gruppo studio creato
     public GruppoStudio selezionaGruppoStudioCreato()
     {
+        scanner = new Scanner(System.in);
         Map<String, GruppoStudio> mappaGruppiStudioCreati = studenteCorrente.getMappaGruppiStudio();
         GruppoStudio gruppoStudioSelezionato = null;
         if (mappaGruppiStudioCreati.isEmpty())
@@ -856,6 +974,7 @@ public class StudyHub
         } while(true);
     }
 
+    //Funzione per l'eliminazione di un gruppo studio
     public void eliminaGruppoStudio()
     {
         GruppoStudio gruppoStudio = selezionaGruppoStudioCreato();
@@ -863,7 +982,7 @@ public class StudyHub
         {
             return;
         }
-        if (gruppoStudio.getAdmin().equals(studenteCorrente.getId()))
+        if (gruppoStudio.getAdmin().equals(studenteCorrente.getUsername()))
         {
             gruppiStudio.remove(gruppoStudio.getId());
             studenteCorrente.rimuoviGruppoStudio(gruppoStudio);
@@ -877,7 +996,6 @@ public class StudyHub
                 }
             }
             mappaStudenti.clear();
-            gruppoStudio = null;
         }
         else
         {
@@ -891,6 +1009,17 @@ public class StudyHub
     public void iscrizioneGruppoStudio()
     {
         scanner = new Scanner(System.in);
+        String risposta;
+        do
+        {
+            System.out.println("Vuoi disiscriverti da un gruppo studio? (si/no)");
+            risposta = scanner.nextLine();
+        } while (!risposta.equals("si") && !risposta.equals("no"));
+        if (risposta.equals("si"))
+        {
+            eliminaIscrizioneGruppoStudio();
+            return;
+        }
         String nome;
         String password;
         boolean trovato = false;
@@ -942,15 +1071,57 @@ public class StudyHub
         }
     }
 
+    //Funzione per la selezione di un gruppo studio a cui si è iscritti
+    public GruppoStudio selezionaGruppoStudioIscritto()
+    {
+        scanner = new Scanner(System.in);
+        Map<String, GruppoStudio> mappaGruppiStudioIscritti = studenteCorrente.getMappaGruppiStudio();
+        GruppoStudio gruppoStudioSelezionato = null;
+        if (mappaGruppiStudioIscritti.isEmpty())
+        {
+            System.out.println("Non sei iscritto a nessun gruppo studio");
+            return null;
+        }
+
+        System.out.println("I tuoi gruppi studio sono: ");
+        for(GruppoStudio gruppoStudio: mappaGruppiStudioIscritti.values())
+        {
+            System.out.print(gruppoStudio.getNome() + " ");
+            System.out.println(gruppoStudio.getId());
+        }
+
+        do
+        {
+            System.out.print("Inserisci l'id di un gruppo studio: ");
+            String id = scanner.nextLine();
+
+            gruppoStudioSelezionato = mappaGruppiStudioIscritti.get(id);
+            if(gruppoStudioSelezionato == null)
+            {
+                System.out.println("Gruppo studio non trovato");
+            }
+            else
+            {
+                return gruppoStudioSelezionato;
+            }
+        } while(true);
+    }
+
+    //Funzione per l'eliminazione di un'iscrizione ad un gruppo studio
     public void eliminaIscrizioneGruppoStudio()
     {
-        GruppoStudio gruppoStudio = selezionaGruppoStudioCreato();
+        GruppoStudio gruppoStudio = selezionaGruppoStudioIscritto();
         if (gruppoStudio == null)
         {
             return;
         }
         if (gruppoStudio.getMappaStudenti().containsKey(studenteCorrente.getId()))
         {
+            if (gruppoStudio.getAdmin().equals(studenteCorrente.getUsername()))
+            {
+                eliminaGruppoStudio();
+                return;
+            }
             gruppoStudio.rimuoviStudente(studenteCorrente);
             studenteCorrente.rimuoviGruppoStudio(gruppoStudio);
             System.out.println("Iscrizione rimossa con successo");
@@ -999,6 +1170,17 @@ public class StudyHub
     public Contenuto caricaContenuto()
     {
         scanner = new Scanner(System.in);
+        String risposta;
+        do
+        {
+            System.out.println("Vuoi eliminare un contenuto? (si/no)");
+            risposta = scanner.nextLine();
+        } while (!risposta.equals("si") && !risposta.equals("no"));
+        if (risposta.equals("si"))
+        {
+            eliminaContenuto();
+            return null;
+        }
         String titolo;
         String formato;
         String file;
@@ -1025,6 +1207,7 @@ public class StudyHub
         return contenuto;
     }
 
+    //Funzione per il controllo del contenuto
     public boolean controllaContenuto(int dimensione, String formato)
     {
         if(dimensione > corsoSelezionato.getDimensioneMassima())
@@ -1032,7 +1215,7 @@ public class StudyHub
             System.out.println("Dimensione massima superata");
             return false;
         }
-        if(formato != "pdf" && formato != "doc" && formato != "txt")
+        if(!formato.equals("pdf") && !formato.equals("doc") && !formato.equals("txt"))
         {
             System.out.println("Formato non valido");
             return false;
@@ -1040,6 +1223,7 @@ public class StudyHub
         return true;
     }
 
+    //Funzione per selezionare un contenuto tra quelli del corso
     public Contenuto selezionaContenutoCreato()
     {
         Map<String, Contenuto> mappaContenuti = corsoSelezionato.getMappaContenuti();
@@ -1073,6 +1257,8 @@ public class StudyHub
             }
         } while(true);
     }
+
+    //Funzione per l'eliminazione di un contenuto
     public void eliminaContenuto()
     {
         selezionaCorsoCreato();
@@ -1098,6 +1284,17 @@ public class StudyHub
     public Appunto caricaAppunto()
     {
         scanner = new Scanner(System.in);
+        String risposta;
+        do
+        {
+            System.out.println("Vuoi eliminare un appunto? (si/no)");
+            risposta = scanner.nextLine();
+        } while (!risposta.equals("si") && !risposta.equals("no"));
+        if (risposta.equals("si"))
+        {
+            eliminaAppunto();
+            return null;
+        }
         String titolo;
         String formato;
         String file;
@@ -1125,6 +1322,7 @@ public class StudyHub
         return appunto;
     }
 
+    //Funzione per il controllo dell'appunto
     public boolean controllaAppunto(Appunto appunto)
     {
         if(appunto.getTitolo().isEmpty() || appunto.getFormato().isEmpty() || appunto.getFile().isEmpty())
@@ -1142,8 +1340,10 @@ public class StudyHub
         return true;
     }
 
+    //Funzione per selezionare un appunto tra quelli dello studente
     public Appunto selezionaAppunto()
     {
+        scanner = new Scanner(System.in);
         Appunto appuntoSelezionato = null;
         if (studenteCorrente.getMappaAppunti().isEmpty())
         {
@@ -1175,6 +1375,7 @@ public class StudyHub
         } while(true);
     }
 
+    //Funzione per l'eliminazione di un appunto
     public void eliminaAppunto()
     {
         Appunto appunto = selezionaAppunto();
