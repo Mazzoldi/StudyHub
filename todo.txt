@@ -1,5 +1,5 @@
 Iterazione 3:
--Rifinire file Astah (?)
+-SD selezionaCorsoIscritto
 
 Iterazione 4:
 -Casi d'uso legati ai corsi e ai gruppi
