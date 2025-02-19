@@ -1,8 +1,8 @@
 Iterazione 3:
--Completare test
 -Rifinire file Astah (?)
 
 Iterazione 4:
+-Casi d'uso legati ai corsi e ai gruppi
 -Trovare dei pattern da usare
 -Refactoring generale
 -Refactor dell'eliminazione del profilo e dell'UC1
