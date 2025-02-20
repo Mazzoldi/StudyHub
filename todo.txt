@@ -10,3 +10,6 @@ Iterazione 4:
 -Dividere mappaGruppiStudio di Studente in mappaGruppiStudioCreati e mappaGruppiStudioIscritti
 -Cambiare admin GruppoStudio (passare da username ad id)
 -Cambiare admin di un gruppo studio
+- Possibilità di scaricare appunti da un corso
+- Possibilità di visualizzare gli studenti totali e i contenuti totali in un corso.
+- Possibilità di visualizzare gli studenti totali in un gruppo studio.
