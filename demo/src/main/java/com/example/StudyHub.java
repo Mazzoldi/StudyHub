@@ -78,7 +78,7 @@ public class StudyHub
         studente1.aggiungiCorsoCreato(corso3);
         Corso corso4 = new Corso("Italiano", "Laurea Triennale", 20, studente1.getId(), "Italiano", 30, 30);
         studente1.aggiungiCorsoCreato(corso4);
-        Corso corso5 = new Corso("Storia", "Liceo", 10, studente2.getId(), "Inglese", 30, 30);
+        Corso corso5 = new Corso("Storia", "Liceo", 0, studente2.getId(), "Inglese", 30, 30);
         studente2.aggiungiCorsoCreato(corso5);
         //Mappe per i corsi
         mappaCorsiTotali.put(corso1.getId(), corso1);
@@ -105,11 +105,6 @@ public class StudyHub
         corso4.aggiungiIscrizione(studente2, iscrizione4);
         Pagamento pagamentoIscrizione2 = new Pagamento(corso4.getCosto(), datiPagamento2);
         iscrizione4.aggiungiPagamento(pagamentoIscrizione2);
-        Iscrizione iscrizione5 = new Iscrizione(studente1.getId(), corso5.getId());
-        studente1.aggiungiIscrizione(corso5, iscrizione5);
-        corso5.aggiungiIscrizione(studente1, iscrizione5);
-        Pagamento pagamentoIscrizione3 = new Pagamento(corso5.getCosto(), datiPagamento1);
-        iscrizione5.aggiungiPagamento(pagamentoIscrizione3);
         //Dati sugli appunti
         Appunto appunto1 = new Appunto(studente1.getId() ,"Appunto1", "pdf", "appunto1.pdf", 10);
         Appunto appunto2 = new Appunto(studente2.getId(), "Appunto2", "pdf", "appunto2.pdf", 10);
@@ -193,13 +188,14 @@ public class StudyHub
         else
         {
             System.out.println("Menu:");
-            System.out.println("1. Modifica o elimina profilo");
-            System.out.println("2. Carica o elimina un appunto");
-            System.out.println("3. Carica o elimina un contenuto");
-            System.out.println("4. Crea o elimina un corso");
-            System.out.println("5. Iscriviti o disiscriviti ad un corso");
-            System.out.println("6. Crea o elimina un gruppo di studio");
-            System.out.println("7. Iscriviti o disiscriviti ad un gruppo studio");
+            System.out.println("1. Elimina profilo");
+            System.out.println("2. Modifica profilo");
+            System.out.println("3. Crea o elimina un corso");
+            System.out.println("4. Iscriviti o disiscriviti ad un corso");
+            System.out.println("5. Crea o elimina un gruppo studio");
+            System.out.println("6. Iscriviti o disiscriviti ad un gruppo studio");
+            System.out.println("7. Carica o elimina un contenuto");
+            System.out.println("3. Carica o elimina un appunto");
             System.out.println("8. Logout");
             System.out.println("9. Esci");
             System.out.print("Seleziona un'opzione: ");
@@ -293,6 +289,7 @@ public class StudyHub
         StudyHub studyHub = new StudyHub();
         boolean running = true;
         int scelta;
+        Runnable action;
 
         do 
         {
@@ -327,46 +324,71 @@ public class StudyHub
                 switch (scelta) 
                 {
                     case 1:
-                        System.out.println("Hai selezionato Modifica o elimina profilo");
-                        studyHub.modificaProfilo();
+                        System.out.println("Hai selezionato Elimina profilo");
+                        studyHub.eliminaProfilo();
                         break;
                     case 2:
-                        System.out.println("Hai selezionato Carica o elimina appunto");
-                        studyHub.caricaAppunto();
+                        System.out.println("Hai selezionato Modifica profilo");
+                        studyHub.modificaProfilo();
                         break;
                     case 3:
-                        System.out.println("Hai selezionato Carica o elimina contenuto");
-                        studyHub.selezionaCorsoCreato();
-                        studyHub.caricaContenuto();
+                        System.out.println("Hai selezionato Crea o elimina un corso");
+                        System.out.println("Scegli un'opzione: ");
+                        System.out.println("1. Crea un corso");
+                        System.out.println("2. Elimina un corso");
+                        action = studyHub.sceltaOpzione() == 1 ? () -> studyHub.creaCorso() : () -> studyHub.eliminaCorso();
+                        action.run();
                         break;
                     case 4:
-                        System.out.println("Hai selezionato Crea o elimina un corso");
-                        studyHub.creaCorso();
+                        System.out.println("Hai selezionato Iscrizione o disiscrizione ad un corso");
+                        System.out.println("Scelta un'opzione: ");
+                        System.out.println("1. Iscrizione ad un corso");
+                        System.out.println("2. Disiscrizione da un corso");
+                        action = studyHub.sceltaOpzione() == 1 ? () -> studyHub.iscrizioneCorso() : () -> studyHub.eliminaIscrizione();
+                        action.run();
                         break;
                     case 5:
-                        System.out.println("Hai selezionato Iscrizione o disiscrizione ad un corso");
-                        studyHub.selezionaCorso(studyHub.cercaCorso());
-                        studyHub.iscrizioneCorso();
+                        System.out.println("Hai selezionato Crea o elimina un gruppo studio");
+                        System.out.println("Scegli un'opzione: ");
+                        System.out.println("1. Crea un gruppo di studio");
+                        System.out.println("2. Elimina un gruppo di studio");
+                        action = studyHub.sceltaOpzione() == 1 ? () -> studyHub.creaGruppoStudio() : () -> studyHub.eliminaGruppoStudio();
+                        action.run();
                         break;
                     case 6:
-                        System.out.println("Hai selezionato Crea o elimina un gruppo di studio");
-                        GruppoStudio gruppoStudio = studyHub.creaGruppoStudio();
-                        studyHub.gruppiStudio.put(gruppoStudio.getId(), gruppoStudio);
-                        break;   
-                    case 7:
                         System.out.println("Hai selezionato Iscrizione o disiscrizione ad un gruppo studio");
-                        studyHub.iscrizioneGruppoStudio();
-                        break;            
+                        System.out.println("Scelta un'opzione: ");
+                        System.out.println("1. Iscrizione ad un gruppo studio");
+                        System.out.println("2. Disiscrizione da un gruppo studio");
+                        action = studyHub.sceltaOpzione() == 1 ? () -> studyHub.iscrizioneGruppoStudio() : () -> studyHub.eliminaIscrizioneGruppoStudio();
+                        action.run();
+                        break;
+                    case 7:
+                        System.out.println("Hai selezionato Carica o elimina contenuto");
+                        System.out.println("Scegli un'opzione: ");
+                        System.out.println("1. Carica un contenuto");
+                        System.out.println("2. Elimina un contenuto");
+                        action = studyHub.sceltaOpzione() == 1 ? () -> studyHub.caricaContenuto() : () -> studyHub.eliminaContenuto();
+                        action.run();
+                        break;
                     case 8:
+                        System.out.println("Hai selezionato Carica o elimina appunto");
+                        System.out.println("Scegli un'opzione: ");
+                        System.out.println("1. Carica un appunto");
+                        System.out.println("2. Elimina un appunto");
+                        action = studyHub.sceltaOpzione() == 1 ? () -> studyHub.caricaAppunto() : () -> studyHub.eliminaAppunto();
+                        action.run();
+                        break;            
+                    case 9:
                         System.out.println("Hai selezionato Logout");
                         studyHub.studenteCorrente = null;
                         studyHub.isLogged = false;
                         break;
-                    case 9:
+                    case 10:
                         System.out.println("Uscita dal programma...");
                         running = false;
                         break;
-                    case 10: 
+                    case 11: 
                         System.out.println("Visualizzazione di tutti i dati");
                         studyHub.visualizzaTuttiIDati();
                         break;
@@ -377,6 +399,17 @@ public class StudyHub
             }
         } while (running);
         scanner.close();
+    }
+
+    //Funzione per scegliere l'opzione
+    public int sceltaOpzione()
+    {
+        int opzione;
+        do
+        {
+            opzione = scanner.nextInt();
+        } while (opzione != 1 && opzione != 2);
+        return opzione;
     }
 
     //Funzione per il login di uno studente
@@ -413,17 +446,6 @@ public class StudyHub
     public Studente datiProfilo()
     {
         scanner = new Scanner(System.in);
-        String risposta;
-        do
-        {
-            System.out.println("Vuoi eliminare il profilo? (si/no)");
-            risposta = scanner.nextLine();
-        } while (!risposta.equals("si") && !risposta.equals("no"));
-        if (risposta.equals("si"))
-        {
-            eliminaProfilo();
-            return null;
-        }
         String username;
         String password;
         String nome;
@@ -453,7 +475,7 @@ public class StudyHub
         return stud;
     }
 
-    //UC1: Iscrizione profilo
+    //UC1: Iscrizione/eliminazione profilo
     
     //Funzione per la creazione di un profilo
     public boolean creaProfilo()
@@ -615,17 +637,6 @@ public class StudyHub
     public Corso creaCorso()
     {
         scanner = new Scanner(System.in);
-        String risposta;
-        do
-        {
-            System.out.println("Vuoi eliminare il corso? (si/no)");
-            risposta = scanner.nextLine();
-        } while (!risposta.equals("si") && !risposta.equals("no"));
-        if (risposta.equals("si"))
-        {
-            eliminaCorso();
-            return null;
-        }
         String nome;
         String livello;
         float costo;
@@ -705,17 +716,6 @@ public class StudyHub
     public Map<String, Corso> cercaCorso() 
     {
         scanner = new Scanner(System.in);
-        String risposta;
-        do 
-        {
-            System.out.println("Vuoi disiscriverti da un corso? (si/no)");
-            risposta = scanner.nextLine();
-        } while (!risposta.equals("si") && !risposta.equals("no"));
-        if (risposta.equals("si")) 
-        {
-            eliminaCorso();
-            return null;
-        }
         System.out.println("Inserisci i dati relativi al corso: ");
         System.out.println("Inserisci il nome del corso (lascia vuoto se non lo conosci): ");
         String nome = scanner.nextLine();
@@ -766,6 +766,16 @@ public class StudyHub
     public void selezionaCorso(Map<String, Corso> mappaCorsiCercati)
     {
         scanner = new Scanner(System.in);
+        if (mappaCorsiCercati.isEmpty())
+        {
+            System.out.println("Nessun corso trovato");
+            return;
+        }
+        if (mappaCorsiCercati.size() == 1)
+        {
+            corsoSelezionato = mappaCorsiCercati.values().iterator().next();
+            return;
+        }
         System.out.println("I corsi trovati sono: ");
         for(Corso corso: mappaCorsiCercati.values())
         {
@@ -781,6 +791,7 @@ public class StudyHub
     //Funzione per l'iscrizione ad un corso
     public void iscrizioneCorso()
     {
+        selezionaCorso(cercaCorso());
         if (!controllaIscrizione(corsoSelezionato))
         {
             System.out.println("Sei già iscritto a questo corso");
@@ -807,7 +818,7 @@ public class StudyHub
     {
         for(Iscrizione iscrizione: studenteCorrente.getMappaIscrizioni().values())
         {
-            if(iscrizione.getCorso().equals(corso.getId()))
+            if(iscrizione.getCorso().equals(corso.getId()) || corso.getCreatore().equals(studenteCorrente.getId()))
             {
                 return false;
             }
@@ -911,17 +922,6 @@ public class StudyHub
     public GruppoStudio creaGruppoStudio()
     {
         scanner = new Scanner(System.in);
-        String risposta;
-        do
-        {
-            System.out.println("Vuoi eliminare il gruppo studio? (si/no)");
-            risposta = scanner.nextLine();
-        } while (!risposta.equals("si") && !risposta.equals("no"));
-        if (risposta.equals("si"))
-        {
-            eliminaGruppoStudio();
-            return null;
-        }
         String nome;
         String password;
         String lingua;
@@ -1034,17 +1034,6 @@ public class StudyHub
     public void iscrizioneGruppoStudio()
     {
         scanner = new Scanner(System.in);
-        String risposta;
-        do
-        {
-            System.out.println("Vuoi disiscriverti da un gruppo studio? (si/no)");
-            risposta = scanner.nextLine();
-        } while (!risposta.equals("si") && !risposta.equals("no"));
-        if (risposta.equals("si"))
-        {
-            eliminaIscrizioneGruppoStudio();
-            return;
-        }
         String nome;
         String password;
         boolean trovato = false;
@@ -1197,18 +1186,12 @@ public class StudyHub
     //Funzione per il caricamento di un contenuto
     public Contenuto caricaContenuto()
     {
-        scanner = new Scanner(System.in);
-        String risposta;
-        do
+        selezionaCorsoCreato();
+        if (corsoSelezionato == null)
         {
-            System.out.println("Vuoi eliminare un contenuto? (si/no)");
-            risposta = scanner.nextLine();
-        } while (!risposta.equals("si") && !risposta.equals("no"));
-        if (risposta.equals("si"))
-        {
-            eliminaContenuto();
             return null;
         }
+        scanner = new Scanner(System.in);
         String titolo;
         String formato;
         String file;
@@ -1312,17 +1295,6 @@ public class StudyHub
     public Appunto caricaAppunto()
     {
         scanner = new Scanner(System.in);
-        String risposta;
-        do
-        {
-            System.out.println("Vuoi eliminare un appunto? (si/no)");
-            risposta = scanner.nextLine();
-        } while (!risposta.equals("si") && !risposta.equals("no"));
-        if (risposta.equals("si"))
-        {
-            eliminaAppunto();
-            return null;
-        }
         String titolo;
         String formato;
         String file;
