@@ -195,9 +195,11 @@ public class StudyHub
             System.out.println("5. Crea o elimina un gruppo studio");
             System.out.println("6. Iscriviti o disiscriviti ad un gruppo studio");
             System.out.println("7. Carica o elimina un contenuto");
-            System.out.println("3. Carica o elimina un appunto");
-            System.out.println("8. Logout");
-            System.out.println("9. Esci");
+            System.out.println("8. Carica o elimina un appunto");
+            System.out.println("9. Scarica contenuto");
+            System.out.println("10. Visualizza contenuti e appunti dello studente");
+            System.out.println("11. Logout");
+            System.out.println("12. Esci");
             System.out.print("Seleziona un'opzione: ");
         }
         scelta = scanner.nextInt();
@@ -378,17 +380,25 @@ public class StudyHub
                         System.out.println("2. Elimina un appunto");
                         action = studyHub.sceltaOpzione() == 1 ? () -> studyHub.caricaAppunto() : () -> studyHub.eliminaAppunto();
                         action.run();
-                        break;            
+                        break;  
                     case 9:
+                        System.out.println("Hai selezionato Scarica contenuto");
+                        studyHub.downloadContenuto();
+                        break;   
+                    case 10:
+                        System.out.println("Hai selezionato Visualizza contenuti e appunti dello studente");
+                        studyHub.visualizzaAppuntiEContenuti();
+                        break;   
+                    case 11:
                         System.out.println("Hai selezionato Logout");
                         studyHub.studenteCorrente = null;
                         studyHub.isLogged = false;
                         break;
-                    case 10:
+                    case 12:
                         System.out.println("Uscita dal programma...");
                         running = false;
                         break;
-                    case 11: 
+                    case 13: 
                         System.out.println("Visualizzazione di tutti i dati");
                         studyHub.visualizzaTuttiIDati();
                         break;
@@ -473,6 +483,34 @@ public class StudyHub
         livello = scanner.nextLine();
         Studente stud = new Studente(username, password, nome, cognome, dataNascita, luogoNascita, residenza, livello);
         return stud;
+    }
+
+    //Funzione per visualizzare appunti e contenuti dello studente
+    public void visualizzaAppuntiEContenuti() {
+        if (studenteCorrente == null) {
+            System.out.println("Devi essere loggato per visualizzare i tuoi appunti e contenuti.");
+            return;
+        }
+        
+        System.out.println("I tuoi appunti:");
+        Map<String, Appunto> appunti = studenteCorrente.getMappaAppunti();
+        if (appunti.isEmpty()) {
+            System.out.println("Non hai nessun appunto.");
+        } else {
+            for (Appunto appunto : appunti.values()) {
+                System.out.println(appunto.getId() + " - " + appunto.getTitolo());
+            }
+        }
+        
+        System.out.println("I tuoi contenuti scaricati:");
+        Map<String, Contenuto> contenutiScaricati = studenteCorrente.getMappaContenuti();
+        if (contenutiScaricati.isEmpty()) {
+            System.out.println("Non hai nessun contenuto.");
+        } else {
+            for (Contenuto contenuto : contenutiScaricati.values()) {
+                System.out.println(contenuto.getId() + " - " + contenuto.getTitolo());
+            }
+        }
     }
 
     //UC1: Iscrizione/eliminazione profilo
@@ -883,8 +921,7 @@ public class StudyHub
         System.out.println("I tuoi corsi sono: ");
         for(Iscrizione iscrizione: mappaCorsiIscritti.values())
         {
-            System.out.print(iscrizione.getCorso() + " ");
-            System.out.println(iscrizione.getId());
+            System.out.println("Corso: " + iscrizione.getCorso());
         }
 
         do
@@ -1393,6 +1430,46 @@ public class StudyHub
         {
             System.out.println("Non sei il creatore dell'appunto");
         }
+    }
+
+    //UC9: Scarica contenuto da un corso
+    public void downloadContenuto() {
+        if (studenteCorrente == null) {
+            System.out.println("Devi essere loggato per scaricare un contenuto.");
+            return;
+        }
+        
+        // Mostra i corsi a cui l'utente è iscritto
+        selezionaCorsoIscritto();
+        if (corsoSelezionato == null) {
+            return;
+        }
+        
+        // Mostra i contenuti disponibili per il corso selezionato
+        Map<String, Contenuto> mappaContenuti = corsoSelezionato.getMappaContenuti();
+        if (mappaContenuti.isEmpty()) {
+            System.out.println("Non ci sono contenuti disponibili per questo corso.");
+            return;
+        }
+        
+        System.out.println("Contenuti disponibili:");
+        for (Contenuto contenuto : mappaContenuti.values()) {
+            System.out.println(contenuto.getId() + " - " + contenuto.getTitolo());
+        }
+        
+        // Selezione del contenuto da scaricare
+        System.out.print("Inserisci l'ID del contenuto da scaricare: ");
+        String idContenuto = scanner.nextLine();
+        Contenuto contenutoSelezionato = mappaContenuti.get(idContenuto);
+        
+        if (contenutoSelezionato == null) {
+            System.out.println("Contenuto non trovato.");
+            return;
+        }
+        
+        // Aggiunge il contenuto alla lista dei contenuti scaricati dallo studente
+        studenteCorrente.aggiungiContenuto(contenutoSelezionato);
+        System.out.println("Contenuto '" + contenutoSelezionato.getTitolo() + "' scaricato con successo!");
     }
 
     //UC GENERALE
