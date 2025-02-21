@@ -581,7 +581,7 @@ public class TestStudyHub
         assertEquals(mockGruppoStudio, mockStudente.getMappaGruppiStudio().get(mockGruppoStudio.getId()));
         assertEquals(mockGruppoStudio, studyHub.getGruppiStudio().get(mockGruppoStudio.getId()));
         assertEquals(mockStudente, mockGruppoStudio.getMappaStudenti().get(mockStudente.getId()));
-        assertEquals(mockStudente.getUsername(), mockGruppoStudio.getAdmin());
+        assertEquals(mockStudente.getId(), mockGruppoStudio.getAdmin());
         assertEquals(numeroGruppiStudioStudente + 1, mockStudente.getMappaGruppiStudio().size());
         assertEquals(numeroGruppiStudioTotali + 1, studyHub.getGruppiStudio().size());
         assertEquals(1, mockGruppoStudio.getNumeroStudenti());

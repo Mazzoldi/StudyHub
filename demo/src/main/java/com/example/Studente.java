@@ -25,6 +25,7 @@ public class Studente
     private Map<String, Corso> mappaCorsiCreati;
     private Map<String, GruppoStudio> mappaGruppiStudio;
     private Map<String, Contenuto> mappaContenuti;
+    private Map<String, Appunto> mappaAppuntiScaricati;
 
     public Studente(String username, String password, String nome, String cognome, String dataNascita, String luogoNascita, String residenza, String livello)
     {
@@ -94,6 +95,11 @@ public class Studente
         mappaContenuti.put(contenuto.getId(), contenuto);
     }
 
+    public void aggiungiAppuntoScaricato(Appunto appunto)
+    {
+        mappaAppuntiScaricati.put(appunto.getId(), appunto);
+    }
+
     public void rimuoviIscrizione(Corso corso)
     {
         mappaIscrizioni.remove(corso.getId());
@@ -118,6 +124,11 @@ public class Studente
     public void rimuoviContenuto(Contenuto contenuto)
     {
         mappaContenuti.remove(contenuto.getId());
+    }
+
+    public void rimuoviAppuntoScaricato(Appunto appunto)
+    {
+        mappaAppuntiScaricati.remove(appunto.getId());
     }
 
     private Map<String, Appunto> creaMappaAppunti()
@@ -154,6 +165,12 @@ public class Studente
     {
         this.mappaContenuti = new HashMap<String, Contenuto>();
         return mappaContenuti;
+    }
+
+    public Map<String, Appunto> creaMappaAppuntiScaricati()
+    {
+        this.mappaAppuntiScaricati = new HashMap<String, Appunto>();
+        return mappaAppuntiScaricati;
     }
 
     public String getId()
@@ -297,5 +314,10 @@ public class Studente
     public Map<String, Contenuto> getMappaContenuti()
     {
         return mappaContenuti;
+    }
+
+    public Map<String, Appunto> getMappaAppuntiScaricati()
+    {
+        return mappaAppuntiScaricati;
     }
 }
