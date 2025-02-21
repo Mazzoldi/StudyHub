@@ -1367,7 +1367,7 @@ public class StudyHub
         }
     }
 
-    //UC8: Caricamento di un appunto in un corso
+    //UC8: Caricamento di un appunto tra quelli dello studente
 
     //Funzione per caricare un appunto tra quelli dello studente
     public Appunto caricaAppunto()
