@@ -14,6 +14,7 @@ public class GruppoStudio {
     private int numeroStudenti;
     private int numeroMaxStudenti;
     private Map<String, Studente> mappaStudenti;
+    private Map<String, Appunto> mappaAppunti;
 
     public GruppoStudio(String nome, String admin, String password, String lingua, int durata, int numeroMaxStudenti)
     {
@@ -28,6 +29,7 @@ public class GruppoStudio {
         this.numeroMaxStudenti = numeroMaxStudenti;
         this.id = StudyHub.generaId();
         creaMappaStudenti();
+        creaMappaAppunti();
     }
 
     public boolean verificaIscrizione(Studente studente)
@@ -70,10 +72,36 @@ public class GruppoStudio {
         return false;
     }
 
+    public boolean aggiungiAppunto(Appunto appunto)
+    {
+        mappaAppunti.put(appunto.getId(), appunto);
+        if(mappaAppunti.containsKey(appunto.getId()))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean rimuoviAppunto(Appunto appunto)
+    {
+        mappaAppunti.remove(appunto.getId());
+        if(mappaAppunti.containsKey(appunto.getId()))
+        {
+            return true;
+        }
+        return false;
+    }
+
     private Map<String, Studente> creaMappaStudenti()
     {
         this.mappaStudenti = new HashMap<String, Studente>();
         return mappaStudenti;
+    }
+
+    public Map<String, Appunto> creaMappaAppunti()
+    {
+        this.mappaAppunti = new HashMap<String, Appunto>();
+        return mappaAppunti;
     }
 
     public String getId()
@@ -124,6 +152,11 @@ public class GruppoStudio {
     public Map<String, Studente> getMappaStudenti()
     {
         return mappaStudenti;
+    }
+
+    public Map<String, Appunto> getMappaAppunti()
+    {
+        return mappaAppunti;
     }
 
     public void setNome(String nome)

@@ -378,8 +378,24 @@ public class StudyHub
                         System.out.println("Scegli un'opzione: ");
                         System.out.println("1. Carica un appunto");
                         System.out.println("2. Elimina un appunto");
-                        action = studyHub.sceltaOpzione() == 1 ? () -> studyHub.caricaAppunto() : () -> studyHub.eliminaAppunto();
-                        action.run();
+                        if (studyHub.sceltaOpzione() == 1)
+                        {
+                            System.out.println("Hai selezionato Carica appunto");
+                            System.out.println("Scegli un'opzione");
+                            System.out.println("1. Carica un appunto personale");
+                            System.out.println("2. Carica un appunto in un gruppo studio");
+                            action = studyHub.sceltaOpzione() == 1 ? () -> studyHub.caricaAppunto() : () -> studyHub.caricaAppuntoGruppoStudio();
+                            action.run();
+                        }
+                        else
+                        {
+                            System.out.println("Hai selezionato Elimina appunto");
+                            System.out.println("Scegli un'opzione");
+                            System.out.println("1. Elimina un appunto personale");
+                            System.out.println("2. Elimina un appunto da un gruppo studio");
+                            action = studyHub.sceltaOpzione() == 1 ? () -> studyHub.eliminaAppunto() : () -> studyHub.eliminaAppuntoGruppoStudio();
+                            action.run();
+                        }
                         break;  
                     case 9:
                         System.out.println("Hai selezionato Scarica contenuto");
@@ -1005,7 +1021,14 @@ public class StudyHub
     public GruppoStudio selezionaGruppoStudioCreato()
     {
         scanner = new Scanner(System.in);
-        Map<String, GruppoStudio> mappaGruppiStudioCreati = studenteCorrente.getMappaGruppiStudio();
+        Map<String, GruppoStudio> mappaGruppiStudioCreati = new HashMap<>();
+        for (GruppoStudio gruppoStudio : studenteCorrente.getMappaGruppiStudio().values())
+        {
+            if (gruppoStudio.getAdmin().equals(studenteCorrente.getUsername()))
+            {
+                mappaGruppiStudioCreati.put(gruppoStudio.getId(), gruppoStudio);
+            }
+        }
         GruppoStudio gruppoStudioSelezionato = null;
         if (mappaGruppiStudioCreati.isEmpty())
         {
@@ -1013,7 +1036,7 @@ public class StudyHub
             return null;
         }
 
-        System.out.println("I tuoi gruppi studio sono: ");
+        System.out.println("I gruppi studio creati da te sono: ");
         for(GruppoStudio gruppoStudio: mappaGruppiStudioCreati.values())
         {
             System.out.print(gruppoStudio.getNome() + " ");
@@ -1126,7 +1149,14 @@ public class StudyHub
     public GruppoStudio selezionaGruppoStudioIscritto()
     {
         scanner = new Scanner(System.in);
-        Map<String, GruppoStudio> mappaGruppiStudioIscritti = studenteCorrente.getMappaGruppiStudio();
+        Map<String, GruppoStudio> mappaGruppiStudioIscritti = new HashMap<>();
+        for (GruppoStudio gruppoStudio : studenteCorrente.getMappaGruppiStudio().values())
+        {
+            if (!gruppoStudio.getAdmin().equals(studenteCorrente.getUsername()))
+            {
+                mappaGruppiStudioIscritti.put(gruppoStudio.getId(), gruppoStudio);
+            }
+        }
         GruppoStudio gruppoStudioSelezionato = null;
         if (mappaGruppiStudioIscritti.isEmpty())
         {
@@ -1134,7 +1164,7 @@ public class StudyHub
             return null;
         }
 
-        System.out.println("I tuoi gruppi studio sono: ");
+        System.out.println("I gruppi studio a cui sei iscritto sono: ");
         for(GruppoStudio gruppoStudio: mappaGruppiStudioIscritti.values())
         {
             System.out.print(gruppoStudio.getNome() + " ");
@@ -1424,6 +1454,13 @@ public class StudyHub
         {
             appunti.remove(appunto.getId());
             studenteCorrente.rimuoviAppunto(appunto);
+            for (GruppoStudio gruppoStudio : gruppiStudio.values())
+            {
+                if (gruppoStudio.getMappaAppunti().containsKey(appunto.getId()))
+                {
+                    gruppoStudio.rimuoviAppunto(appunto);
+                }
+            }
             System.out.println("Appunto rimosso con successo");
         }
         else
@@ -1432,45 +1469,137 @@ public class StudyHub
         }
     }
 
-    //UC9: Scarica contenuto da un corso
+    //Funzione per caricare un appunto in un gruppo studio
+    public void caricaAppuntoGruppoStudio()
+    {
+        GruppoStudio gruppoStudioSelezionato = null;
+        Map<String, GruppoStudio> mappaGruppiStudio = studenteCorrente.getMappaGruppiStudio();
+        System.out.println("I tuoi gruppi studio sono:\n");
+        for (GruppoStudio gruppoStudio : mappaGruppiStudio.values())
+        {
+            System.out.println("Gruppo studio: " + gruppoStudio.getNome());
+            System.out.println("Id: " + gruppoStudio.getId());
+        }
+        do
+        {
+            System.out.print("Inserisci l'id di un gruppo studio: ");
+            String id = scanner.nextLine();
+            gruppoStudioSelezionato = mappaGruppiStudio.get(id);
+            if (gruppoStudioSelezionato == null)
+            {
+                System.out.println("Gruppo studio non trovato");
+            }
+        } while (gruppoStudioSelezionato == null);
+        System.out.println("Vuoi caricare un appunto nuovo o uno già caricato?");
+        System.out.println("1. Appunto nuovo");
+        System.out.println("2. Appunto già caricato");
+        final Appunto[] appuntoHolder = new Appunto[1];
+        Runnable action = sceltaOpzione() == 1 ? () -> appuntoHolder[0] = caricaAppunto() : () -> appuntoHolder[0] = selezionaAppunto();
+        action.run();
+        Appunto appunto = appuntoHolder[0];
+        gruppoStudioSelezionato.aggiungiAppunto(appunto);
+        System.out.println("Appunto caricato con successo");
+    }
+
+    //Funzione per l'eliminazione di un appunto in un gruppo studio
+    public void eliminaAppuntoGruppoStudio()
+    {
+        GruppoStudio gruppoStudioSelezionato = null;
+        Map<String, Appunto> mappaAppuntiCaricati = new HashMap<>();
+        System.out.println("I tuoi gruppi studio sono:\n");
+        for (GruppoStudio gruppoStudio : studenteCorrente.getMappaGruppiStudio().values())
+        {
+            System.out.println("Gruppo studio: " + gruppoStudio.getNome());
+            System.out.println("Id: " + gruppoStudio.getId());
+        }
+        do
+        {
+            System.out.print("Inserisci l'id di un gruppo studio: ");
+            String id = scanner.nextLine();
+            gruppoStudioSelezionato = gruppiStudio.get(id);
+            if (gruppoStudioSelezionato == null)
+            {
+                System.out.println("Gruppo studio non trovato");
+            }
+        } while (gruppoStudioSelezionato == null);
+        Appunto appuntoSelezionato = null;
+        if (gruppoStudioSelezionato.getMappaAppunti().isEmpty())
+        {
+            System.out.println("Non ci sono appunti per questo gruppo studio");
+            return;
+        }
+        System.out.println("I tuoi appunti nel gruppo studio sono: ");
+        for(Appunto appunto: gruppoStudioSelezionato.getMappaAppunti().values())
+        {
+            if (appunto.getCreatore().equals(studenteCorrente.getId()))
+            {
+                System.out.print(appunto.getTitolo() + " ");
+                System.out.println(appunto.getId());
+                mappaAppuntiCaricati.put(appunto.getId(), appunto);
+            }
+        }
+        if (mappaAppuntiCaricati.isEmpty())
+        {
+            System.out.println("Non hai caricato nessun appunto in questo gruppo studio");
+            return;
+        }
+        do
+        {
+            System.out.print("Inserisci l'id di un appunto: ");
+            String id = scanner.nextLine();
+            if (mappaAppuntiCaricati.containsKey(id))
+            {
+                appuntoSelezionato = mappaAppuntiCaricati.get(id);
+                gruppoStudioSelezionato.rimuoviAppunto(appuntoSelezionato);
+                System.out.println("Appunto rimosso con successo");
+                System.out.println("Vuoi eliminarlo anche dagli appunti personali?");
+                System.out.println("1. Sì");
+                System.out.println("2. No");
+                final Appunto appuntoFinal = appuntoSelezionato;
+                Runnable action = sceltaOpzione() == 1 ? () -> studenteCorrente.rimuoviAppunto(appuntoFinal) : () -> {};
+                action.run();
+                return;
+            }
+            else
+            {
+                System.out.println("Appunto non trovato");
+            }
+        } while(appuntoSelezionato == null);
+    }
+
+    //UC9: Scaricare un contenuto da un corso
+
+    //Funzione per il download di un contenuto
     public void downloadContenuto() {
-        if (studenteCorrente == null) {
-            System.out.println("Devi essere loggato per scaricare un contenuto.");
-            return;
-        }
-        
-        // Mostra i corsi a cui l'utente è iscritto
         selezionaCorsoIscritto();
-        if (corsoSelezionato == null) {
+        if (corsoSelezionato == null)
+        {
             return;
         }
-        
-        // Mostra i contenuti disponibili per il corso selezionato
         Map<String, Contenuto> mappaContenuti = corsoSelezionato.getMappaContenuti();
-        if (mappaContenuti.isEmpty()) {
+        if (mappaContenuti.isEmpty())
+        {
             System.out.println("Non ci sono contenuti disponibili per questo corso.");
             return;
         }
-        
         System.out.println("Contenuti disponibili:");
-        for (Contenuto contenuto : mappaContenuti.values()) {
+        for (Contenuto contenuto : mappaContenuti.values())
+        {
             System.out.println(contenuto.getId() + " - " + contenuto.getTitolo());
         }
-        
-        // Selezione del contenuto da scaricare
         System.out.print("Inserisci l'ID del contenuto da scaricare: ");
         String idContenuto = scanner.nextLine();
         Contenuto contenutoSelezionato = mappaContenuti.get(idContenuto);
-        
-        if (contenutoSelezionato == null) {
+        if (contenutoSelezionato == null)
+        {
             System.out.println("Contenuto non trovato.");
             return;
         }
-        
-        // Aggiunge il contenuto alla lista dei contenuti scaricati dallo studente
         studenteCorrente.aggiungiContenuto(contenutoSelezionato);
         System.out.println("Contenuto '" + contenutoSelezionato.getTitolo() + "' scaricato con successo!");
     }
+
+    //
 
     //UC GENERALE
 

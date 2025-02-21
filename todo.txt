@@ -5,11 +5,10 @@ Iterazione 4:
 -Dividere mappaGruppiStudio di Studente in mappaGruppiStudioCreati e mappaGruppiStudioIscritti
 -Cambiare admin GruppoStudio (passare da username ad id)
 -Cambiare admin di un gruppo studio
--Possibilità di visualizzare gli studenti totali e i contenuti totali in un corso.
--Possibilità di visualizzare gli studenti totali in un gruppo studio.
-
-- Asta UC9: scarica contenuto.
+-Visualizzare gli studenti totali e i contenuti totali in un corso.
+-Visualizzare gli studenti totali in un gruppo studio.
+-Asta UC9: scaricare contenuto e caricare/eliminare appunti nei gruppi studio.
 
 Cose fatte:
-- Visualizzazione degli appunti e dei contenuti di un utente.
-- Funzioni principali dell'UC9.
+-Visualizzare gli appunti e i contenuti di un utente.
+-Funzioni principali dell'UC9.
