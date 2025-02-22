@@ -185,6 +185,28 @@ public class TestStudyHub
         assertEquals(11, result);
     }
 
+    //Test per l'opzione 12 del menu a scelta
+    @Test
+    public void testMenuOption12() {
+        isLogged = false;
+        String simulatedInput = "12\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        int result = studyHub.menu(isLogged);
+        assertEquals(12, result);
+    }
+
+    //Test per l'opzione 13 del menu a scelta
+    @Test
+    public void testMenuOption13() {
+        isLogged = false;
+        String simulatedInput = "13\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        int result = studyHub.menu(isLogged);
+        assertEquals(13, result);
+    }
+
     //Test login
     @Test
     public void testLogin()
@@ -198,7 +220,7 @@ public class TestStudyHub
     }
 
     //UC1
-    //Test creaProfilo
+    //Test creaProfilo e datiProfilo
     @Test
     public void testCreaProfilo()
     {
@@ -545,6 +567,21 @@ public class TestStudyHub
         assertEquals(numeroCorsi + 1, mockStudente.getNumeroCorsi());
     }
 
+    //Test selezionaCorsoIscritto
+    @Test
+    public void testSelezionaCorsoIscritto()
+    {
+        studyHub.setStudente(mockStudente);
+        studyHub.setCorsoSelezionato(null);
+        System.out.println(mockCorso2.getId());
+        String simulatedInput = mockCorso2.getId() + "\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        studyHub.selezionaCorsoIscritto();
+        assertNotNull(studyHub.getCorsoSelezionato());
+        assertEquals(mockCorso2, studyHub.getCorsoSelezionato());
+    }
+
     //Test eliminaIscrizione
     @Test
     public void testEliminaIscrizione()
@@ -563,7 +600,7 @@ public class TestStudyHub
         assertNull(mockCorso2.getMappaIscrizioni().get(mockStudente.getId()));
     }
     
-    //UC6
+    //UC5
     //Test creaGruppoStudio
     @Test
     public void testCreaGruppoStudio()
@@ -601,6 +638,28 @@ public class TestStudyHub
         assertNull(mockGruppoStudio);
         assertEquals(numeroGruppiStudioTotali, studyHub.getGruppiStudio().size());
         assertEquals(numeroGruppiStudioStudente, mockStudente.getMappaGruppiStudio().size());
+    }
+
+    //Test selezionaGruppoStudioCreato
+    @Test
+    public void testSelezionaGruppoStudioCreato()
+    {
+        studyHub.setStudente(mockStudente);
+        GruppoStudio mockGruppoStudio = null;
+        for (GruppoStudio gruppoStudio : studyHub.getGruppiStudio().values())
+        {
+            if (gruppoStudio.getNome() == "Gruppo1")
+            {
+                mockGruppoStudio = gruppoStudio;
+            }
+        }
+        System.out.println(mockGruppoStudio.getNome());
+        String simulatedInput = mockGruppoStudio.getId() + "\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        GruppoStudio mockGruppoStudio2 = studyHub.selezionaGruppoStudioCreato();
+        assertNotNull(mockGruppoStudio2);
+        assertEquals(mockGruppoStudio, mockGruppoStudio2);
     }
 
     //Test eliminaGruppoStudio
@@ -660,6 +719,65 @@ public class TestStudyHub
         assertEquals(mockStudente, mockGruppoStudio.getMappaStudenti().get(mockStudente.getId()));
         assertEquals(numeroGruppiStudio + 1, mockStudente.getMappaGruppiStudio().size());
         assertEquals(numeroStudenti + 1, mockGruppoStudio.getNumeroStudenti());
+    }
+
+    //Test selezionaGruppoStudioIscritto
+    @Test
+    public void testSelezionaGruppoStudioIscritto()
+    {
+        studyHub.setStudente(mockStudente);
+        GruppoStudio mockGruppoStudio = null;
+        for (GruppoStudio gruppoStudio : studyHub.getGruppiStudio().values())
+        {
+            if (gruppoStudio.getNome() == "Gruppo4")
+            {
+                mockGruppoStudio = gruppoStudio;
+            }
+        }
+        System.out.println(mockGruppoStudio.getNome());
+        String simulatedInput = mockGruppoStudio.getId() + "\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        GruppoStudio mockGruppoStudio2 = studyHub.selezionaGruppoStudioIscritto();
+        assertNotNull(mockGruppoStudio2);
+        assertEquals(mockGruppoStudio, mockGruppoStudio2);
+    }
+
+    //Test selezionaGruppoStudio
+    @Test
+    public void testSelezionaGruppoStudio()
+    {
+        studyHub.setStudente(mockStudente);
+        GruppoStudio mockGruppoStudio = null;
+        for (GruppoStudio gruppoStudio : studyHub.getGruppiStudio().values())
+        {
+            if (gruppoStudio.getNome() == "Gruppo4")
+            {
+                mockGruppoStudio = gruppoStudio;
+            }
+        }
+        System.out.println(mockGruppoStudio.getNome());
+        String simulatedInput = mockGruppoStudio.getId() + "\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        GruppoStudio mockGruppoStudio2 = studyHub.selezionaGruppoStudio();
+        assertNotNull(mockGruppoStudio2);
+        assertEquals(mockGruppoStudio, mockGruppoStudio2);
+        mockGruppoStudio = null;
+        for (GruppoStudio gruppoStudio : studyHub.getGruppiStudio().values())
+        {
+            if (gruppoStudio.getNome() == "Gruppo3")
+            {
+                mockGruppoStudio = gruppoStudio;
+            }
+        }
+        System.out.println(mockGruppoStudio.getNome());
+        simulatedInput = mockGruppoStudio.getId() + "\n";
+        inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        mockGruppoStudio2 = studyHub.selezionaGruppoStudio();
+        assertNotNull(mockGruppoStudio2);
+        assertEquals(mockGruppoStudio, mockGruppoStudio2);
     }
 
     //Test eliminaIscrizioneGruppoStudio
@@ -758,6 +876,7 @@ public class TestStudyHub
         String simulatedInput = "Appunto di Matematica\nPDF\nappunti_matematica.pdf\n30\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
+        studyHub.setScanner(new Scanner(inputStream));
         Appunto mockAppunto = studyHub.caricaAppunto();
         assertNotNull(mockStudente.getMappaAppunti());
         assertEquals(mockAppunto, mockStudente.getMappaAppunti().get(mockAppunto.getId()));
@@ -773,11 +892,12 @@ public class TestStudyHub
         String simulatedInput = mockAppunto.getTitolo() + "\nJPG\nappunti_matematica.pdf\n30\n";
         InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
         System.setIn(inputStream);
+        studyHub.setScanner(new Scanner(inputStream));
         assertNull(studyHub.caricaAppunto());
         assertEquals(numeroAppunti, mockStudente.getMappaAppunti().size());
     }
 
-    //Test eliminaAppunto
+    //Test eliminaAppunto e selezionaAppunto
     @Test
     public void testEliminaAppunto()
     {
@@ -790,5 +910,132 @@ public class TestStudyHub
         studyHub.eliminaAppunto();
         assertEquals(numeroAppunti - 1, mockStudente.getMappaAppunti().size());
         assertNull(mockStudente.getMappaAppunti().get(mockAppunto.getId()));
+    }
+
+    //Test caricaAppuntoGruppoStudio e eliminaAppuntoGruppoStudio
+    @Test
+    public void testAppuntoGruppoStudio()
+    {
+        studyHub.setStudente(mockStudente);
+        GruppoStudio mockGruppoStudio = null;
+        for (GruppoStudio gruppoStudio : studyHub.getGruppiStudio().values())
+        {
+            if (gruppoStudio.getNome().equals("Gruppo4"))
+            {
+                mockGruppoStudio = gruppoStudio;
+            }
+        }
+        Appunto mockAppunto = mockStudente.getMappaAppunti().values().iterator().next();
+        int numeroAppunti = mockGruppoStudio.getMappaAppunti().size();
+        int numeroAppuntiStudente = mockStudente.getMappaAppunti().size();
+        String simulatedInput = mockGruppoStudio.getId() + "\n2\n" + mockAppunto.getId() + "\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        studyHub.caricaAppuntoGruppoStudio();
+        assertNotNull(mockGruppoStudio.getMappaAppunti().get(mockAppunto.getId()));
+        assertEquals(mockAppunto, mockGruppoStudio.getMappaAppunti().get(mockAppunto.getId()));
+        assertEquals(numeroAppunti + 1, mockGruppoStudio.getMappaAppunti().size());
+        assertEquals(numeroAppuntiStudente, mockStudente.getMappaAppunti().size());
+        simulatedInput = mockGruppoStudio.getId() + "\n1\nmockAppunto\npdf\nappunti.pdf\n" + 30 + "\n";
+        inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        studyHub.caricaAppuntoGruppoStudio();
+        Appunto mockAppunto2 = null;
+        for (Appunto appunto : mockGruppoStudio.getMappaAppunti().values())
+        {
+            if (appunto.getTitolo().equals("mockAppunto"))
+            {
+                mockAppunto2 = appunto;
+            }
+        }
+        assertNotNull(mockGruppoStudio.getMappaAppunti().get(mockAppunto2.getId()));
+        assertEquals(numeroAppunti + 2, mockGruppoStudio.getMappaAppunti().size());
+        assertEquals(numeroAppuntiStudente + 1, mockStudente.getMappaAppunti().size());
+        simulatedInput = mockGruppoStudio.getId() + "\n" + mockAppunto.getId() + "\n1\n";
+        inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        studyHub.eliminaAppuntoGruppoStudio();
+        assertNull(mockGruppoStudio.getMappaAppunti().get(mockAppunto.getId()));
+        assertEquals(numeroAppunti + 1, mockGruppoStudio.getMappaAppunti().size());
+        assertNull(mockStudente.getMappaAppunti().get(mockAppunto.getId()));
+        assertEquals(numeroAppuntiStudente, mockStudente.getMappaAppunti().size());
+        simulatedInput = mockGruppoStudio.getId() + "\n" + mockAppunto2.getId() + "\n2\n";
+        inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        studyHub.eliminaAppuntoGruppoStudio();
+        assertNull(mockGruppoStudio.getMappaAppunti().get(mockAppunto2.getId()));
+        assertEquals(numeroAppunti, mockGruppoStudio.getMappaAppunti().size());
+        assertNotNull(mockStudente.getMappaAppunti().get(mockAppunto2.getId()));
+        assertEquals(numeroAppuntiStudente, mockStudente.getMappaAppunti().size());
+    }
+
+    //UC9
+    //test downloadContenuto ed eliminaContenutoScaricato
+    @Test
+    public void testDownloadContenuto()
+    {
+        studyHub.setStudente(mockStudente);
+        studyHub.setCorsoSelezionato(mockCorso2);
+        Contenuto mockContenuto = mockCorso2.getMappaContenuti().values().iterator().next();
+        int numeroContenuti = mockStudente.getMappaContenuti().size();
+        String simulatedInput = mockCorso2.getId() + "\n" + mockContenuto.getId() + "\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        studyHub.downloadContenuto();
+        assertNotNull(mockStudente.getMappaContenuti().get(mockContenuto.getId()));
+        assertEquals(mockContenuto, mockStudente.getMappaContenuti().get(mockContenuto.getId()));
+        assertEquals(numeroContenuti + 1, mockStudente.getMappaContenuti().size());
+        simulatedInput = mockContenuto.getId() + "\n";
+        inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        studyHub.eliminaContenutoScaricato();
+        assertNull(mockStudente.getMappaContenuti().get(mockContenuto.getId()));
+        assertEquals(numeroContenuti, mockStudente.getMappaContenuti().size());
+    }
+
+    //Test downloadAppunto ed eliminaAppuntoScaricato
+    @Test
+    public void testDownloadAppunto()
+    {
+        studyHub.setStudente(mockStudente);
+        GruppoStudio mockGruppoStudio = null;
+        for (GruppoStudio gruppoStudio : studyHub.getGruppiStudio().values())
+        {
+            if (gruppoStudio.getNome().equals("Gruppo4"))
+            {
+                mockGruppoStudio = gruppoStudio;
+            }
+        }
+        Appunto mockAppunto = mockStudente.getMappaAppunti().values().iterator().next();
+        String simulatedInput = mockGruppoStudio.getId() + "\n2\n" + mockAppunto.getId() + "\n";
+        InputStream inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        studyHub.caricaAppuntoGruppoStudio();
+        assertEquals(1, mockGruppoStudio.getMappaAppunti().size());
+        assertNotNull(mockGruppoStudio.getMappaAppunti().get(mockAppunto.getId()));
+        Studente mockStudente2 = null;
+        for (Studente studente : mockGruppoStudio.getMappaStudenti().values())
+        {
+            if (!studente.getId().equals(mockStudente.getId()))
+            {
+                System.out.println(studente.getUsername());
+                mockStudente2 = studente;
+            }
+        }
+        studyHub.setStudente(mockStudente2);
+        int numeroAppunti = mockStudente2.getMappaAppuntiScaricati().size();
+        simulatedInput = mockGruppoStudio.getId() + "\n" + mockAppunto.getId() + "\n";
+        inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        studyHub.downloadAppunto();
+        assertNotNull(mockStudente2.getMappaAppuntiScaricati().get(mockAppunto.getId()));
+        assertEquals(mockAppunto, mockStudente2.getMappaAppuntiScaricati().get(mockAppunto.getId()));
+        assertEquals(numeroAppunti + 1, mockStudente2.getMappaAppuntiScaricati().size());
+        simulatedInput = mockAppunto.getId() + "\n";
+        inputStream = new ByteArrayInputStream(simulatedInput.getBytes());
+        System.setIn(inputStream);
+        studyHub.eliminaAppuntoScaricato();
+        assertNull(mockStudente2.getMappaAppuntiScaricati().get(mockAppunto.getId()));
+        assertEquals(numeroAppunti, mockStudente2.getMappaAppuntiScaricati().size());
     }
 }

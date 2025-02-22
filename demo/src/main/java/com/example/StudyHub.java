@@ -2,7 +2,7 @@ package com.example;
 
 import java.util.*;
 
-public class StudyHub 
+public class StudyHub
 {
     //Creazione di un singleton per la classe StudyHub
     private static StudyHub instance;
@@ -16,7 +16,7 @@ public class StudyHub
     //Corso selezionato durante una ricerca o un'iscrizione
     private Corso corsoSelezionato;
     //Scanner per l'input da tastiera
-    private static Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
     //Booleano per la verifica del login
     boolean isLogged = false;
 
@@ -285,6 +285,12 @@ public class StudyHub
         this.isLogged = isLogged;
     }
 
+    //Funzione per settare lo scanner
+    public void setScanner(Scanner scanner)
+    {
+        this.scanner = scanner;
+    }
+
     //Main
     public static void main(String[] args) 
     {
@@ -430,7 +436,6 @@ public class StudyHub
                 }
             }
         } while (running);
-        scanner.close();
     }
 
     //Funzione per scegliere l'opzione
@@ -440,6 +445,7 @@ public class StudyHub
         do
         {
             opzione = scanner.nextInt();
+            scanner.nextLine();
         } while (opzione != 1 && opzione != 2 && opzione != 3 && opzione != 4);
         return opzione;
     }
@@ -905,7 +911,12 @@ public class StudyHub
     public void selezionaCorsoIscritto()
     {
         scanner = new Scanner(System.in);
-        Map<String, Iscrizione> mappaCorsiIscritti = studenteCorrente.getMappaIscrizioni();
+        corsoSelezionato = null;
+        Map<String, Corso> mappaCorsiIscritti = new HashMap<>();
+        for(Iscrizione iscrizione: studenteCorrente.getMappaIscrizioni().values())
+        {
+            mappaCorsiIscritti.put(iscrizione.getCorso(), mappaCorsiTotali.get(iscrizione.getCorso()));
+        }
         if (mappaCorsiIscritti.isEmpty())
         {
             System.out.println("Non sei iscritto a nessun corso");
@@ -913,9 +924,9 @@ public class StudyHub
         }
 
         System.out.println("I tuoi corsi sono: ");
-        for(Iscrizione iscrizione: mappaCorsiIscritti.values())
+        for(Corso corso : mappaCorsiIscritti.values())
         {
-            System.out.println("Corso: " + iscrizione.getCorso());
+            System.out.println(corso.getNome() + " - " + corso.getId());
         }
 
         do
@@ -923,7 +934,7 @@ public class StudyHub
             System.out.print("Inserisci l'id di un corso: ");
             String id = scanner.nextLine();
 
-            corsoSelezionato = mappaCorsiTotali.get(id);
+            corsoSelezionato = mappaCorsiIscritti.get(id);
             if(corsoSelezionato == null)
             {
                 System.out.println("Corso non trovato");
@@ -1372,7 +1383,6 @@ public class StudyHub
     //Funzione per caricare un appunto tra quelli dello studente
     public Appunto caricaAppunto()
     {
-        scanner = new Scanner(System.in);
         String titolo;
         String formato;
         String file;
@@ -1421,7 +1431,6 @@ public class StudyHub
     //Funzione per selezionare un appunto tra quelli dello studente
     public Appunto selezionaAppunto()
     {
-        scanner = new Scanner(System.in);
         Appunto appuntoSelezionato = null;
         if (studenteCorrente.getMappaAppunti().isEmpty())
         {
@@ -1456,6 +1465,7 @@ public class StudyHub
     //Funzione per l'eliminazione di un appunto
     public void eliminaAppunto()
     {
+        scanner = new Scanner(System.in);
         Appunto appunto = selezionaAppunto();
         if (appunto == null)
         {
@@ -1483,6 +1493,7 @@ public class StudyHub
     //Funzione per caricare un appunto in un gruppo studio
     public void caricaAppuntoGruppoStudio()
     {
+        scanner = new Scanner(System.in);
         GruppoStudio gruppoStudioSelezionato = null;
         Map<String, GruppoStudio> mappaGruppiStudio = studenteCorrente.getMappaGruppiStudio();
         System.out.println("I tuoi gruppi studio sono:\n");
@@ -1515,6 +1526,7 @@ public class StudyHub
     //Funzione per l'eliminazione di un appunto in un gruppo studio
     public void eliminaAppuntoGruppoStudio()
     {
+        scanner = new Scanner(System.in);
         GruppoStudio gruppoStudioSelezionato = null;
         Map<String, Appunto> mappaAppuntiCaricati = new HashMap<>();
         System.out.println("I tuoi gruppi studio sono:\n");
@@ -1583,7 +1595,6 @@ public class StudyHub
     //Funzione per il download di un contenuto
     public void downloadContenuto() {
         selezionaCorsoIscritto();
-        scanner = new Scanner(System.in);
         if (corsoSelezionato == null)
         {
             return;
@@ -1601,6 +1612,7 @@ public class StudyHub
         }
         System.out.print("Inserisci l'ID del contenuto da scaricare: ");
         String idContenuto = scanner.nextLine();
+        System.out.println(idContenuto);
         Contenuto contenutoSelezionato = mappaContenuti.get(idContenuto);
         if (contenutoSelezionato == null)
         {
@@ -1613,8 +1625,7 @@ public class StudyHub
 
     //Funzione per scaricare un appunto
     public void downloadAppunto() {
-        GruppoStudio gruppoStudioSelezionato= selezionaGruppoStudioIscritto();
-        scanner = new Scanner(System.in);
+        GruppoStudio gruppoStudioSelezionato= selezionaGruppoStudio();
         if (gruppoStudioSelezionato == null)
         {
             return;
@@ -1636,6 +1647,11 @@ public class StudyHub
         if (appuntoSelezionato == null)
         {
             System.out.println("Appunto non trovato.");
+            return;
+        }
+        else if (studenteCorrente.getMappaAppuntiScaricati().containsKey(appuntoSelezionato.getId()) || studenteCorrente.getMappaAppunti().containsKey(appuntoSelezionato.getId()))
+        {
+            System.out.println("Appunto già scaricato.");
             return;
         }
         studenteCorrente.aggiungiAppuntoScaricato(appuntoSelezionato);

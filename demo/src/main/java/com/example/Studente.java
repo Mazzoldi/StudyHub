@@ -47,6 +47,7 @@ public class Studente
         creaMappaCorsiCreati();
         creaMappaGruppiStudio();
         creaMappaContenuti();
+        creaMappaAppuntiScaricati();
     }
 
     public DatiPagamento creaDatiPagamento(String metodo, String numeroCarta, String nome, String cognome)

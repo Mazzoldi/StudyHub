@@ -53,10 +53,66 @@ public class TestStudente {
     }
 
     @Test
+    public void testRimuoviAppunto() {
+        Studente mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
+        Appunto mockAppunto = new Appunto(mockStudente.getId(), "Appunto", "PDF", "Appunto.pdf", 10);
+        mockStudente.aggiungiAppunto(mockAppunto);
+        assertEquals(1, mockStudente.getMappaAppunti().size());
+        mockStudente.rimuoviAppunto(mockAppunto);
+        assertEquals(0, mockStudente.getMappaAppunti().size());
+        assertFalse(mockStudente.getMappaAppunti().containsKey(mockAppunto.getId()));
+        assertFalse(mockStudente.getMappaAppunti().containsValue(mockAppunto));
+    }
+
+    @Test
+    public void testAggiungiAppuntoScaricato(){
+        Studente mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
+        Appunto mockAppunto = new Appunto(mockStudente.getId(), "Appunto Scaricato", "PDF", "AppuntoScaricato.pdf", 15);
+        mockStudente.aggiungiAppuntoScaricato(mockAppunto);
+        assertEquals(1, mockStudente.getMappaAppuntiScaricati().size());
+        assertTrue(mockStudente.getMappaAppuntiScaricati().containsKey(mockAppunto.getId()));
+        assertTrue(mockStudente.getMappaAppuntiScaricati().containsValue(mockAppunto));
+    }
+
+    @Test
+    public void testRimuoviAppuntoScaricato(){
+        Studente mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
+        Appunto mockAppunto = new Appunto(mockStudente.getId(), "Appunto Scaricato", "PDF", "AppuntoScaricato.pdf", 15);
+        mockStudente.aggiungiAppuntoScaricato(mockAppunto);
+        assertEquals(1, mockStudente.getMappaAppuntiScaricati().size());
+        mockStudente.rimuoviAppuntoScaricato(mockAppunto);
+        assertEquals(0, mockStudente.getMappaAppuntiScaricati().size());
+        assertFalse(mockStudente.getMappaAppuntiScaricati().containsKey(mockAppunto.getId()));
+        assertFalse(mockStudente.getMappaAppuntiScaricati().containsValue(mockAppunto));
+    }
+
+    @Test
     public void testVerificaPassword() {
         Studente mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
         assertTrue(mockStudente.verificaPassword("1111"));
         assertFalse(mockStudente.verificaPassword("0000"));
+    }
+
+    @Test
+    public void testAggiungiContenuto() {
+        Studente mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
+        Contenuto mockContenuto = new Contenuto("Contenuto", "PDF", "Contenuto.pdf", 20);
+        mockStudente.aggiungiContenuto(mockContenuto);
+        assertEquals(1, mockStudente.getMappaContenuti().size());
+        assertTrue(mockStudente.getMappaContenuti().containsKey(mockContenuto.getId()));
+        assertTrue(mockStudente.getMappaContenuti().containsValue(mockContenuto));
+    }
+
+    @Test
+    public void testRimuoviContenuto() {
+        Studente mockStudente = new Studente("Mazzoldi", "1111", "Nicolò", "Mazzola", "12/09/2002", "Catania", "Catania", "Laurea Magistrale");
+        Contenuto mockContenuto = new Contenuto("Contenuto", "PDF", "Contenuto.pdf", 20);
+        mockStudente.aggiungiContenuto(mockContenuto);
+        assertEquals(1, mockStudente.getMappaContenuti().size());
+        mockStudente.rimuoviContenuto(mockContenuto);
+        assertEquals(0, mockStudente.getMappaContenuti().size());
+        assertFalse(mockStudente.getMappaContenuti().containsKey(mockContenuto.getId()));
+        assertFalse(mockStudente.getMappaContenuti().containsValue(mockContenuto));
     }
 
     @Test
