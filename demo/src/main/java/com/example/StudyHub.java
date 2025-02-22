@@ -196,11 +196,16 @@ public class StudyHub
             System.out.println("6. Iscriviti o disiscriviti ad un gruppo studio");
             System.out.println("7. Carica o elimina un contenuto");
             System.out.println("8. Carica o elimina un appunto");
-            System.out.println("9. Scarica contenuto");
+            System.out.println("9. Scarica o elimina contenuto/appunto scaricato");
             System.out.println("10. Visualizza informazioni studente");
             System.out.println("11. Logout");
             System.out.println("12. Esci");
             System.out.print("Seleziona un'opzione: ");
+        }
+        while (!scanner.hasNextInt())
+        {
+            System.out.println("Input non valido, inserisci un numero intero:");
+            scanner.next();
         }
         scelta = scanner.nextInt();
         scanner.nextLine();
@@ -404,14 +409,33 @@ public class StudyHub
                         }
                         break;  
                     case 9:
-                        System.out.println("Hai selezionato Scarica o elimina contenuto/appunto");
+                        System.out.println("Hai selezionato Scarica o elimina contenuto/appunto scaricato");
                         System.out.println("Scegli un'opzione: ");
                         System.out.println("1. Scarica un contenuto");
                         System.out.println("2. Scarica un appunto");
                         System.out.println("3. Elimina un contenuto");
                         System.out.println("4. Elimina un appunto");
-                        action = studyHub.sceltaOpzione() == 1 ? () -> studyHub.downloadContenuto() : studyHub.sceltaOpzione() == 2 ? () -> studyHub.downloadAppunto() : studyHub.sceltaOpzione() == 3 ? () -> studyHub.eliminaContenuto() : () -> studyHub.eliminaAppunto();
-                        action.run();
+                        int opzione = studyHub.sceltaOpzione();
+                        if (opzione == 1)
+                        {
+                            System.out.println("Hai selezionato Scarica contenuto");
+                            studyHub.downloadContenuto();
+                        }
+                        else if (opzione == 2)
+                        {
+                            System.out.println("Hai selezionato Scarica appunto");
+                            studyHub.downloadAppunto();
+                        }
+                        else if (opzione == 3)
+                        {
+                            System.out.println("Hai selezionato Elimina contenuto");
+                            studyHub.eliminaContenutoScaricato();
+                        }
+                        else if (opzione == 4)
+                        {
+                            System.out.println("Hai selezionato Elimina appunto");
+                            studyHub.eliminaAppuntoScaricato();
+                        }
                         break;   
                     case 10:
                         System.out.println("Hai selezionato Visualizza informazioni studente");
@@ -771,7 +795,7 @@ public class StudyHub
         if (!id.isEmpty()) 
         {
             Corso corso = mappaCorsiTotali.get(id);
-            if (corso != null) 
+            if (corso != null && controllaIscrizione(corso) && !corso.getCreatore().equals(studenteCorrente.getId())) 
             {
                 mappaCorsiCercati.put(id, corso);
                 return mappaCorsiCercati;
@@ -786,7 +810,7 @@ public class StudyHub
                 boolean linguaCorrisponde = lingua.isEmpty() || corso.getLingua().equalsIgnoreCase(lingua);
                 boolean creatoreCorrisponde = creatore.isEmpty() || corso.getCreatore().equalsIgnoreCase(creatore);
 
-                if (nomeCorrisponde && livelloCorrisponde && linguaCorrisponde && creatoreCorrisponde) 
+                if (nomeCorrisponde && livelloCorrisponde && linguaCorrisponde && creatoreCorrisponde && controllaIscrizione(corso) && !corso.getCreatore().equals(studenteCorrente.getId()))
                 {
                     mappaCorsiCercati.put(corso.getId(), corso);
                 }
@@ -811,8 +835,20 @@ public class StudyHub
         }
         if (mappaCorsiCercati.size() == 1)
         {
-            corsoSelezionato = mappaCorsiCercati.values().iterator().next();
-            return;
+            System.out.println("Corso trovato: ");
+            System.out.println(mappaCorsiCercati.values().iterator().next().getNome());
+            System.out.println(mappaCorsiCercati.values().iterator().next().getId());
+            System.out.println("Vuoi iscriverti a questo corso? (s/n)");
+            String risposta = scanner.nextLine();
+            if (risposta.equals("s"))
+            {
+                corsoSelezionato = mappaCorsiCercati.values().iterator().next();
+                return;
+            }
+            else
+            {
+                return;
+            }
         }
         System.out.println("I corsi trovati sono: ");
         for(Corso corso: mappaCorsiCercati.values())
@@ -840,6 +876,7 @@ public class StudyHub
         {
             Iscrizione iscrizione = new Iscrizione(studenteCorrente.getId(), corsoSelezionato.getId());
             aggiungiIscrizione(iscrizione);
+            System.out.println("Iscrizione avvenuta con successo");
         }
         else
         {
@@ -904,7 +941,6 @@ public class StudyHub
     {
         corsoSelezionato.aggiungiIscrizione(studenteCorrente, iscrizione);
         studenteCorrente.aggiungiIscrizione(corsoSelezionato, iscrizione);
-        System.out.println("Iscrizione avvenuta con successo");
     }
 
     //Funzione per la selezione di un corso a cui si è iscritti
@@ -1067,6 +1103,7 @@ public class StudyHub
                 }
             }
             gruppoStudio.getMappaStudenti().clear();
+            System.out.println("Gruppo studio eliminato con successo");
         }
         else
         {
@@ -1260,11 +1297,7 @@ public class StudyHub
         {
             System.out.print("Inserisci l'id di un corso: ");
             String id = scanner.nextLine();
-
-            System.out.println(id);
             corsoSelezionato = mappaCorsiCreati.get(id);
-            System.out.println(corsoSelezionato.getNome());
-            System.out.println(corsoSelezionato.getId());
             if(corsoSelezionato == null)
             {
                 System.out.println("Corso non trovato");
@@ -1496,7 +1529,7 @@ public class StudyHub
         scanner = new Scanner(System.in);
         GruppoStudio gruppoStudioSelezionato = null;
         Map<String, GruppoStudio> mappaGruppiStudio = studenteCorrente.getMappaGruppiStudio();
-        System.out.println("I tuoi gruppi studio sono:\n");
+        System.out.println("I tuoi gruppi studio sono:");
         for (GruppoStudio gruppoStudio : mappaGruppiStudio.values())
         {
             System.out.println("Gruppo studio: " + gruppoStudio.getNome());
@@ -1519,8 +1552,12 @@ public class StudyHub
         Runnable action = sceltaOpzione() == 1 ? () -> appuntoHolder[0] = caricaAppunto() : () -> appuntoHolder[0] = selezionaAppunto();
         action.run();
         Appunto appunto = appuntoHolder[0];
+        if (appunto == null)
+        {
+            return;
+        }
         gruppoStudioSelezionato.aggiungiAppunto(appunto);
-        System.out.println("Appunto caricato con successo");
+        System.out.println("Appunto caricato con successo nel gruppo studio");
     }
 
     //Funzione per l'eliminazione di un appunto in un gruppo studio
@@ -1714,16 +1751,17 @@ public class StudyHub
 
     //Funzione per visualizzare appunti e contenuti dello studente
     public void visualizzaInformazioniStudente() {
-        System.out.println("Cosa vuoi vedere?");
-        System.out.println("1. I tuoi dati, contenuti e appunti scaricati");
-        System.out.println("2. I tuoi corsi");
-        System.out.println("3. I corsi a cui sei iscritto");
-        System.out.println("4. I tuoi gruppi studio");
-        System.out.println("5. Le tue iscrizioni");
-        System.out.println("6. Torna al menu principale");
-        int scelta = scanner.nextInt();
-        scanner.nextLine();
+        int scelta;
         do{
+            System.out.println("Cosa vuoi vedere?");
+            System.out.println("1. I tuoi dati, contenuti e appunti scaricati");
+            System.out.println("2. I tuoi corsi");
+            System.out.println("3. I corsi a cui sei iscritto");
+            System.out.println("4. I tuoi gruppi studio");
+            System.out.println("5. Le tue iscrizioni");
+            System.out.println("6. Torna al menu principale");
+            scelta = scanner.nextInt();
+            scanner.nextLine();
             switch (scelta) {
                 case 1:
                     visualizzaDatiStudente();
@@ -1769,28 +1807,50 @@ public class StudyHub
             System.out.println("Nome: " + datiPagamento.getNome());
             System.out.println("Cognome: " + datiPagamento.getCognome());
         }
-        System.out.println("Vuoi vedere i tuoi contenuti?(s/n)");
+        System.out.println("Vuoi vedere i contenuti scaricati?(s/n)");
         String risposta = scanner.nextLine();
+        boolean vuoto = true;
         if (risposta.equals("s"))
         {
-            visualizzaContenuti();
-            System.out.println("Vuoi eliminare un contenuto?(s/n)");
-            risposta = scanner.nextLine();
-            if (risposta.equals("s"))
+            vuoto = visualizzaContenuti();
+            if (!vuoto)
             {
-                eliminaContenuto();
+                System.out.println("Vuoi eliminare un contenuto?(s/n)");
+                risposta = scanner.nextLine();
+                if (risposta.equals("s"))
+                {
+                    eliminaContenutoScaricato();
+                }
             }
         }
         System.out.println("Vuoi vedere i tuoi appunti?(s/n)");
         risposta = scanner.nextLine();
         if (risposta.equals("s"))
         {
-            visualizzaAppunti();
-            System.out.println("Vuoi eliminare un appunto?(s/n)");
-            risposta = scanner.nextLine();
-            if (risposta.equals("s"))
+            vuoto = visualizzaAppunti();
+            if (!vuoto)
             {
-                eliminaAppunto();
+                System.out.println("Vuoi eliminare un appunto?(s/n)");
+                risposta = scanner.nextLine();
+                if (risposta.equals("s"))
+                {
+                    eliminaAppunto();
+                }
+            }
+        }
+        System.out.println("Vuoi vedere gli appunti scaricati?(s/n)");
+        risposta = scanner.nextLine();
+        if (risposta.equals("s"))
+        {
+            vuoto = visualizzaAppuntiScaricati();
+            if (!vuoto)
+            {
+                System.out.println("Vuoi eliminare un appunto scaricato?(s/n)");
+                risposta = scanner.nextLine();
+                if (risposta.equals("s"))
+                {
+                    eliminaAppuntoScaricato();
+                }
             }
         }
     }
@@ -1840,16 +1900,6 @@ public class StudyHub
                     corsoSelezionato = corso;
                     caricaContenuto();
                 }
-                for (Contenuto contenuto: corso.getMappaContenuti().values())
-                {
-                    System.out.println("Id: " + contenuto.getId().toString());
-                    System.out.println("Titolo: " + contenuto.getTitolo().toString());
-                    System.out.println("Formato: " + contenuto.getFormato().toString());
-                    System.out.println("File: " + contenuto.getFile().toString());
-                    System.out.println("Dimensione: " + contenuto.getDimensione());
-                    System.out.println("Data creazione: " + contenuto.getDataCreazione().toString());
-                    System.out.println("Data ultima modifica: " + contenuto.getDataUltimaModifica().toString());
-                }
                 Map<String, Iscrizione> mappaIscrizioni = corso.getMappaIscrizioni();
                 if(mappaIscrizioni.isEmpty())
                 {
@@ -1864,12 +1914,19 @@ public class StudyHub
                         System.out.println("Username studente: " + studenti.get(iscrizione.getStudente()).getUsername());
                         System.out.println("Data iscrizione: " + iscrizione.getDataIscrizione().toString());
                         System.out.println("Data scadenza: " + iscrizione.getDataScadenza().toString());
-                        System.out.println("Pagamenti: ");
-                        for (Pagamento pagamento: iscrizione.getMappaPagamenti().values())
+                        if (iscrizione.getMappaPagamenti().isEmpty())
                         {
-                            System.out.println("Id pagamento: " + pagamento.getId().toString());
-                            System.out.println("Importo: " + pagamento.getCosto());
-                            System.out.println("Data pagamento: " + pagamento.getDataPagamento().toString());
+                            System.out.println("Non ci sono pagamenti per questo corso");
+                        }
+                        else
+                        {
+                            System.out.println("Pagamenti: ");
+                            for (Pagamento pagamento: iscrizione.getMappaPagamenti().values())
+                            {
+                                System.out.println("Id pagamento: " + pagamento.getId().toString());
+                                System.out.println("Importo: " + pagamento.getCosto());
+                                System.out.println("Data pagamento: " + pagamento.getDataPagamento().toString());
+                            }
                         }
                     }
                 }
@@ -1899,12 +1956,19 @@ public class StudyHub
                 System.out.println("Durata: " + corso.getDurata());
                 System.out.println("Data iscrizione: " + iscrizione.getDataIscrizione().toString());
                 System.out.println("Data scadenza: " + iscrizione.getDataScadenza().toString());
-                System.out.println("Pagamenti: ");
-                for (Pagamento pagamento: iscrizione.getMappaPagamenti().values())
+                if (iscrizione.getMappaPagamenti().isEmpty())
                 {
-                    System.out.println("Id pagamento: " + pagamento.getId().toString());
-                    System.out.println("Importo: " + pagamento.getCosto());
-                    System.out.println("Data pagamento: " + pagamento.getDataPagamento().toString());
+                    System.out.println("Non ci sono pagamenti per questo corso");
+                }
+                else
+                {
+                    System.out.println("Pagamenti: ");
+                    for (Pagamento pagamento: iscrizione.getMappaPagamenti().values())
+                    {
+                        System.out.println("Id pagamento: " + pagamento.getId().toString());
+                        System.out.println("Importo: " + pagamento.getCosto());
+                        System.out.println("Data pagamento: " + pagamento.getDataPagamento().toString());
+                    }
                 }
                 System.out.println("Studenti iscritti: ");
                 for (Iscrizione iscrizioneCorso: corso.getMappaIscrizioni().values())
@@ -1913,12 +1977,9 @@ public class StudyHub
                     System.out.println("Username studente: " + studenti.get(iscrizioneCorso.getStudente()).getUsername());
                     System.out.println("Data iscrizione: " + iscrizioneCorso.getDataIscrizione().toString());
                 }
-                System.out.println("Vuoi scaricare un contenuto? (s/n)");
-                String risposta = scanner.nextLine();
-                if (risposta.equals("s"))
+                if (corso.getMappaContenuti().isEmpty())
                 {
-                    corsoSelezionato = corso;
-                    downloadContenuto();
+                    System.out.println("Non ci sono contenuti caricati per questo corso");
                 }
                 else
                 {
@@ -1931,6 +1992,41 @@ public class StudyHub
                         System.out.println("Dimensione: " + contenuto.getDimensione());
                         System.out.println("Data creazione: " + contenuto.getDataCreazione().toString());
                         System.out.println("Data ultima modifica: " + contenuto.getDataUltimaModifica().toString());
+                    }
+                    System.out.println("Vuoi scaricare un contenuto? (s/n)");
+                    String risposta = scanner.nextLine();
+                    if (risposta.equals("s"))
+                    {
+                        corsoSelezionato = corso;
+                        Map<String, Contenuto> mappaContenuti = corsoSelezionato.getMappaContenuti();
+                        if (mappaContenuti.isEmpty())
+                        {
+                            System.out.println("Non ci sono contenuti disponibili per questo corso.");
+                            return;
+                        }
+                        System.out.println("Contenuti disponibili:");
+                        for (Contenuto contenuto : mappaContenuti.values())
+                        {
+                            System.out.println(contenuto.getId() + " - " + contenuto.getTitolo());
+                        }
+                        System.out.print("Inserisci l'ID del contenuto da scaricare: ");
+                        String idContenuto = scanner.nextLine();
+                        System.out.println(idContenuto);
+                        Contenuto contenutoSelezionato = mappaContenuti.get(idContenuto);
+                        if (contenutoSelezionato == null)
+                        {
+                            System.out.println("Contenuto non trovato.");
+                            return;
+                        }
+                        if (!studenteCorrente.getMappaContenuti().containsKey(contenutoSelezionato.getId()))
+                        {
+                            studenteCorrente.aggiungiContenuto(contenutoSelezionato);
+                        }
+                        else
+                        {
+                            System.out.println("Contenuto già scaricato");
+                        }
+                        System.out.println("Contenuto '" + contenutoSelezionato.getTitolo() + "' scaricato con successo!");
                     }
                 }
             }
@@ -1973,8 +2069,19 @@ public class StudyHub
                     Runnable action = sceltaOpzione() == 1 ? () -> appuntoHolder[0] = caricaAppunto() : () -> appuntoHolder[0] = selezionaAppunto();
                     action.run();
                     Appunto appunto = appuntoHolder[0];
-                    gruppoStudio.aggiungiAppunto(appunto);
-                    System.out.println("Appunto caricato con successo");
+                    if (appunto != null)
+                    {
+                        gruppoStudio.aggiungiAppunto(appunto);
+                        System.out.println("Appunto caricato con successo nel gruppo studio");
+                    }
+                    else
+                    {
+                        System.out.println("Appunto non valido");
+                    }
+                }
+                if (gruppoStudio.getMappaAppunti().isEmpty())
+                {
+                    System.out.println("Non ci sono appunti caricati per questo gruppo studio");
                 }
                 else
                 {
@@ -1988,40 +2095,50 @@ public class StudyHub
                         System.out.println("Data creazione: " + appunto.getDataCreazione().toString());
                         System.out.println("Data ultima modifica: " + appunto.getDataUltimaModifica().toString());
                     }
-                }
-                System.out.println("Vuoi scaricare un appunto? (s/n)");
-                String rispostaAppunto = scanner.nextLine();
-                if (rispostaAppunto.equals("s"))
-                {
-                    System.out.println("Inserisci l'id dell'appunto da scaricare: ");
-                    String idAppunto = scanner.nextLine();
-                    Appunto appunto = gruppoStudio.getMappaAppunti().get(idAppunto);
-                    if (appunto != null)
+                    System.out.println("Vuoi scaricare un appunto? (s/n)");
+                    String rispostaAppunto = scanner.nextLine();
+                    if (rispostaAppunto.equals("s"))
                     {
-                        studenteCorrente.aggiungiAppunto(appunto);
-                        System.out.println("Appunto scaricato con successo");
+                        System.out.println("Inserisci l'id dell'appunto da scaricare: ");
+                        String idAppunto = scanner.nextLine();
+                        Appunto appunto = gruppoStudio.getMappaAppunti().get(idAppunto);
+                        if (appunto == null)
+                        {
+                            System.out.println("Appunto non trovato");
+                        }
+                        else if (!studenteCorrente.getMappaAppuntiScaricati().containsKey(appunto.getId()) && !studenteCorrente.getMappaAppunti().containsKey(appunto.getId()))
+                        {
+                            studenteCorrente.aggiungiAppunto(appunto);
+                            System.out.println("Appunto scaricato con successo");
+                        }
+                        else
+                        {
+                            System.out.println("Appunto già scaricato");
+                        }
                     }
-                    else
+                    System.out.println("Vuoi eliminare un appunto? (s/n)");
+                    String rispostaElimina = scanner.nextLine();
+                    if (rispostaElimina.equals("s"))
                     {
-                        System.out.println("Appunto non trovato");
-                    }
-                    System.out.println("Appunto scaricato con successo");
-                }
-                System.out.println("Vuoi eliminare un appunto? (s/n)");
-                String rispostaElimina = scanner.nextLine();
-                if (rispostaElimina.equals("s"))
-                {
-                    System.out.println("Inserisci l'id dell'appunto da eliminare: ");
-                    String idAppunto = scanner.nextLine();
-                    Appunto appunto = gruppoStudio.getMappaAppunti().get(idAppunto);
-                    if (appunto != null)
-                    {
-                        gruppoStudio.rimuoviAppunto(appunto);
-                        System.out.println("Appunto eliminato con successo");
-                    }
-                    else
-                    {
-                        System.out.println("Appunto non trovato");
+                        System.out.println("Inserisci l'id dell'appunto da eliminare: ");
+                        String idAppunto = scanner.nextLine();
+                        Appunto appunto = gruppoStudio.getMappaAppunti().get(idAppunto);
+                        if (appunto != null)
+                        {
+                            gruppoStudio.rimuoviAppunto(appunto);
+                            System.out.println("Appunto eliminato con successo");
+                            System.out.println("Vuoi eliminarlo anche dagli appunti personali?");
+                            System.out.println("1. Sì");
+                            System.out.println("2. No");
+                            final Appunto appuntoFinal = appunto;
+                            Runnable action = sceltaOpzione() == 1 ? () -> studenteCorrente.rimuoviAppunto(appuntoFinal) : () -> {};
+                            action.run();
+                            return;
+                        }
+                        else
+                        {
+                            System.out.println("Appunto non trovato");
+                        }
                     }
                 }
             }
@@ -2029,12 +2146,13 @@ public class StudyHub
     }
 
     //Funzione per visualizzare i contenuti dello studente
-    public void visualizzaContenuti()
+    public boolean visualizzaContenuti()
     {
         Map<String, Contenuto> mappaContenuti = studenteCorrente.getMappaContenuti();
         if(mappaContenuti.isEmpty())
         {
             System.out.println("Non hai scaricato nessun contenuto");
+            return true;
         }
         else
         {
@@ -2049,16 +2167,18 @@ public class StudyHub
                 System.out.println("Data creazione: " + contenuto.getDataCreazione().toString());
                 System.out.println("Data ultima modifica: " + contenuto.getDataUltimaModifica().toString());
             }
+            return false;
         }
     }
 
     //Funzione per visualizzare gli appunti dello studente
-    public void visualizzaAppunti()
+    public boolean visualizzaAppunti()
     {
         Map<String, Appunto> mappaAppunti = studenteCorrente.getMappaAppunti();
         if(mappaAppunti.isEmpty())
         {
             System.out.println("Non hai caricato nessun appunto");
+            return true;
         }
         else
         {
@@ -2073,6 +2193,33 @@ public class StudyHub
                 System.out.println("Data creazione: " + appunto.getDataCreazione().toString());
                 System.out.println("Data ultima modifica: " + appunto.getDataUltimaModifica().toString());
             }
+            return false;
+        }
+    }
+
+    //Funzione per visualizzare gli appunti scaricati
+    public boolean visualizzaAppuntiScaricati()
+    {
+        Map<String, Appunto> mappaAppunti = studenteCorrente.getMappaAppuntiScaricati();
+        if(mappaAppunti.isEmpty())
+        {
+            System.out.println("Non hai scaricato nessun appunto");
+            return true;
+        }
+        else
+        {
+            System.out.println("Appunti scaricati: ");
+            for (Appunto appunto: mappaAppunti.values())
+            {
+                System.out.println("Id: " + appunto.getId().toString());
+                System.out.println("Titolo: " + appunto.getTitolo().toString());
+                System.out.println("Formato: " + appunto.getFormato().toString());
+                System.out.println("File: " + appunto.getFile().toString());
+                System.out.println("Dimensione: " + appunto.getDimensione());
+                System.out.println("Data creazione: " + appunto.getDataCreazione().toString());
+                System.out.println("Data ultima modifica: " + appunto.getDataUltimaModifica().toString());
+            }
+            return false;
         }
     }
 
