@@ -2123,7 +2123,7 @@ public class StudyHub
                         System.out.println("Inserisci l'id dell'appunto da eliminare: ");
                         String idAppunto = scanner.nextLine();
                         Appunto appunto = gruppoStudio.getMappaAppunti().get(idAppunto);
-                        if (appunto != null)
+                        if (appunto != null && appunto.getCreatore().equals(studenteCorrente.getId()))
                         {
                             gruppoStudio.rimuoviAppunto(appunto);
                             System.out.println("Appunto eliminato con successo");
@@ -2134,6 +2134,10 @@ public class StudyHub
                             Runnable action = sceltaOpzione() == 1 ? () -> studenteCorrente.rimuoviAppunto(appuntoFinal) : () -> {};
                             action.run();
                             return;
+                        }
+                        else if (appunto != null)
+                        {
+                            System.out.println("Non sei il creatore dell'appunto");
                         }
                         else
                         {
@@ -2193,7 +2197,46 @@ public class StudyHub
                 System.out.println("Data creazione: " + appunto.getDataCreazione().toString());
                 System.out.println("Data ultima modifica: " + appunto.getDataUltimaModifica().toString());
             }
+            System.out.println("Vuoi modificare un appunto?(s/n)");
+            String risposta = scanner.nextLine();
+            if (risposta.equals("s"))
+            {
+                modificaAppunto(mappaAppunti);
+            }
             return false;
+        }
+    }
+
+    //Funzione per modificare un appunto dello studente
+    public void modificaAppunto(Map<String, Appunto> mappaAppunti)
+    {
+        System.out.println("Inserisci l'id dell'appunto da modificare: ");
+        String idAppunto = scanner.nextLine();
+        Appunto appunto = mappaAppunti.get(idAppunto);
+        if (appunto != null)
+        {
+            String risposta;
+            String titolo = appunto.getTitolo();
+            String file = appunto.getFile();
+            System.out.println("Vuoi modificare il titolo?(s/n)");
+            risposta = scanner.nextLine();
+            if (risposta.equals("s"))
+            {
+                System.out.println("Inserisci il nuovo titolo: ");
+                titolo = scanner.nextLine();
+            }
+            System.out.println("Vuoi modificare il file?(s/n)");
+            risposta = scanner.nextLine();
+            if (risposta.equals("s"))
+            {
+                System.out.println("Inserisci il nuovo file: ");
+                file = scanner.nextLine();
+            }
+            appunto.modificaAppunto(titolo, file);
+        }
+        else
+        {
+            System.out.println("Appunto non trovato");
         }
     }
 
